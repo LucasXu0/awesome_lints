@@ -179,14 +179,9 @@ custom_lint:
 dart run custom_lint
 ```
 
-## Running Tests
+## Testing
 
-Unit tests:
-```bash
-dart test
-```
-
-Integration tests:
+Run custom_lint to verify all rules:
 ```bash
 cd test/fixtures/test_project
 flutter pub get
@@ -200,10 +195,9 @@ This package is built using the `custom_lint_builder` package. To add new lint r
 1. Create a new file in `lib/src/lints/<lint_name>.dart`
 2. Implement your `DartLintRule` class
 3. Add the rule to `lib/src/awesome_lints_plugin.dart`
-4. Write unit tests in `test/lints/<lint_name>_test.dart`
-5. Create integration test fixtures:
-   - `test/fixtures/test_project/lib/<lint_name>/should_trigger_lint.dart`
-   - `test/fixtures/test_project/lib/<lint_name>/should_not_trigger_lint.dart`
+4. Create test fixtures with `// expect_lint` comments:
+   - `test/fixtures/test_project/lib/<lint_name>/should_trigger_lint.dart` - Use `// expect_lint: <rule_name>` above lines that should trigger
+   - `test/fixtures/test_project/lib/<lint_name>/should_not_trigger_lint.dart` - Valid code that should not trigger
 
 ### Project Structure
 
@@ -214,13 +208,11 @@ lib/
       <lint_name>.dart              # Lint rule implementation
     awesome_lints_plugin.dart       # Plugin registration
 test/
-  lints/
-    <lint_name>_test.dart           # Unit tests
   fixtures/
     test_project/
       lib/
         <lint_name>/
-          should_trigger_lint.dart
+          should_trigger_lint.dart   # Use // expect_lint comments
           should_not_trigger_lint.dart
       analysis_options.yaml
       pubspec.yaml
