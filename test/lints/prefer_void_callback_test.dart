@@ -4,61 +4,41 @@ import 'package:test/test.dart';
 
 void main() {
   group('PreferVoidCallback', () {
-    test('should trigger lint for void Function() cases', () async {
-      // Run custom_lint on the test project
+    test('should trigger lint for void Function() instead of VoidCallback', () async {
       final result = await Process.run(
         'dart',
         ['run', 'custom_lint'],
         workingDirectory: 'test/fixtures/test_project',
       );
 
-      // custom_lint output can be in either stdout or stderr
       final output = '${result.stdout}\n${result.stderr}';
+      final lines = output.split('\n');
 
-      // Parse issues by file
-      final shouldTriggerIssues = output
-          .split('\n')
+      final shouldTriggerLintErrors = lines
           .where((line) =>
-              line.contains('should_trigger_lint.dart') &&
-              line.contains('prefer_void_callback'))
+              line.contains('prefer_void_callback/should_trigger_lint.dart') &&
+              line.contains('unfulfilled_expect_lint'))
           .toList();
 
-      final shouldNotTriggerIssues = output
-          .split('\n')
+      final shouldNotTriggerLintIssues = lines
           .where((line) =>
-              line.contains('should_not_trigger_lint.dart') &&
-              line.contains('prefer_void_callback'))
+              line.contains('prefer_void_callback/should_not_trigger_lint.dart') &&
+              line.contains('prefer_void_callback') &&
+              !line.contains('unfulfilled_expect_lint'))
           .toList();
 
-      // Verify: should_trigger_lint.dart should have exactly 12 issues
-      // (1 function param, 2 variables, 1 return type, 2 generics,
-      // 2 class fields, 1 typedef, 1 constructor param, 1 optional param, 1 named param)
       expect(
-        shouldTriggerIssues.length,
-        12,
-        reason: 'should_trigger_lint.dart should have exactly 12 lint issues',
+        shouldTriggerLintErrors.length,
+        0,
+        reason: 'should_trigger_lint.dart should have no unfulfilled_expect_lint errors',
       );
 
-      // Verify: should_not_trigger_lint.dart should have 0 issues
       expect(
-        shouldNotTriggerIssues.length,
+        shouldNotTriggerLintIssues.length,
         0,
         reason:
             'should_not_trigger_lint.dart should not trigger any false positives',
       );
-
-      // Verify the total issue count is reasonable (at least 12 from prefer_void_callback)
-      final summaryLine =
-          output.split('\n').lastWhere((line) => line.contains('issues found'));
-      // Extract the number from the summary line
-      final issueCount = int.tryParse(
-        summaryLine.replaceAll(RegExp(r'[^\d]'), ''),
-      );
-      expect(
-        issueCount,
-        greaterThanOrEqualTo(12),
-        reason: 'Total issues should include at least 12 from prefer_void_callback',
-      );
-    });
+    }, timeout: const Timeout(Duration(minutes: 2)));
   });
 }

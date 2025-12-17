@@ -4,81 +4,46 @@ import 'package:test/test.dart';
 
 void main() {
   group('AvoidSingleChildColumnOrRow', () {
-    test('should trigger lint for actual single child cases', () async {
-      // Run custom_lint on the test project
+    test('should trigger lint when Column or Row has single child', () async {
       final result = await Process.run(
         'dart',
         ['run', 'custom_lint'],
         workingDirectory: 'test/fixtures/test_project',
       );
 
-      // custom_lint output can be in either stdout or stderr
       final output = '${result.stdout}\n${result.stderr}';
+      final lines = output.split('\n');
 
-      // Parse issues by file
-      final shouldTriggerIssues = output
-          .split('\n')
+      final shouldTriggerLintErrors = lines
           .where((line) =>
-              line.contains('should_trigger_lint.dart') &&
-              line.contains('avoid_single_child_column_or_row'))
+              line.contains('avoid_single_child_column_or_row/should_trigger_lint.dart') &&
+              line.contains('unfulfilled_expect_lint'))
           .toList();
 
-      final shouldNotTriggerIssues = output
-          .split('\n')
+      final shouldNotTriggerLintIssues = lines
           .where((line) =>
-              line.contains('should_not_trigger_lint.dart') &&
-              line.contains('avoid_single_child_column_or_row'))
+              line.contains('avoid_single_child_column_or_row/should_not_trigger_lint.dart') &&
+              line.contains('avoid_single_child_column_or_row') &&
+              !line.contains('unfulfilled_expect_lint'))
           .toList();
 
-      // Verify: should_trigger_lint.dart should have exactly 5 issues
+      if (shouldTriggerLintErrors.isNotEmpty) {
+        print('Full custom_lint output for avoid_single_child_column_or_row:');
+        print(output);
+      }
+
       expect(
-        shouldTriggerIssues.length,
-        5,
-        reason: 'should_trigger_lint.dart should have exactly 5 lint issues',
+        shouldTriggerLintErrors.length,
+        0,
+        reason: 'should_trigger_lint.dart should have no unfulfilled_expect_lint errors',
       );
 
-      // Verify: should_not_trigger_lint.dart should have 0 issues
       expect(
-        shouldNotTriggerIssues.length,
+        shouldNotTriggerLintIssues.length,
         0,
         reason:
             'should_not_trigger_lint.dart should not trigger any false positives',
       );
-
-      // Verify the total issue count is reasonable (at least 5 from this rule)
-      final summaryLine =
-          output.split('\n').lastWhere((line) => line.contains('issues found'));
-      // Extract the number from the summary line
-      final issueCount = int.tryParse(
-        summaryLine.replaceAll(RegExp(r'[^\d]'), ''),
-      );
-      expect(
-        issueCount,
-        greaterThanOrEqualTo(5),
-        reason: 'Total issues should include at least 5 from avoid_single_child_column_or_row',
-      );
-    });
+    }, timeout: const Timeout(Duration(minutes: 2)));
   });
 }
-
-// Note: For comprehensive integration testing of custom_lint rules,
-// it's recommended to use the following approach:
-//
-// 1. Create a test Flutter project in test/fixtures/
-// 2. Add your lint rule to the analysis_options.yaml
-// 3. Create test files with both valid and invalid code
-// 4. Run custom_lint on the test project
-// 5. Verify the expected warnings are generated
-//
-// Example structure:
-// test/
-//   fixtures/
-//     test_project/
-//       lib/
-//         single_child_column.dart      # Should trigger warning
-//         multiple_children_column.dart # Should NOT trigger warning
-//       analysis_options.yaml
-//       pubspec.yaml
-//
-// This approach provides end-to-end testing of your lint rule
-// in a real Flutter environment.
