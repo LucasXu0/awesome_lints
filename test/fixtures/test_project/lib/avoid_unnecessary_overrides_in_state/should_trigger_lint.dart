@@ -12,6 +12,7 @@ class MyWidget1 extends StatefulWidget {
 
 class _MyWidget1State extends State<MyWidget1> {
   @override
+  // expect_lint: avoid_unnecessary_overrides_in_state
   void dispose() {
     super.dispose();
   }
@@ -32,6 +33,7 @@ class MyWidget2 extends StatefulWidget {
 
 class _MyWidget2State extends State<MyWidget2> {
   @override
+  // expect_lint: avoid_unnecessary_overrides_in_state
   void initState() => super.initState();
 
   @override
@@ -50,6 +52,7 @@ class MyWidget3 extends StatefulWidget {
 
 class _MyWidget3State extends State<MyWidget3> {
   @override
+  // expect_lint: avoid_unnecessary_overrides_in_state
   void didUpdateWidget(MyWidget3 oldWidget) {
     super.didUpdateWidget(oldWidget);
   }
@@ -70,6 +73,7 @@ class MyWidget4 extends StatefulWidget {
 
 class _MyWidget4State extends State<MyWidget4> {
   @override
+  // expect_lint: avoid_unnecessary_overrides_in_state
   void deactivate() {
     super.deactivate();
   }

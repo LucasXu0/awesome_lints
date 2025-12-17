@@ -3,51 +3,63 @@
 /// Test cases where prefer_void_callback lint should trigger
 
 // Case 1: Function parameter with void Function()
+// expect_lint: prefer_void_callback
 void functionWithCallback(void Function() callback) {
   callback();
 }
 
 // Case 2: Variable declaration with void Function()
 void variableDeclarations() {
+  // expect_lint: prefer_void_callback
   final void Function() callback = () {};
+  // expect_lint: prefer_void_callback
   void Function()? nullableCallback;
 }
 
 // Case 3: Return type as void Function()
+// expect_lint: prefer_void_callback
 void Function() returnCallback() {
   return () {};
 }
 
 // Case 4: Generic type argument with void Function()
 void genericTypes() {
+  // expect_lint: prefer_void_callback
   final List<void Function()> callbacks = [];
+  // expect_lint: prefer_void_callback
   final Map<String, void Function()> callbackMap = {};
 }
 
 // Case 5: Class field with void Function()
 class MyClass {
+  // expect_lint: prefer_void_callback
   final void Function()? onPressed;
+  // expect_lint: prefer_void_callback
   void Function() callback = () {};
 
   MyClass(this.onPressed);
 }
 
 // Case 6: Typedef with void Function()
+// expect_lint: prefer_void_callback
 typedef CallbackAlias = void Function();
 
 // Case 7: Constructor parameter with void Function()
 class MyWidget {
+  // expect_lint: prefer_void_callback
   final void Function()? onTap;
 
   const MyWidget({this.onTap});
 }
 
 // Case 8: Optional parameter with void Function()
+// expect_lint: prefer_void_callback
 void optionalParameters([void Function()? callback]) {
   callback?.call();
 }
 
 // Case 9: Named parameter with void Function()
+// expect_lint: prefer_void_callback
 void namedParameters({void Function()? onComplete}) {
   onComplete?.call();
 }

@@ -15,6 +15,7 @@ class _ShouldTriggerLintState extends State<ShouldTriggerLint> {
   // Case 1: mounted check inside setState - should trigger
   void _incrementCounter1() async {
     await Future.delayed(Duration(seconds: 1));
+    // expect_lint: avoid_mounted_in_setstate
     setState(() {
       if (mounted) {
         _counter++;
@@ -25,6 +26,7 @@ class _ShouldTriggerLintState extends State<ShouldTriggerLint> {
   // Case 2: context.mounted check inside setState - should trigger
   void _incrementCounter2() async {
     await Future.delayed(Duration(seconds: 1));
+    // expect_lint: avoid_mounted_in_setstate
     setState(() {
       if (context.mounted) {
         _counter++;
@@ -35,6 +37,7 @@ class _ShouldTriggerLintState extends State<ShouldTriggerLint> {
   // Case 3: mounted check with negation inside setState - should trigger
   void _incrementCounter3() async {
     await Future.delayed(Duration(seconds: 1));
+    // expect_lint: avoid_mounted_in_setstate
     setState(() {
       if (!mounted) {
         return;
@@ -46,6 +49,7 @@ class _ShouldTriggerLintState extends State<ShouldTriggerLint> {
   // Case 4: mounted check inside setState with early return - should trigger
   void _incrementCounter4() async {
     await Future.delayed(Duration(seconds: 1));
+    // expect_lint: avoid_mounted_in_setstate
     setState(() {
       if (!context.mounted) return;
       _counter++;

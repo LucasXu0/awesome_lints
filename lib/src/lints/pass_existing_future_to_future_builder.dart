@@ -56,13 +56,13 @@ class PassExistingFutureToFutureBuilder extends DartLintRule {
         // - Future.delayed(...)
         // - someObject.getFuture()
         reporter.atNode(
-          futureArg,
+          node, // Report on the FutureBuilder instance creation node
           _code,
         );
       } else if (expression is FunctionExpressionInvocation) {
         // This covers cases where a function variable is called
         reporter.atNode(
-          futureArg,
+          node, // Report on the FutureBuilder instance creation node
           _code,
         );
       } else if (expression is InstanceCreationExpression) {
@@ -75,7 +75,7 @@ class PassExistingFutureToFutureBuilder extends DartLintRule {
           final typeString = creationType.getDisplayString();
           if (typeString.startsWith('Future')) {
             reporter.atNode(
-              futureArg,
+              node, // Report on the FutureBuilder instance creation node
               _code,
             );
           }

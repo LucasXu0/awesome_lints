@@ -17,6 +17,7 @@ class _ShouldTriggerLintState extends State<ShouldTriggerLint> {
   @override
   Widget build(BuildContext context) {
     // Case 1: Method invocation creating future inline - should trigger
+    // expect_lint: pass_existing_future_to_future_builder
     final widget1 = FutureBuilder<String>(
       future: getValue(),
       builder: (context, snapshot) {
@@ -25,6 +26,7 @@ class _ShouldTriggerLintState extends State<ShouldTriggerLint> {
     );
 
     // Case 2: Future.delayed creating future inline - should trigger
+    // expect_lint: pass_existing_future_to_future_builder
     final widget2 = FutureBuilder<int>(
       future: Future.delayed(Duration(seconds: 1), () => 42),
       builder: (context, snapshot) {
@@ -33,6 +35,7 @@ class _ShouldTriggerLintState extends State<ShouldTriggerLint> {
     );
 
     // Case 3: Future.value creating future inline - should trigger
+    // expect_lint: pass_existing_future_to_future_builder
     final widget3 = FutureBuilder<String>(
       future: Future.value('hello'),
       builder: (context, snapshot) {
@@ -41,6 +44,7 @@ class _ShouldTriggerLintState extends State<ShouldTriggerLint> {
     );
 
     // Case 4: Static method call creating future inline - should trigger
+    // expect_lint: pass_existing_future_to_future_builder
     final widget4 = FutureBuilder<String>(
       future: Future.microtask(() => 'test'),
       builder: (context, snapshot) {
@@ -49,6 +53,7 @@ class _ShouldTriggerLintState extends State<ShouldTriggerLint> {
     );
 
     // Case 5: Instance method call creating future inline - should trigger
+    // expect_lint: pass_existing_future_to_future_builder
     final widget5 = FutureBuilder<String>(
       future: _fetchData(),
       builder: (context, snapshot) {
