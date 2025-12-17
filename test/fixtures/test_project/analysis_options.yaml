@@ -1,0 +1,7 @@
+analyzer:
+  plugins:
+    - custom_lint
+
+custom_lint:
+  rules:
+    - avoid_single_child_column_or_row
