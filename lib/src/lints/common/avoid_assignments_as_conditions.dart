@@ -34,6 +34,15 @@ class AvoidAssignmentsAsConditions extends DartLintRule {
     context.registry.addConditionalExpression((node) {
       _checkCondition(node.condition, reporter);
     });
+
+    context.registry.addForStatement((node) {
+      final forLoopParts = node.forLoopParts;
+      if (forLoopParts is ForParts) {
+        if (forLoopParts.condition != null) {
+          _checkCondition(forLoopParts.condition!, reporter);
+        }
+      }
+    });
   }
 
   void _checkCondition(Expression condition, ErrorReporter reporter) {
@@ -45,12 +54,34 @@ class AvoidAssignmentsAsConditions extends DartLintRule {
           condition,
           _code,
         );
+        return;
       }
     }
 
     // Check for parenthesized assignments
     if (condition is ParenthesizedExpression) {
       _checkCondition(condition.expression, reporter);
+      return;
+    }
+
+    // Check for assignments in binary expressions (e.g., (x = 5) != null)
+    if (condition is BinaryExpression) {
+      _checkForAssignment(condition.leftOperand, reporter);
+      _checkForAssignment(condition.rightOperand, reporter);
+    }
+  }
+
+  void _checkForAssignment(Expression expression, ErrorReporter reporter) {
+    if (expression is AssignmentExpression) {
+      if (expression.operator.type.lexeme == '=' ||
+          expression.operator.type.lexeme == '??=') {
+        reporter.atNode(
+          expression,
+          _code,
+        );
+      }
+    } else if (expression is ParenthesizedExpression) {
+      _checkForAssignment(expression.expression, reporter);
     }
   }
 }

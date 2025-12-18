@@ -77,35 +77,45 @@ class AvoidAlwaysNullParameters extends DartLintRule {
       }
     });
 
-    // After collecting all usages, check which parameters always receive null
-    for (final entry in privateDeclarations.entries) {
-      final function = entry.key;
-      final parameters = entry.value;
+    // Use addCompilationUnit to run analysis after all nodes have been visited
+    context.registry.addCompilationUnit((node) {
+      // After collecting all usages, check which parameters always receive null
+      for (final entry in privateDeclarations.entries) {
+        final function = entry.key;
+        final parameters = entry.value;
 
-      for (final param in parameters) {
-        final usages = parameterUsages[param] ?? [];
+        // Check if ANY parameter always receives null
+        var hasAlwaysNullParam = false;
+        for (final param in parameters) {
+          final usages = parameterUsages[param] ?? [];
 
-        // If there are no usages, skip (can't determine)
-        if (usages.isEmpty) continue;
+          // If there are no usages, skip (can't determine)
+          if (usages.isEmpty) continue;
 
-        // Check if all usages are null
-        final allNull = usages.every((arg) => _isNullLiteral(arg));
+          // Check if all usages are null
+          final allNull = usages.every((arg) => _isNullLiteral(arg));
 
-        if (allNull) {
-          // Find the parameter node to report
+          if (allNull) {
+            hasAlwaysNullParam = true;
+            break;
+          }
+        }
+
+        // If any parameter always receives null, report on the function/method declaration
+        if (hasAlwaysNullParam) {
           final declNode = declarationNodes[function];
           if (declNode != null) {
-            final paramNode = _findParameterNode(declNode, param.displayName);
-            if (paramNode != null) {
+            final reportNode = _getFunctionNameNode(declNode);
+            if (reportNode != null) {
               reporter.atNode(
-                paramNode,
+                reportNode,
                 _code,
               );
             }
           }
         }
       }
-    }
+    });
   }
 
   void _recordArguments(
@@ -146,29 +156,12 @@ class AvoidAlwaysNullParameters extends DartLintRule {
     return expression is NullLiteral || expression == null;
   }
 
-  AstNode? _findParameterNode(
-    AstNode declNode,
-    String paramName,
-  ) {
-    // Get the formal parameter list from the declaration node
-    FormalParameterList? parameterList;
-
+  AstNode? _getFunctionNameNode(AstNode declNode) {
     if (declNode is FunctionDeclaration) {
-      parameterList = declNode.functionExpression.parameters;
+      return declNode.functionExpression.parameters;
     } else if (declNode is MethodDeclaration) {
-      parameterList = declNode.parameters;
+      return declNode.parameters;
     }
-
-    if (parameterList == null) return null;
-
-    // Find the parameter with the matching name
-    for (final param in parameterList.parameters) {
-      final identifier = param.name;
-      if (identifier != null && identifier.lexeme == paramName) {
-        return param;
-      }
-    }
-
     return null;
   }
 }
