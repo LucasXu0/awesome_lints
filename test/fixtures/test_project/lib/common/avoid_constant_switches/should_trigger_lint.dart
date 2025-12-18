@@ -19,10 +19,12 @@ void badExamples() {
     case 10:
       print('ten');
       break;
-    case 20:
+    
+case 20:
       print('twenty');
       break;
-    default:
+    
+default:
       print('other');
   }
 

@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable, unused_element
+// ignore_for_file: unused_local_variable, unused_element, no_empty_block
 
 /// Test cases where prefer_void_callback lint should trigger
 

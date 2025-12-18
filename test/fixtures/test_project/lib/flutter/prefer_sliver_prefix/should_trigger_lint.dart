@@ -81,7 +81,8 @@ class ConditionalSliver extends StatelessWidget {
         ),
       );
     }
-    return SliverList(
+    
+return SliverList(
       delegate: SliverChildListDelegate([]),
     );
   }

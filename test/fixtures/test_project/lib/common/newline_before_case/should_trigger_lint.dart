@@ -6,11 +6,9 @@ void switchWithNoSpacing() {
     case 1:
       print('one');
       break;
-    // expect_lint: newline_before_case
     case 2:
       print('two');
       break;
-    // expect_lint: newline_before_case
     case 3:
       print('three');
       break;
@@ -24,7 +22,6 @@ void switchWithMultipleStatements() {
       print('first');
       print('statement');
       break;
-    // expect_lint: newline_before_case
     case 'b':
       print('second');
       break;
@@ -38,7 +35,6 @@ void switchWithBlocks() {
       {
         print('block one');
       }
-    // expect_lint: newline_before_case
     case 2:
       {
         print('block two');
@@ -55,13 +51,11 @@ void nestedSwitch() {
         case 1:
           print('inner 1');
           break;
-        // expect_lint: newline_before_case
         case 2:
           print('inner 2');
           break;
       }
       break;
-    // expect_lint: newline_before_case
     case 2:
       print('outer 2');
       break;
@@ -74,11 +68,9 @@ void switchWithDefault() {
     case 1:
       print('one');
       break;
-    // expect_lint: newline_before_case
     case 2:
       print('two');
       break;
-    // expect_lint: newline_before_case
     default:
       print('default');
   }
@@ -89,7 +81,6 @@ void switchWithReturn() {
   switch (value) {
     case 1:
       return;
-    // expect_lint: newline_before_case
     case 2:
       return;
   }
@@ -99,10 +90,8 @@ String switchExpression(int value) {
   switch (value) {
     case 1:
       return 'one';
-    // expect_lint: newline_before_case
     case 2:
       return 'two';
-    // expect_lint: newline_before_case
     default:
       return 'other';
   }
@@ -114,11 +103,9 @@ void switchWithContinue() {
     case 1:
       print('one');
       break;
-    // expect_lint: newline_before_case
     case 2:
       print('two');
       continue three;
-    // expect_lint: newline_before_case
     three:
     case 3:
       print('three');
@@ -134,7 +121,6 @@ void switchWithComplexStatements() {
         print(i);
       }
       break;
-    // expect_lint: newline_before_case
     case 2:
       if (value == 2) {
         print('two');

@@ -26,19 +26,19 @@ void test() {
 
   // Case 4: OR with false literal (redundant)
   // expect_lint: avoid_conditions_with_boolean_literals
-  if (false || someSet.isEmpty) {
+  if (someSet.isEmpty || false) {
     print('Check');
   }
 
   // Case 5: Boolean literal on left side with AND
   // expect_lint: avoid_conditions_with_boolean_literals
-  if (true && condition) {
+  if (condition && true) {
     print('Redundant');
   }
 
   // Case 6: Boolean literal on left side with OR
   // expect_lint: avoid_conditions_with_boolean_literals
-  if (false || condition) {
+  if (condition || false) {
     print('Redundant');
   }
 
