@@ -36,9 +36,6 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
       // Skip if passed to a parameter that expects a Future
       if (_isPassedToFutureParameter(node)) return;
 
-      // TODO: Add support for detecting assignments to Future-typed variables
-      // if (_isAssignedToFutureVariable(node)) return;
-
       // Check if the invoked method is async
       final element = node.methodName.element;
       if (element is ExecutableElement2) {
@@ -64,9 +61,6 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
 
       // Skip if passed to a parameter that expects a Future
       if (_isPassedToFutureParameter(node)) return;
-
-      // TODO: Add support for detecting assignments to Future-typed variables
-      // if (_isAssignedToFutureVariable(node)) return;
 
       // Check if the function returns a Future
       final element = node.element;
@@ -143,15 +137,6 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
     return name == 'Future' || name == 'FutureOr';
   }
 
-  bool _isFutureTypeByName(DartType type) {
-    // Alternative check using display string
-    final typeStr = type.getDisplayString();
-    return typeStr.startsWith('Future<') ||
-        typeStr.startsWith('FutureOr<') ||
-        typeStr == 'Future' ||
-        typeStr == 'FutureOr';
-  }
-
   bool _isPassedToFutureParameter(AstNode node) {
     final parent = node.parent;
 
@@ -214,57 +199,6 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
           }
         }
       }
-    }
-
-    return false;
-  }
-
-  bool _isAssignedToFutureVariable(AstNode node) {
-    // Traverse up the tree to find assignment or variable declaration
-    AstNode? current = node.parent;
-    int depth = 0;
-    const maxDepth = 5; // Limit traversal depth
-
-    while (current != null && depth < maxDepth) {
-      // Check if we found an assignment expression
-      if (current is AssignmentExpression) {
-        final leftType = current.leftHandSide.staticType;
-        if (leftType != null) {
-          if (_isFutureTypeByName(leftType)) {
-            return true;
-          }
-        }
-        // If we found an assignment but it's not to a Future, stop here
-        return false;
-      }
-
-      // Check if we found a variable declaration
-      if (current is VariableDeclaration) {
-        // Try multiple ways to get the type
-        final element = current.declaredFragment?.element;
-        if (element != null) {
-          if (_isFutureTypeByName(element.type)) {
-            return true;
-          }
-        }
-        // Also check initializer static type as fallback
-        final initType = current.initializer?.staticType;
-        if (initType != null && _isFutureTypeByName(initType)) {
-          return true;
-        }
-        // If we found a variable declaration but it's not a Future, stop here
-        return false;
-      }
-
-      // Stop if we reach certain boundaries
-      if (current is FunctionDeclaration ||
-          current is MethodDeclaration ||
-          current is FunctionExpression) {
-        break;
-      }
-
-      current = current.parent;
-      depth++;
     }
 
     return false;
