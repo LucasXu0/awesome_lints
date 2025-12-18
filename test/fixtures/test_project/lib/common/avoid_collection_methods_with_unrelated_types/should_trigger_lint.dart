@@ -9,6 +9,10 @@ void test() {
   // expect_lint: avoid_collection_methods_with_unrelated_types
   final contains1 = intList.contains('not an int');
 
+  // Case 2: List<int>.indexOf with String argument
+  // expect_lint: avoid_collection_methods_with_unrelated_types
+  final index1 = intList.indexOf('not an int');
+
   // Case 4: Set<String>.contains with int argument
   // expect_lint: avoid_collection_methods_with_unrelated_types
   final contains2 = stringSet.contains(42);

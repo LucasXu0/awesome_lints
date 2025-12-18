@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code, unused_local_variable
+
 const _another = 10;
 
 abstract final class Some {

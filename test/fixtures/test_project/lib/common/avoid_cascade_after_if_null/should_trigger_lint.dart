@@ -8,7 +8,6 @@ void fn() {
   Cow? nullableCow;
 
   // expect_lint: avoid_cascade_after_if_null
-  // ignore: unused_local_variable
-  final cow = nullableCow ?? Cow()
+  final cow = nullableCow ?? Cow() // ignore: unused_local_variable
     ..moo();
 }

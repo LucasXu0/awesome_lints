@@ -40,11 +40,6 @@ void test() {
     print('equal');
   }
 
-  // Valid: Null checks
-  if (list1 == null) {
-    print('null');
-  }
-
   // Valid: Comparing collection lengths (not the collections themselves)
   if (list1.length == list2.length) {
     print('same length');

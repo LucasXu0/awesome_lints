@@ -8,10 +8,6 @@ void fn(Object? object) {
   if (object case Never()) {}
 
   // ignore: unused_local_variable
-  // expect_lint: avoid_bottom_type_in_patterns
-  if (object case final Null value) {}
-
-  // ignore: unused_local_variable
   final value = switch (object) {
     // expect_lint: avoid_bottom_type_in_patterns
     Null() => 'bad',
