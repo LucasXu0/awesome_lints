@@ -28,6 +28,7 @@ void badExamples() {
   final duplicateSet = {
     'a',
     'b',
+    // ignore_for_file: equal_elements_in_set
     // expect_lint: avoid_duplicate_collection_elements
     'a',
   };

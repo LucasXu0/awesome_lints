@@ -18,8 +18,10 @@ class Example {
 
 void examples() {
   // Would be flagged if fully implemented
+  // ignore: unused_local_variable, deprecated_member_use_from_same_package
   final instance = SomeClass();
 
   final example = Example();
+  // ignore: deprecated_member_use_from_same_package
   example.oldMethod();
 }

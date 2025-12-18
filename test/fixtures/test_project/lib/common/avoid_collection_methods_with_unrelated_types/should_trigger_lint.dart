@@ -11,7 +11,7 @@ void test() {
 
   // Case 2: List<int>.indexOf with String argument
   // expect_lint: avoid_collection_methods_with_unrelated_types
-  final index1 = intList.indexOf('not an int');
+  final index1 = intList.indexOf('not an int'); // ignore: argument_type_not_assignable
 
   // Case 4: Set<String>.contains with int argument
   // expect_lint: avoid_collection_methods_with_unrelated_types

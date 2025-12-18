@@ -24,16 +24,14 @@ void test() {
   var i = 0;
   do {
     i++;
-  // expect_lint: avoid_assignments_as_conditions
+    // expect_lint: avoid_assignments_as_conditions
   } while (flag = i < 5);
 
-  // ignore: unused_local_variable
   // expect_lint: avoid_assignments_as_conditions
-  final result = (flag = values.isEmpty) ? 'empty' : 'not empty';
+  final result = (flag = values.isEmpty) ? 'empty' : 'not empty'; // ignore: unused_local_variable
 
-  // ignore: unnecessary_null_comparison
   // expect_lint: avoid_assignments_as_conditions
-  if ((nullable ??= 'default') != null) {
+  if ((nullable ??= 'default') != null) { // ignore: unnecessary_null_comparison
     print(nullable);
   }
 }
