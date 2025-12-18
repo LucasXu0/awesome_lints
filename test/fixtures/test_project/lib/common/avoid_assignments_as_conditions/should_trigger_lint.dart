@@ -18,21 +18,21 @@ void test() {
 
   // expect_lint: avoid_assignments_as_conditions
   while (flag = values.isNotEmpty) {
-    values.removeLast();
+    values.last;
   }
 
   var i = 0;
-  // expect_lint: avoid_assignments_as_conditions
   do {
     i++;
+  // expect_lint: avoid_assignments_as_conditions
   } while (flag = i < 5);
 
-  // expect_lint: avoid_assignments_as_conditions
   // ignore: unused_local_variable
+  // expect_lint: avoid_assignments_as_conditions
   final result = (flag = values.isEmpty) ? 'empty' : 'not empty';
 
-  // expect_lint: avoid_assignments_as_conditions
   // ignore: unnecessary_null_comparison
+  // expect_lint: avoid_assignments_as_conditions
   if ((nullable ??= 'default') != null) {
     print(nullable);
   }

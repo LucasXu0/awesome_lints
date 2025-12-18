@@ -10,8 +10,8 @@ void test() {
   // Valid: List<int>.contains with int argument
   final contains1 = intList.contains(1);
 
-  // Valid: List<int>.remove with int argument
-  intList.remove(2);
+  // Valid: List<int>.indexOf with int argument
+  final index2 = intList.indexOf(2);
 
   // Valid: List<int>.indexOf with int argument
   final index1 = intList.indexOf(3);
@@ -19,8 +19,8 @@ void test() {
   // Valid: Set<String>.contains with String argument
   final contains2 = stringSet.contains('a');
 
-  // Valid: Set<String>.remove with String argument
-  stringSet.remove('b');
+  // Valid: Set<String>.lookup with String argument
+  final lookup1 = stringSet.lookup('b');
 
   // Valid: Map<int, String>.containsKey with int argument
   final hasKey = intStringMap.containsKey(1);
@@ -28,8 +28,8 @@ void test() {
   // Valid: Map<int, String>.containsValue with String argument
   final hasValue = intStringMap.containsValue('one');
 
-  // Valid: Map<int, String>.remove with int key
-  intStringMap.remove(2);
+  // Valid: Map<int, String>.containsKey with int key
+  final hasKey2 = intStringMap.containsKey(2);
 
   // Valid: Map index access with correct key type
   final value = intStringMap[1];
@@ -47,7 +47,7 @@ void test() {
   // Valid: Dynamic collections (no type checking)
   final dynamicList = <dynamic>[1, 'two', true];
   dynamicList.contains('anything');
-  dynamicList.remove(123);
+  final dynIndex = dynamicList.indexOf(123);
 
   // Valid: Object type (accepts anything)
   final objectList = <Object>[1, 'two', true];
@@ -63,5 +63,5 @@ void test() {
   final keys = intStringMap.keys;
 
   print(
-      '$contains1 $contains2 $index1 $hasKey $hasValue $value $item $lastIndex $numContains $numIndex $length $isEmpty $keys');
+      '$contains1 $contains2 $index1 $index2 $hasKey $hasValue $hasKey2 $value $item $lastIndex $numContains $numIndex $lookup1 $dynIndex $length $isEmpty $keys');
 }

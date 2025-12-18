@@ -47,7 +47,7 @@ void test() {
 
   // Valid: While loop with method call
   while (items.isEmpty) {
-    items.add(1);
+    items.first;
   }
 
   // Valid: While loop with equality check
