@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -23,16 +22,20 @@ class AvoidCastingToExtensionType extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addAsExpression((node) {
-      final type = node.type;
+      final typeAnnotation = node.type;
 
-      // Check if the type is a NamedType
-      if (type is! NamedType) return;
+      // Check if the type annotation is a NamedType
+      if (typeAnnotation is! NamedType) return;
 
-      // Get the element for the type
-      final element = type.element2;
+      // Get the actual DartType from the type annotation
+      final dartType = typeAnnotation.type;
+      if (dartType == null) return;
 
-      // Check if the element kind is an extension type
-      if (element?.kind == ElementKind.EXTENSION_TYPE) {
+      // Check if it's an extension type by comparing with its erasure
+      // Extension types have a different type than their erasure
+      final erasure = dartType.extensionTypeErasure;
+      if (dartType != erasure) {
+        // This is an extension type
         reporter.atNode(
           node,
           _code,

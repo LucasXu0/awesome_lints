@@ -25,10 +25,14 @@ class AvoidDuplicateCollectionElements extends DartLintRule {
     });
 
     context.registry.addSetOrMapLiteral((node) {
-      if (node.isSet) {
-        _checkDuplicates(node.elements, reporter);
-      } else if (node.isMap) {
+      // Check if it's a map by looking for MapLiteralEntry elements
+      final hasMapEntry = node.elements.any((e) => e is MapLiteralEntry);
+
+      if (hasMapEntry || node.isMap) {
         _checkMapDuplicates(node.elements, reporter);
+      } else {
+        // If no map entries, treat it as a set (even if isSet is false due to lack of type resolution)
+        _checkDuplicates(node.elements, reporter);
       }
     });
   }
@@ -63,7 +67,15 @@ class AvoidDuplicateCollectionElements extends DartLintRule {
     while (parent != null) {
       // Check if we're inside a function expression (lambda/callback)
       if (parent is FunctionExpression) {
-        return true;
+        // Need to distinguish between regular function declarations
+        // and anonymous functions/callbacks
+        final grandparent = parent.parent;
+        // If the parent is a FunctionDeclaration or MethodDeclaration,
+        // this is a regular function, not a callback
+        if (grandparent is! FunctionDeclaration &&
+            grandparent is! MethodDeclaration) {
+          return true;
+        }
       }
       parent = parent.parent;
     }
@@ -97,17 +109,23 @@ class AvoidDuplicateCollectionElements extends DartLintRule {
     // Handle spread operators
     if (element is SpreadElement) {
       final expr = element.expression;
-      if (expr is SimpleIdentifier) {
-        return 'spread:${expr.name}';
-      }
-      return 'spread:${_getExpressionKey(expr)}';
+      final exprKey = expr is SimpleIdentifier
+          ? 'id:${expr.name}'
+          : _getExpressionKey(expr);
+      if (exprKey == null) return null;
+      return 'spread:$exprKey';
     }
 
     // Handle if elements
     if (element is IfElement) {
-      final condition = _getExpressionKey(element.expression);
-      final thenKey = _getElementKey(element.thenElement);
-      return 'if:$condition:$thenKey';
+      final expression = element.expression;
+      final thenElement = element.thenElement;
+      final exprKey = _getExpressionKey(expression);
+      final thenKey = _getElementKey(thenElement);
+      if (exprKey == null || thenKey == null) {
+        return null;
+      }
+      return 'if:$exprKey:$thenKey';
     }
 
     // Handle regular expressions
@@ -118,12 +136,17 @@ class AvoidDuplicateCollectionElements extends DartLintRule {
     return null;
   }
 
-  String? _getExpressionKey(Expression expr) {
+  String? _getExpressionKey(Expression? expr) {
+    if (expr == null) return null;
+
     if (expr is IntegerLiteral) {
       return 'int:${expr.value}';
     }
     if (expr is StringLiteral) {
       return 'string:"${expr.stringValue}"';
+    }
+    if (expr is DoubleLiteral) {
+      return 'double:${expr.value}';
     }
     if (expr is BooleanLiteral) {
       return 'bool:${expr.value}';
@@ -135,7 +158,14 @@ class AvoidDuplicateCollectionElements extends DartLintRule {
       return 'id:${expr.name}';
     }
     if (expr is PrefixedIdentifier) {
-      return 'id:${expr.identifier.name}';
+      return 'id:${expr.prefix.name}.${expr.identifier.name}';
+    }
+    if (expr is PropertyAccess) {
+      // Handle property access like list.isNotEmpty
+      final target = expr.target;
+      final property = expr.propertyName.name;
+      final targetKey = target != null ? _getExpressionKey(target) : 'null';
+      return 'prop:$targetKey.$property';
     }
     // For complex expressions, generate a unique representation
     return 'expr:${expr.toString()}';

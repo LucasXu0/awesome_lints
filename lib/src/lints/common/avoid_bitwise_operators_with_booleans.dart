@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
@@ -15,6 +16,29 @@ class AvoidBitwiseOperatorsWithBooleans extends DartLintRule {
     errorSeverity: analyzer_error.ErrorSeverity.WARNING,
   );
 
+  bool _isBooleanExpression(Expression? expr) {
+    if (expr == null) return false;
+
+    // Unwrap parenthesized expressions
+    var unwrapped = expr;
+    while (unwrapped is ParenthesizedExpression) {
+      unwrapped = unwrapped.expression;
+    }
+
+    // Check if it's a boolean literal first (more reliable)
+    if (unwrapped is BooleanLiteral) {
+      return true;
+    }
+
+    // Then check if the static type is bool
+    final type = unwrapped.staticType;
+    if (type != null && type.isDartCoreBool) {
+      return true;
+    }
+
+    return false;
+  }
+
   @override
   void run(
     CustomLintResolver resolver,
@@ -28,12 +52,9 @@ class AvoidBitwiseOperatorsWithBooleans extends DartLintRule {
 
       if (!isBitwiseOperator) return;
 
-      // Check if either operand is a boolean type
-      final leftType = node.leftOperand.staticType;
-      final rightType = node.rightOperand.staticType;
-
-      final isLeftBoolean = leftType?.isDartCoreBool ?? false;
-      final isRightBoolean = rightType?.isDartCoreBool ?? false;
+      // Check if either operand is a boolean expression
+      final isLeftBoolean = _isBooleanExpression(node.leftOperand);
+      final isRightBoolean = _isBooleanExpression(node.rightOperand);
 
       if (isLeftBoolean || isRightBoolean) {
         reporter.atNode(

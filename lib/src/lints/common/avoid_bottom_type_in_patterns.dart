@@ -33,6 +33,13 @@ class AvoidBottomTypeInPatterns extends DartLintRule {
         _checkTypeAnnotation(type, reporter);
       }
     });
+
+    context.registry.addDeclaredVariablePattern((node) {
+      final type = node.type;
+      if (type != null) {
+        _checkTypeAnnotation(type, reporter);
+      }
+    });
   }
 
   void _checkTypeAnnotation(TypeAnnotation type, ErrorReporter reporter) {

@@ -18,25 +18,28 @@ class AvoidCommentedOutCode extends DartLintRule {
   // Patterns that indicate code rather than regular comments
   // Made more conservative to avoid false positives
   static final _codePatterns = [
-    // Variable declarations with assignment
-    RegExp(
-        r'^\s*//\s*(void|int|String|double|bool|var|final|const)\s+\w+\s*='),
+    // Variable declarations with assignment (may have explicit type)
+    RegExp(r'^\s*//\s*(var|final|const)\s+(\w+\s+)?\w+\s*='),
+    // Variable declarations with explicit type and assignment
+    RegExp(r'^\s*//\s*(int|String|double|bool|List|Map|Set)\s+\w+\s*='),
+    // Function declarations with return type and body
+    RegExp(r'^\s*//\s*(void|int|String|double|bool|Future|Stream)\s+\w+\s*\('),
     // Class/enum/typedef declarations
     RegExp(r'^\s*//\s*(class|enum|typedef|extension)\s+\w+\s*[{<]'),
-    // Function declarations with body
+    // Function declarations with body (without return type)
     RegExp(r'^\s*//\s*\w+\s*\([^)]*\)\s*\{'),
     // Control flow statements
     RegExp(r'^\s*//\s*(if|for|while|switch|try)\s*\('),
-    // Return/throw statements
-    RegExp(r'^\s*//\s*(return|throw)\s+'),
+    // Return/throw statements (with or without space before parenthesis)
+    RegExp(r'^\s*//\s*(return|throw)[\s(]'),
     // Assignments (must have = and value)
     RegExp(r'^\s*//\s*[\w.]+\s*=\s*\w+'),
-    // Method calls with semicolon
-    RegExp(r'^\s*//\s*[\w.]+\.\w+\([^)]*\);'),
+    // Method/function calls with semicolon (with or without dot)
+    RegExp(r'^\s*//\s*[\w.]+\([^)]*\);'),
     // Import/export statements
     RegExp(r'^\s*//\s*(import|export)\s+[' "'" r'"]'),
-    // Annotations
-    RegExp(r'^\s*//\s*@\w+\('),
+    // Annotations (with or without parentheses)
+    RegExp(r'^\s*//\s*@\w+'),
     // Closing braces (only standalone)
     RegExp(r'^\s*//\s*}\s*$'),
   ];

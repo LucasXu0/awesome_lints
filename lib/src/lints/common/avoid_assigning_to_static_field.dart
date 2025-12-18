@@ -22,25 +22,20 @@ class AvoidAssigningToStaticField extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addAssignmentExpression((node) {
-      _checkAssignment(node, node.leftHandSide, reporter);
+      _checkAssignmentExpression(node, reporter);
     });
 
     context.registry.addPostfixExpression((node) {
-      if (node.operand is SimpleIdentifier) {
-        _checkAssignment(node, node.operand as SimpleIdentifier, reporter);
-      }
+      _checkCompoundAssignment(node, node.operand, reporter);
     });
 
     context.registry.addPrefixExpression((node) {
-      if (node.operand is SimpleIdentifier) {
-        _checkAssignment(node, node.operand as SimpleIdentifier, reporter);
-      }
+      _checkCompoundAssignment(node, node.operand, reporter);
     });
   }
 
-  void _checkAssignment(
-    AstNode node,
-    Expression leftHandSide,
+  void _checkAssignmentExpression(
+    AssignmentExpression node,
     ErrorReporter reporter,
   ) {
     // Check if we're in an instance method (not static)
@@ -48,29 +43,41 @@ class AvoidAssigningToStaticField extends DartLintRule {
       return;
     }
 
-    // Check if the assignment target is a static field
-    bool isStaticField = false;
+    // For AssignmentExpression, use writeElement2 to get the element being assigned to
+    final element = node.writeElement2;
 
-    if (leftHandSide is SimpleIdentifier) {
-      final element = leftHandSide.element;
-      isStaticField = _isStaticField(element);
-    } else if (leftHandSide is PrefixedIdentifier) {
-      final element = leftHandSide.identifier.element;
-      isStaticField = _isStaticField(element);
-    } else if (leftHandSide is PropertyAccess) {
-      final element = leftHandSide.propertyName.element;
-      isStaticField = _isStaticField(element);
-    }
-
-    if (isStaticField) {
+    if (element != null && _isStaticField(element)) {
       reporter.atNode(
-        leftHandSide,
+        node.leftHandSide,
         _code,
       );
     }
   }
 
-  bool _isStaticField(Element2? element) {
+  void _checkCompoundAssignment(
+    AstNode node,
+    Expression operand,
+    ErrorReporter reporter,
+  ) {
+    // Check if we're in an instance method (not static)
+    if (!_isInInstanceMethod(node)) {
+      return;
+    }
+
+    // For PrefixExpression and PostfixExpression, they implement CompoundAssignmentExpression
+    if (node is CompoundAssignmentExpression) {
+      final element = node.writeElement2;
+
+      if (element != null && _isStaticField(element)) {
+        reporter.atNode(
+          operand,
+          _code,
+        );
+      }
+    }
+  }
+
+  bool _isStaticField(Element2 element) {
     if (element is PropertyAccessorElement2) {
       final variable = element.variable3;
       return variable != null && variable.isStatic;
