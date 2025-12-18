@@ -74,15 +74,17 @@ class MyWidget4 extends StatefulWidget {
 }
 
 class _MyWidget4State extends State<MyWidget4> {
+  int _counter = 0;
+
   @override
   void activate() {
     super.activate(); // Correct: super is first
-    final x = 1; // Code after super is fine
+    _counter++; // Use state
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Text('$_counter');
   }
 }
 
@@ -147,7 +149,7 @@ class _MyWidget7State extends State<MyWidget7> {
   }
 }
 
-// Case 8: Only super call in lifecycle method - should NOT trigger
+// Case 8: Widget with state usage - should NOT trigger
 class MyWidget8 extends StatefulWidget {
   const MyWidget8({super.key});
 
@@ -156,18 +158,16 @@ class MyWidget8 extends StatefulWidget {
 }
 
 class _MyWidget8State extends State<MyWidget8> {
-  @override
-  void initState() {
-    super.initState(); // Only statement - technically first
-  }
+  int _value = 0;
 
-  @override
-  void dispose() {
-    super.dispose(); // Only statement - technically last
+  void _increment() {
+    setState(() {
+      _value++;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Text('$_value');
   }
 }

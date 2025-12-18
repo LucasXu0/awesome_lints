@@ -9,6 +9,7 @@ class ShouldTriggerLint extends StatefulWidget {
   State<ShouldTriggerLint> createState() => _ShouldTriggerLintState();
 }
 
+// expect_lint: avoid_unnecessary_stateful_widgets
 class _ShouldTriggerLintState extends State<ShouldTriggerLint> {
   Future<String> getValue() async {
     return 'value';

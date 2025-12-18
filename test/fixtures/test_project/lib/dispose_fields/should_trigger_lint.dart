@@ -52,6 +52,7 @@ class _MyWidget3State extends State<MyWidget3> {
   // expect_lint: dispose_fields
   final TextEditingController _controller = TextEditingController();
 
+  // expect_lint: avoid_unnecessary_overrides_in_state
   @override
   void dispose() {
     // Field not disposed
