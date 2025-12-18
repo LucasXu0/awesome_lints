@@ -18,6 +18,7 @@ class _ShouldNotTriggerLintState extends State<ShouldNotTriggerLint> {
   void initState() {
     super.initState();
     // Properly initialize the future in initState
+    // ignore: avoid_async_call_in_sync_function
     _myFuture = _fetchData();
   }
 

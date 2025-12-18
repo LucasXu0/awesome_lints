@@ -33,6 +33,12 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
       // Skip if wrapped in unawaited() or .ignore()
       if (_isHandled(node)) return;
 
+      // Skip if passed to a parameter that expects a Future
+      if (_isPassedToFutureParameter(node)) return;
+
+      // TODO: Add support for detecting assignments to Future-typed variables
+      // if (_isAssignedToFutureVariable(node)) return;
+
       // Check if the invoked method is async
       final element = node.methodName.element;
       if (element is ExecutableElement2) {
@@ -55,6 +61,12 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
 
       // Skip if wrapped in unawaited() or .ignore()
       if (_isHandled(node)) return;
+
+      // Skip if passed to a parameter that expects a Future
+      if (_isPassedToFutureParameter(node)) return;
+
+      // TODO: Add support for detecting assignments to Future-typed variables
+      // if (_isAssignedToFutureVariable(node)) return;
 
       // Check if the function returns a Future
       final element = node.element;
@@ -127,6 +139,134 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
     if (element == null) return false;
 
     // Check if it's a Future or FutureOr
-    return element.displayName == 'Future' || element.displayName == 'FutureOr';
+    final name = element.displayName;
+    return name == 'Future' || name == 'FutureOr';
+  }
+
+  bool _isFutureTypeByName(DartType type) {
+    // Alternative check using display string
+    final typeStr = type.getDisplayString();
+    return typeStr.startsWith('Future<') ||
+        typeStr.startsWith('FutureOr<') ||
+        typeStr == 'Future' ||
+        typeStr == 'FutureOr';
+  }
+
+  bool _isPassedToFutureParameter(AstNode node) {
+    final parent = node.parent;
+
+    // Check if this is a named argument
+    if (parent is NamedExpression) {
+      final argumentList = parent.parent;
+      if (argumentList is ArgumentList) {
+        final invocation = argumentList.parent;
+
+        // Get the parameter element for this named argument
+        if (invocation is InstanceCreationExpression) {
+          final constructor = invocation.constructorName.element;
+          if (constructor is ConstructorElement2) {
+            try {
+              final parameter = constructor.formalParameters.firstWhere(
+                (p) => p.name3 == parent.name.label.name,
+              );
+              return _isFutureType(parameter.type);
+            } catch (_) {
+              // Parameter not found
+              return false;
+            }
+          }
+        } else if (invocation is MethodInvocation) {
+          final method = invocation.methodName.element;
+          if (method is ExecutableElement2) {
+            try {
+              final parameter = method.formalParameters.firstWhere(
+                (p) => p.name3 == parent.name.label.name,
+              );
+              return _isFutureType(parameter.type);
+            } catch (_) {
+              // Parameter not found
+              return false;
+            }
+          }
+        }
+      }
+    }
+
+    // Check if this is a positional argument
+    if (parent is ArgumentList) {
+      final invocation = parent.parent;
+      final index = parent.arguments.indexOf(node as Expression);
+
+      if (index >= 0) {
+        if (invocation is InstanceCreationExpression) {
+          final constructor = invocation.constructorName.element;
+          if (constructor is ConstructorElement2) {
+            if (index < constructor.formalParameters.length) {
+              return _isFutureType(constructor.formalParameters[index].type);
+            }
+          }
+        } else if (invocation is MethodInvocation) {
+          final method = invocation.methodName.element;
+          if (method is ExecutableElement2) {
+            if (index < method.formalParameters.length) {
+              return _isFutureType(method.formalParameters[index].type);
+            }
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+
+  bool _isAssignedToFutureVariable(AstNode node) {
+    // Traverse up the tree to find assignment or variable declaration
+    AstNode? current = node.parent;
+    int depth = 0;
+    const maxDepth = 5; // Limit traversal depth
+
+    while (current != null && depth < maxDepth) {
+      // Check if we found an assignment expression
+      if (current is AssignmentExpression) {
+        final leftType = current.leftHandSide.staticType;
+        if (leftType != null) {
+          if (_isFutureTypeByName(leftType)) {
+            return true;
+          }
+        }
+        // If we found an assignment but it's not to a Future, stop here
+        return false;
+      }
+
+      // Check if we found a variable declaration
+      if (current is VariableDeclaration) {
+        // Try multiple ways to get the type
+        final element = current.declaredFragment?.element;
+        if (element != null) {
+          if (_isFutureTypeByName(element.type)) {
+            return true;
+          }
+        }
+        // Also check initializer static type as fallback
+        final initType = current.initializer?.staticType;
+        if (initType != null && _isFutureTypeByName(initType)) {
+          return true;
+        }
+        // If we found a variable declaration but it's not a Future, stop here
+        return false;
+      }
+
+      // Stop if we reach certain boundaries
+      if (current is FunctionDeclaration ||
+          current is MethodDeclaration ||
+          current is FunctionExpression) {
+        break;
+      }
+
+      current = current.parent;
+      depth++;
+    }
+
+    return false;
   }
 }
