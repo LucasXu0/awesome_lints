@@ -38,7 +38,4 @@ void notTrigger() {
       Text('b'),
     ],
   );
-
-  // List.generate is acceptable when used appropriately in other contexts
-  final widgets = List.generate(5, (index) => Text('$index'));
 }
