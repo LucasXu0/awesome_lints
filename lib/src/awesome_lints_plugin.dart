@@ -1,5 +1,6 @@
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+import 'lints/common/common.dart';
 import 'lints/flutter/flutter.dart';
 
 PluginBase createPlugin() => _AwesomeLints();
@@ -7,7 +8,24 @@ PluginBase createPlugin() => _AwesomeLints();
 class _AwesomeLints extends PluginBase {
   @override
   List<LintRule> getLintRules(CustomLintConfigs configs) =>
-      [...flutterLintRules];
+      [...commonLintRules, ...flutterLintRules];
+
+  List<LintRule> commonLintRules = [
+    ArgumentsOrdering(),
+    AvoidAccessingCollectionsByConstantIndex(),
+    AvoidAccessingOtherClassesPrivateMembers(),
+    AvoidAdjacentStrings(),
+    AvoidAlwaysNullParameters(),
+    AvoidAssigningToStaticField(),
+    AvoidAssignmentsAsConditions(),
+    AvoidAsyncCallInSyncFunction(),
+    AvoidBarrelFiles(),
+    AvoidBitwiseOperatorsWithBooleans(),
+    AvoidBottomTypeInPatterns(),
+    AvoidBottomTypeInRecords(),
+    AvoidCascadeAfterIfNull(),
+    AvoidCastingToExtensionType(),
+  ];
 
   List<LintRule> flutterLintRules = [
     AvoidEmptySetstate(),
