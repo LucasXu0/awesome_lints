@@ -34,6 +34,7 @@ void main() {
   );
 
   // Container without constraints - should not trigger
+  // ignore: prefer_padding_over_container
   Container(
     padding: const EdgeInsets.all(8),
     child: const Text('Hello'),

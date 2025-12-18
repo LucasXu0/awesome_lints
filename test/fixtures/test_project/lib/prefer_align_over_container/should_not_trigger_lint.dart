@@ -8,6 +8,7 @@ void notTrigger() {
     child: Text('Hello'),
   );
 
+  // ignore: prefer_center_over_align
   Container(
     alignment: Alignment.center,
     padding: EdgeInsets.all(8),
@@ -27,6 +28,7 @@ void notTrigger() {
   );
 
   // Container without alignment
+  // ignore: prefer_padding_over_container
   Container(
     padding: EdgeInsets.all(8),
     child: Text('Baz'),
