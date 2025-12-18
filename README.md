@@ -4,6 +4,45 @@ Custom lint rules for Flutter applications using the `custom_lint` package.
 
 ## Available Lints
 
+### avoid-late-context
+
+Warns when `context` is accessed in `late` field initializers in `State` classes.
+
+**Why?** Using `context` in late field initializers can result in unexpected behavior. Late fields are initialized lazily (when first accessed), not during object construction, so the context may not be available or valid at initialization time.
+
+**Bad:**
+```dart
+class _MyWidgetState extends State<MyWidget> {
+  late final _theme = Theme.of(context);
+  late final _mediaQuery = MediaQuery.of(context);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+```
+
+**Good:**
+```dart
+class _MyWidgetState extends State<MyWidget> {
+  late final ThemeData _theme;
+  late final MediaQueryData _mediaQuery;
+
+  @override
+  void initState() {
+    super.initState();
+    _theme = Theme.of(context);
+    _mediaQuery = MediaQuery.of(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+```
+
 ### avoid-mounted-in-setstate
 
 Detects when `mounted` checks occur inside `setState` callbacks. The mounted check should be before the `setState` call, not inside it.
@@ -26,6 +65,40 @@ if (mounted) {
     // Update state
   });
 }
+```
+
+### avoid-missing-controller
+
+Warns when `TextField`, `TextFormField`, or `EditableText` widgets lack adequate mechanisms for tracking user input changes.
+
+**Why?** Without a controller or change callback, widget state fails to update when users modify the field, potentially causing the UI to become out of sync with user input. Text input widgets should include either a `TextEditingController` or an `onChanged`/`onSaved` callback to properly manage input state.
+
+**Bad:**
+```dart
+TextField();
+
+TextFormField(
+  decoration: InputDecoration(labelText: 'Name'),
+);
+```
+
+**Good:**
+```dart
+TextField(
+  controller: TextEditingController(),
+);
+
+TextFormField(
+  onChanged: (value) {
+    // Handle input change
+  },
+);
+
+TextFormField(
+  onSaved: (value) {
+    // Save the value
+  },
+);
 ```
 
 ### avoid-single-child-column-or-row
@@ -276,6 +349,89 @@ Row(
   ],
 )
 ```
+
+### prefer-padding-over-container
+
+Recommends using `Padding` instead of `Container` when only padding or margin is needed.
+
+**Why?** Using `Padding` when you only need padding functionality is clearer and more semantically appropriate than using `Container`. The `Container` widget is a heavyweight component designed for multiple purposes. When only padding is needed, `Padding` is the appropriate lightweight alternative that communicates intent more effectively.
+
+**Bad:**
+```dart
+Container(
+  padding: EdgeInsets.all(8),
+  child: Text('Hello'),
+);
+
+Container(
+  margin: EdgeInsets.all(16),
+  child: Text('World'),
+);
+```
+
+**Good:**
+```dart
+Padding(
+  padding: EdgeInsets.all(8),
+  child: Text('Hello'),
+);
+
+// Container is acceptable when other properties are present
+Container(
+  padding: EdgeInsets.all(8),
+  color: Colors.blue,
+  child: Text('World'),
+);
+```
+
+### prefer-spacing
+
+Recommends using the `spacing` parameter in `Row`, `Column`, and `Flex` widgets instead of inserting `SizedBox` widgets for spacing.
+
+**Why?** Flutter 3.27+ provides a built-in `spacing` parameter that offers a cleaner, more maintainable way to add gaps between children. Using `SizedBox` for spacing creates unnecessary widget instances and adds visual clutter to the code.
+
+**Bad:**
+```dart
+Column(
+  children: [
+    Text('First'),
+    SizedBox(height: 10),
+    Text('Second'),
+    SizedBox(height: 10),
+    Text('Third'),
+  ],
+)
+
+Row(
+  children: [
+    Icon(Icons.star),
+    SizedBox(width: 8),
+    Text('Rating'),
+  ],
+)
+```
+
+**Good:**
+```dart
+Column(
+  spacing: 10,
+  children: [
+    Text('First'),
+    Text('Second'),
+    Text('Third'),
+  ],
+)
+
+Row(
+  spacing: 8,
+  children: [
+    Icon(Icons.star),
+    Text('Rating'),
+  ],
+)
+```
+
+**Note:** This lint requires Flutter 3.27 or later. The `spacing` parameter is only available in these versions.
 
 ## Installation
 

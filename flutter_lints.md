@@ -6,6 +6,7 @@ This document lists the Flutter lints supported and not supported by awesome_lin
 
 ### Flutter
 - `avoid-empty-setstate`
+- `avoid-missing-controller`
 - `avoid-mounted-in-setstate`
 - `avoid-single-child-column-or-row`
 - `avoid-stateless-widget-initialized-fields`
@@ -26,6 +27,7 @@ This document lists the Flutter lints supported and not supported by awesome_lin
 - `prefer-container`
 - `prefer-dedicated-media-query-methods`
 - `prefer-for-loop-in-children`
+- `prefer-padding-over-container`
 - `prefer-single-setstate`
 - `prefer-sized-box-square`
 - `prefer-sliver-prefix`
@@ -44,14 +46,10 @@ The following Flutter lints are currently not supported:
 - `add-copy-with`
 - `avoid-flexible-outside-flex`
 - `avoid-incomplete-copy-with`
-- `avoid-incorrect-image-opacity`
 - `avoid-inherited-widget-in-initstate`
 - `avoid-late-context`
-- `avoid-missing-controller`
-- `avoid-missing-image-alt`
 - `avoid-recursive-widget-calls`
 - `avoid-state-constructors`
-- `prefer-padding-over-container`
 - `prefer-spacing`
 - `prefer-transform-over-container`
 - `use-closest-build-context`
