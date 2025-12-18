@@ -10,3 +10,4 @@ custom_lint:
     - avoid_unnecessary_gesture_detector
     - avoid_unnecessary_stateful_widgets
     - avoid_wrapping_in_padding
+    - prefer_compute_over_isolate_run

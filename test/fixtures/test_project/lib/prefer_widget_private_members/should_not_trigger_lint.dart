@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// ignore_for_file: unused_element, unused_field
+// ignore_for_file: unused_element, unused_field, avoid_unnecessary_stateful_widgets
 
 // Case 1: Private method in State class - should NOT trigger
 class MyWidget1 extends StatefulWidget {
@@ -47,31 +47,37 @@ class MyWidget3 extends StatefulWidget {
 }
 
 class _MyWidget3State extends State<MyWidget3> {
+  // ignore: avoid_unnecessary_overrides_in_state
   @override
   void initState() {
     super.initState();
   }
 
+  // ignore: avoid_unnecessary_overrides_in_state
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
 
+  // ignore: avoid_unnecessary_overrides_in_state
   @override
   void didUpdateWidget(MyWidget3 oldWidget) {
     super.didUpdateWidget(oldWidget);
   }
 
+  // ignore: avoid_unnecessary_overrides_in_state
   @override
   void reassemble() {
     super.reassemble();
   }
 
+  // ignore: avoid_unnecessary_overrides_in_state
   @override
   void deactivate() {
     super.deactivate();
   }
 
+  // ignore: avoid_unnecessary_overrides_in_state
   @override
   void dispose() {
     super.dispose();
@@ -111,6 +117,7 @@ class MyWidget5 extends StatefulWidget {
 
 // Custom base state class
 abstract class BaseState<T extends StatefulWidget> extends State<T> {
+  // ignore: prefer_widget_private_members
   void customLifecycle() {}
 }
 

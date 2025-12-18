@@ -1,5 +1,7 @@
 import 'dart:async';
 
+// ignore_for_file: unnecessary_non_null_assertion
+
 import 'package:flutter/material.dart';
 
 // ignore_for_file: unused_field
@@ -199,9 +201,9 @@ class _MyWidget8State extends State<MyWidget8> {
 
 // Case 9: StatelessWidget - should NOT trigger (not a State class)
 class MyWidget9 extends StatelessWidget {
-   MyWidget9({super.key});
+  MyWidget9({super.key});
 
-  final TextEditingController controller =  TextEditingController();
+  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

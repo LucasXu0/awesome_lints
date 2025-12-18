@@ -27,9 +27,9 @@ class ShouldTriggerLint extends StatelessWidget {
     // expect_lint: prefer_dedicated_media_query_methods
     final brightness1 = MediaQuery.of(context).platformBrightness;
 
-    // Case 6: MediaQuery.maybeOf() used to get textScaleFactor - should trigger
+    // Case 6: MediaQuery.maybeOf() used to get textScaler - should trigger
     // expect_lint: prefer_dedicated_media_query_methods
-    final textScale1 = MediaQuery.maybeOf(context)?.textScaleFactor;
+    final textScale1 = MediaQuery.maybeOf(context)?.textScaler;
 
     // Case 7: MediaQuery.of() used in conditional - should trigger
     // expect_lint: prefer_dedicated_media_query_methods

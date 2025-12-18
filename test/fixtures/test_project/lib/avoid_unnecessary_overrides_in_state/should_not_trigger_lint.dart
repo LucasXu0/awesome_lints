@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// ignore_for_file: unused_field
+// ignore_for_file: unused_field, must_call_super
 
 // Case 1: dispose() with additional logic - should NOT trigger
 class MyWidget1 extends StatefulWidget {

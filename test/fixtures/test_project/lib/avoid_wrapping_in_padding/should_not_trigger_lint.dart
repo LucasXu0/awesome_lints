@@ -5,7 +5,7 @@ void notTrigger() {
     padding: EdgeInsets.all(8),
     child: Text('Hello'),
   );
-  
+
   Container(
     padding: EdgeInsets.all(8),
     child: Text('Hello'),

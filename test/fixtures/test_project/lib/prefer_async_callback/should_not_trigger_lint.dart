@@ -40,7 +40,8 @@ void functionWithParameters(Future<void> Function(int) callback) {
 }
 
 // Case 7: Future<void> Function with multiple parameters (should NOT trigger)
-void functionWithMultipleParameters(Future<void> Function(String, int) callback) {
+void functionWithMultipleParameters(
+    Future<void> Function(String, int) callback) {
   callback('hello', 42);
 }
 
@@ -70,6 +71,7 @@ void functionWithNamedParams(Future<void> Function({String? name}) callback) {
 }
 
 // Case 13: Synchronous void Function() (should NOT trigger)
+// ignore: prefer_void_callback
 void synchronousCallback(void Function() callback) {
   callback();
 }

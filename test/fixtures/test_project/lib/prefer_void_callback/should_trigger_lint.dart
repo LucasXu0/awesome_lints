@@ -29,7 +29,8 @@ void genericTypes() {
   final List<
       // expect_lint: prefer_void_callback
       void Function()> callbacks = [];
-  final Map<String,
+  final Map<
+      String,
       // expect_lint: prefer_void_callback
       void Function()> callbackMap = {};
 }
@@ -51,8 +52,8 @@ typedef CallbackAlias = void Function();
 // Case 7: Constructor parameter with void Function()
 class MyWidget {
   final
-  // expect_lint: prefer_void_callback
-  void Function()? onTap;
+      // expect_lint: prefer_void_callback
+      void Function()? onTap;
 
   const MyWidget({this.onTap});
 }

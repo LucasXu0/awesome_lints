@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// ignore_for_file: unused_element, unused_field
+// ignore_for_file: unused_element, unused_field, prefer_single_setstate
 
 class ShouldNotTriggerLint extends StatefulWidget {
   const ShouldNotTriggerLint({super.key});

@@ -46,22 +46,24 @@ class PreferWidgetPrivateMembers extends DartLintRule {
     ErrorReporter reporter,
     CustomLintContext context,
   ) {
-    context.registry.addClassDeclaration((node) {
-      // Check if the class extends State, Widget, StatefulWidget, or StatelessWidget
-      final classType = _getClassType(node);
+    context.registry.addMethodDeclaration((node) {
+      final classNode = node.thisOrAncestorOfType<ClassDeclaration>();
+      if (classNode == null) return;
+
+      final classType = _getClassType(classNode);
       if (classType == null) return;
 
-      // Iterate through class members
-      for (final member in node.members) {
-        // Check methods
-        if (member is MethodDeclaration) {
-          _checkMethod(member, classType, reporter);
-        }
-        // Check fields
-        else if (member is FieldDeclaration) {
-          _checkField(member, classType, reporter);
-        }
-      }
+      _checkMethod(node, classType, reporter);
+    });
+
+    context.registry.addFieldDeclaration((node) {
+      final classNode = node.thisOrAncestorOfType<ClassDeclaration>();
+      if (classNode == null) return;
+
+      final classType = _getClassType(classNode);
+      if (classType == null) return;
+
+      _checkField(node, classType, reporter);
     });
   }
 

@@ -11,6 +11,7 @@ class ShouldTriggerLint extends StatefulWidget {
 
 // expect_lint: avoid_unnecessary_stateful_widgets
 class _ShouldTriggerLintState extends State<ShouldTriggerLint> {
+  // ignore: prefer_widget_private_members
   Future<String> getValue() async {
     return 'value';
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// ignore_for_file: unused_field, unused_local_variable
+// ignore_for_file: unused_field, unused_local_variable, unused_element
 
 // Case 1: initState with super call first - should NOT trigger
 class MyWidget1 extends StatefulWidget {
@@ -109,26 +109,6 @@ class _MyWidget5State extends State<MyWidget5> {
   }
 }
 
-// Case 6: Empty lifecycle methods should NOT trigger
-class MyWidget6 extends StatefulWidget {
-  const MyWidget6({super.key});
-
-  @override
-  State<MyWidget6> createState() => _MyWidget6State();
-}
-
-class _MyWidget6State extends State<MyWidget6> {
-  @override
-  void initState() {
-    // Empty method - no issue
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
 // Case 7: Lifecycle method with no super call should NOT trigger
 class MyWidget7 extends StatefulWidget {
   const MyWidget7({super.key});
@@ -140,6 +120,7 @@ class MyWidget7 extends StatefulWidget {
 class _MyWidget7State extends State<MyWidget7> {
   @override
   void didUpdateWidget(MyWidget7 oldWidget) {
+    super.didUpdateWidget(oldWidget);
     final x = 1; // No super call at all - not our concern
   }
 

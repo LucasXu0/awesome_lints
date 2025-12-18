@@ -56,7 +56,7 @@ void trigger() {
     ),
   );
 
-  // expect_lint: prefer_text_rich
   final span = TextSpan(text: 'Dynamic span');
+  // expect_lint: prefer_text_rich
   RichText(text: span);
 }

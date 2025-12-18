@@ -37,11 +37,11 @@ class ShouldNotTriggerLint extends StatelessWidget {
     // Case 10: MediaQuery.maybeDevicePixelRatioOf() - should NOT trigger
     final maybeDevicePixelRatio = MediaQuery.maybeDevicePixelRatioOf(context);
 
-    // Case 11: MediaQuery.textScaleFactorOf() - should NOT trigger
-    final textScale = MediaQuery.textScaleFactorOf(context);
+    // Case 11: MediaQuery.textScalerOf() - should NOT trigger
+    final textScale = MediaQuery.textScalerOf(context);
 
-    // Case 12: MediaQuery.maybeTextScaleFactorOf() - should NOT trigger
-    final maybeTextScale = MediaQuery.maybeTextScaleFactorOf(context);
+    // Case 12: MediaQuery.maybeTextScalerOf() - should NOT trigger
+    final maybeTextScale = MediaQuery.maybeTextScalerOf(context);
 
     // Case 13: MediaQuery.platformBrightnessOf() - should NOT trigger
     final brightness = MediaQuery.platformBrightnessOf(context);
@@ -86,8 +86,8 @@ class AnotherExample extends StatelessWidget {
       return Container();
     }
 
-    // Case 23: Using textScaleFactorOf in calculation - should NOT trigger
-    final fontSize = 14 * MediaQuery.textScaleFactorOf(context);
+    // Case 23: Using textScalerOf in calculation - should NOT trigger
+    final fontSize = MediaQuery.textScalerOf(context).scale(14);
 
     return Container();
   }

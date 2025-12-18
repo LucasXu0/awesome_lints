@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// ignore_for_file: unused_element, unused_field
+// ignore_for_file: unused_element, unused_field, avoid_unnecessary_stateful_widgets
 
 // Case 1: Public method in State class - should trigger
 class MyWidget1 extends StatefulWidget {
