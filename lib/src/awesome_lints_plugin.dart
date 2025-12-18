@@ -1,6 +1,8 @@
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 import 'lints/avoid_empty_setstate.dart';
+import 'lints/avoid_late_context.dart';
+import 'lints/avoid_missing_controller.dart';
 import 'lints/avoid_mounted_in_setstate.dart';
 import 'lints/avoid_single_child_column_or_row.dart';
 import 'lints/avoid_stateless_widget_initialized_fields.dart';
@@ -21,9 +23,11 @@ import 'lints/prefer_constrained_box_over_container.dart';
 import 'lints/prefer_container.dart';
 import 'lints/prefer_dedicated_media_query_methods.dart';
 import 'lints/prefer_for_loop_in_children.dart';
+import 'lints/prefer_padding_over_container.dart';
 import 'lints/prefer_single_setstate.dart';
 import 'lints/prefer_sized_box_square.dart';
 import 'lints/prefer_sliver_prefix.dart';
+import 'lints/prefer_spacing.dart';
 import 'lints/prefer_text_rich.dart';
 import 'lints/prefer_void_callback.dart';
 import 'lints/prefer_widget_private_members.dart';
@@ -35,6 +39,8 @@ class _AwesomeLints extends PluginBase {
   @override
   List<LintRule> getLintRules(CustomLintConfigs configs) => [
         AvoidEmptySetstate(),
+        AvoidLateContext(),
+        AvoidMissingController(),
         AvoidMountedInSetstate(),
         AvoidSingleChildColumnOrRow(),
         AvoidStatelessWidgetInitializedFields(),
@@ -55,9 +61,11 @@ class _AwesomeLints extends PluginBase {
         PreferContainer(),
         PreferDedicatedMediaQueryMethods(),
         PreferForLoopInChildren(),
+        PreferPaddingOverContainer(),
         PreferSingleSetstate(),
         PreferSizedBoxSquare(),
         PreferSliverPrefix(),
+        PreferSpacing(),
         PreferTextRich(),
         PreferVoidCallback(),
         PreferWidgetPrivateMembers(),
