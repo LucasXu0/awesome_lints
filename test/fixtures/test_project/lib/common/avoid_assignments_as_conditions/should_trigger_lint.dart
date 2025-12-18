@@ -1,7 +1,8 @@
 // Test cases that should trigger the avoid-assignments-as-conditions lint
 
+// ignore_for_file: dead_code, unused_local_variable, unnecessary_null_comparison
+
 void test() {
-  // ignore: unused_local_variable
   bool flag = false;
   final values = <int>[];
   String? nullable;
@@ -28,16 +29,15 @@ void test() {
   } while (flag = i < 5);
 
   // expect_lint: avoid_assignments_as_conditions
-  final result = (flag = values.isEmpty) ? 'empty' : 'not empty'; // ignore: unused_local_variable
+  final result = (flag = values.isEmpty) ? 'empty' : 'not empty';
 
   // expect_lint: avoid_assignments_as_conditions
-  if ((nullable ??= 'default') != null) { // ignore: unnecessary_null_comparison
+  if ((nullable ??= 'default') != null) {
     print(nullable);
   }
 }
 
 void testFor() {
-  // ignore: unused_local_variable
   bool flag = false;
   // expect_lint: avoid_assignments_as_conditions
   for (var i = 0; flag = i < 10; i++) {
