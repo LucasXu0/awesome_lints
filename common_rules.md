@@ -6,52 +6,56 @@ This document lists all 331 common lint rules available in DCM (Dart Code Metric
 
 **Last Updated:** 2025-12-18
 
+**Implementation Progress:** 35 / 331 rules implemented (10.6%)
+
 ---
 
 ## Complete List of Common Rules
 
+Legend: ✅ = Implemented
+
 ### A
 
-1. arguments-ordering
-2. avoid-accessing-collections-by-constant-index
-3. avoid-accessing-other-classes-private-members
-4. avoid-adjacent-strings
-5. avoid-always-null-parameters
-6. avoid-assigning-to-static-field
-7. avoid-assignments-as-conditions
-8. avoid-async-call-in-sync-function
+1. ✅ arguments-ordering
+2. ✅ avoid-accessing-collections-by-constant-index
+3. ✅ avoid-accessing-other-classes-private-members
+4. ✅ avoid-adjacent-strings
+5. ✅ avoid-always-null-parameters
+6. ✅ avoid-assigning-to-static-field
+7. ✅ avoid-assignments-as-conditions
+8. ✅ avoid-async-call-in-sync-function
 9. avoid-banned-annotations
 10. avoid-banned-exports
 11. avoid-banned-file-names
 12. avoid-banned-imports
 13. avoid-banned-names
 14. avoid-banned-types
-15. avoid-barrel-files
-16. avoid-bitwise-operators-with-booleans
-17. avoid-bottom-type-in-patterns
-18. avoid-bottom-type-in-records
-19. avoid-cascade-after-if-null
-20. avoid-casting-to-extension-type
-21. avoid-collapsible-if
-22. avoid-collection-equality-checks
-23. avoid-collection-methods-with-unrelated-types
-24. avoid-collection-mutating-methods
-25. avoid-commented-out-code
-26. avoid-complex-arithmetic-expressions
-27. avoid-complex-conditions
-28. avoid-complex-loop-conditions
-29. avoid-conditions-with-boolean-literals
-30. avoid-constant-assert-conditions
-31. avoid-constant-conditions
-32. avoid-constant-switches
-33. avoid-continue
-34. avoid-contradictory-expressions
-35. avoid-declaring-call-method
-36. avoid-default-tostring
-37. avoid-deprecated-usage
-38. avoid-double-slash-imports
-39. avoid-duplicate-cascades
-40. avoid-duplicate-collection-elements
+15. ✅ avoid-barrel-files
+16. ✅ avoid-bitwise-operators-with-booleans
+17. ✅ avoid-bottom-type-in-patterns
+18. ✅ avoid-bottom-type-in-records
+19. ✅ avoid-cascade-after-if-null
+20. ✅ avoid-casting-to-extension-type
+21. ✅ avoid-collapsible-if
+22. ✅ avoid-collection-equality-checks
+23. ✅ avoid-collection-methods-with-unrelated-types
+24. ✅ avoid-collection-mutating-methods
+25. ✅ avoid-commented-out-code
+26. ✅ avoid-complex-arithmetic-expressions
+27. ✅ avoid-complex-conditions
+28. ✅ avoid-complex-loop-conditions
+29. ✅ avoid-conditions-with-boolean-literals
+30. ✅ avoid-constant-assert-conditions
+31. ✅ avoid-constant-conditions
+32. ✅ avoid-constant-switches
+33. ✅ avoid-continue
+34. ✅ avoid-contradictory-expressions
+35. ✅ avoid-declaring-call-method
+36. ✅ avoid-default-tostring
+37. ✅ avoid-deprecated-usage
+38. ✅ avoid-double-slash-imports
+39. ✅ avoid-duplicate-cascades
+40. ✅ avoid-duplicate-collection-elements
 41. avoid-duplicate-constant-values
 42. avoid-duplicate-exports
 43. avoid-duplicate-initializers
@@ -123,7 +127,7 @@ This document lists all 331 common lint rules available in DCM (Dart Code Metric
 109. avoid-non-ascii-symbols
 110. avoid-non-empty-constructor-bodies
 111. avoid-non-final-exception-class-fields
-112. avoid-non-null-assertion
+112. ✅ avoid-non-null-assertion
 113. avoid-not-encodable-in-to-json
 114. avoid-nullable-interpolation
 115. avoid-nullable-parameters-with-default-values
