@@ -11,11 +11,13 @@ This document lists the Flutter lints supported and not supported by awesome_lin
 - `avoid-undisposed-instances`
 - `avoid-single-child-column-or-row`
 - `avoid-mounted-in-setstate`
+- `avoid-unnecessary-gesture-detector`
+- `avoid-unnecessary-stateful-widgets`
+- `avoid-wrapping-in-padding`
 - `dispose-fields`
 - `prefer-sized-box-square`
 - `prefer-void-callback`
 - `proper-super-calls`
-- `avoid-unnecessary-stateful-widgets`
 - `avoid-empty-setstate`
 - `prefer-async-callback`
 - `prefer-dedicated-media-query-methods`
@@ -23,6 +25,8 @@ This document lists the Flutter lints supported and not supported by awesome_lin
 - `prefer-single-setstate`
 - `prefer-widget-private-members`
 - `prefer-text-rich`
+- `prefer-compute-over-isolate-run`
+- `prefer-sliver-prefix`
 
 ### Dart
 - `no-empty-block`
@@ -42,15 +46,12 @@ The following Flutter lints are currently not supported:
 - `avoid-recursive-widget-calls`
 - `avoid-state-constructors`
 - `avoid-stateless-widget-initialized-fields`
-- `avoid-unnecessary-gesture-detector`
 - `prefer-align-over-container`
 - `prefer-center-over-align`
-- `prefer-compute-over-isolate-run`
 - `prefer-constrained-box-over-container`
 - `prefer-container`
 - `prefer-for-loop-in-children`
 - `prefer-padding-over-container`
-- `prefer-sliver-prefix`
 - `prefer-spacing`
 - `prefer-transform-over-container`
 - `use-closest-build-context`
