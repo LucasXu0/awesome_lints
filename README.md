@@ -146,6 +146,99 @@ void fn(VoidCallback callback) {
 }
 ```
 
+### prefer-align-over-container
+
+Recommends using `Align` instead of `Container` when only alignment is needed.
+
+**Why?** Using `Align` for alignment-only scenarios is more efficient and clearer in intent. The `Container` widget is heavyweight and designed for multiple purposes, while `Align` is the appropriate lightweight alternative when only alignment is required.
+
+**Bad:**
+```dart
+Container(
+  alignment: Alignment.topRight,
+  child: Text('Hello'),
+)
+```
+
+**Good:**
+```dart
+Align(
+  alignment: Alignment.topRight,
+  child: Text('Hello'),
+)
+
+// Container is acceptable when other properties are present
+Container(
+  alignment: Alignment.topRight,
+  transform: Matrix4.skewY(0.3),
+  child: Text('Hello'),
+)
+```
+
+### prefer-container
+
+Suggests using a single `Container` instead of nested widgets when possible.
+
+**Why?** The `Container` widget uses various widgets under the hood (e.g., `Align`, `Padding`, `DecoratedBox`, etc.). When multiple such widgets are nested together, they can often be replaced with a single `Container`, reducing nesting levels and improving code maintainability.
+
+**Bad:**
+```dart
+Align(
+  alignment: Alignment.center,
+  child: Padding(
+    padding: EdgeInsets.all(8),
+    child: DecoratedBox(
+      decoration: BoxDecoration(color: Colors.black),
+      child: Text('Hello'),
+    ),
+  ),
+)
+```
+
+**Good:**
+```dart
+Container(
+  alignment: Alignment.center,
+  padding: EdgeInsets.all(8),
+  decoration: BoxDecoration(color: Colors.black),
+  child: Text('Hello'),
+)
+```
+
+**Note:** This lint triggers when 3 or more containerizable widgets are nested (minimum sequence depth).
+
+### prefer-for-loop-in-children
+
+Suggests using for-loop syntax instead of functional methods in widget list arguments.
+
+**Why?** For-loops are generally more straightforward and readable than functional programming patterns like `.map().toList()` or `fold()` when building lists of widgets.
+
+**Bad:**
+```dart
+Column(
+  children: items.map((item) => Text(item)).toList(),
+)
+
+Row(
+  children: [...items.map((item) => Text(item)).toList()],
+)
+```
+
+**Good:**
+```dart
+Column(
+  children: [
+    for (final item in items) Text(item),
+  ],
+)
+
+Row(
+  children: [
+    for (var i = 0; i < items.length; i++) Text(items[i]),
+  ],
+)
+```
+
 ## Installation
 
 1. Add this package to your `pubspec.yaml`:
@@ -170,6 +263,9 @@ custom_lint:
     - avoid_single_child_column_or_row
     - avoid_unnecessary_overrides_in_state
     - pass_existing_future_to_future_builder
+    - prefer_align_over_container
+    - prefer_container
+    - prefer_for_loop_in_children
     - prefer_void_callback
 ```
 
