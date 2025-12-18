@@ -1,5 +1,7 @@
 // Test cases that should trigger the avoid_collapsible_if lint
 
+// ignore_for_file: dead_code
+
 void test() {
   final bool a = true;
   final bool b = true;

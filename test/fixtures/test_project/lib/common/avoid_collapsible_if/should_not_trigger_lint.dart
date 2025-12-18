@@ -1,5 +1,7 @@
 // Test cases that should NOT trigger the avoid_collapsible_if lint
 
+// ignore_for_file: dead_code
+
 void test() {
   final bool a = true;
   final bool b = true;
@@ -70,6 +72,8 @@ void test() {
       } else {
         print('c is false');
       }
+    } else {
+      print('b is false');
     }
   }
 
