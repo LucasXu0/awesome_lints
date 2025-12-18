@@ -203,6 +203,7 @@ class _MyWidget8State extends State<MyWidget8> {
 class MyWidget9 extends StatelessWidget {
   MyWidget9({super.key});
 
+  // ignore: avoid_stateless_widget_initialized_fields
   final TextEditingController controller = TextEditingController();
 
   @override

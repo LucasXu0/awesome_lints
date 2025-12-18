@@ -181,6 +181,7 @@ class MyWidget8 extends StatelessWidget {
 class MyWidget9 extends StatelessWidget {
   const MyWidget9({super.key});
 
+  // ignore: avoid_stateless_widget_initialized_fields
   final String _privateField = 'test';
 
   @override
@@ -339,6 +340,7 @@ class _MyWidget16State extends State<MyWidget16> {
 class MyWidget17 extends StatelessWidget {
   const MyWidget17({super.key});
 
+  // ignore: avoid_stateless_widget_initialized_fields
   final String publicField = 'test';
 
   @override
