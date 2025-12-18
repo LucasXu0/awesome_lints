@@ -1,5 +1,7 @@
 // Test cases that should NOT trigger the avoid_complex_arithmetic_expressions lint
 
+// ignore_for_file: dead_code
+
 void test() {
   final int a = 1, b = 2, c = 3, d = 4, e = 5, f = 6;
 
@@ -37,7 +39,8 @@ void test() {
   final result11 = a > b && c < d;
 
   // Valid: Logical operations (not arithmetic)
-  final result12 = true || false;
+  final bool p = true, q = false;
+  final result12 = p || q;
 
   // Valid: String concatenation (not arithmetic in number sense)
   final result13 = 'a' + 'b' + 'c';

@@ -2,15 +2,16 @@
 
 void fn() {
   var x = true;
+  var y = false;
 
   // Using logical operators is correct
   // ignore: dead_code
-  if (x && false) {
+  if (x && y) {
     print('test');
   }
 
   // ignore: dead_code
-  if (x || false) {
+  if (x || y) {
     print('test');
   }
 

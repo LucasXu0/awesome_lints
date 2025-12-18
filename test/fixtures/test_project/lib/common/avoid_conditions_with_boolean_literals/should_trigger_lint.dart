@@ -1,5 +1,7 @@
 // Test cases that should trigger the avoid_conditions_with_boolean_literals lint
 
+// ignore_for_file: dead_code
+
 void test() {
   final bool condition = true;
   final someSet = {1, 2, 3};

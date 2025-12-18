@@ -13,7 +13,11 @@ void fn() {
     print('test');
   }
 
-  // expect_lint: avoid_bitwise_operators_with_booleans
   // ignore: unused_local_variable
-  var result = true & false;
+  // expect_lint: avoid_bitwise_operators_with_booleans
+  var result1 = true & false;
+
+  // ignore: unused_local_variable
+  // expect_lint: avoid_bitwise_operators_with_booleans
+  var result2 = true | false;
 }
