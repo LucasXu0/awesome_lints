@@ -188,7 +188,7 @@ class _MyWidget8State extends State<MyWidget8> {
   @override
   void dispose() {
     if (_controller != null) {
-      _controller!.dispose();
+      _controller.dispose();
     }
     super.dispose();
   }

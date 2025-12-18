@@ -45,6 +45,7 @@ class _AwesomeLints extends PluginBase {
     AvoidDoubleSlashImports(),
     AvoidDuplicateCascades(),
     AvoidDuplicateCollectionElements(),
+    AvoidNonNullAssertion(),
   ];
 
   List<LintRule> flutterLintRules = [

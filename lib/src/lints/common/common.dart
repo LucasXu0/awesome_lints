@@ -32,3 +32,4 @@ export 'avoid_deprecated_usage.dart';
 export 'avoid_double_slash_imports.dart';
 export 'avoid_duplicate_cascades.dart';
 export 'avoid_duplicate_collection_elements.dart';
+export 'avoid_non_null_assertion.dart';

@@ -67,6 +67,52 @@ if (mounted) {
 }
 ```
 
+### avoid-non-null-assertion
+
+Warns when the non-null assertion operator (`!`) is used on property access and method invocations.
+
+**Why?** The non-null assertion operator checks at runtime and can cause exceptions if the value is null. Using null-aware operators or proper null handling is safer and more explicit.
+
+**Bad:**
+```dart
+class Test {
+  String? field;
+  Test? object;
+
+  void method() {
+    field!.contains('other');
+    object!.field!.contains('other');
+    object!.method();
+  }
+}
+```
+
+**Good:**
+```dart
+class Test {
+  String? field;
+  Test? object;
+
+  void method() {
+    // Use null-aware operators
+    field?.contains('other');
+    object?.field?.contains('other');
+    object?.method();
+
+    // Or proper null checks
+    if (field != null) {
+      field.contains('other');
+    }
+
+    // Map index operations are allowed (idiomatic Dart)
+    final map = {'key': 'value'};
+    map['key']!.contains('other');
+  }
+}
+```
+
+**Note:** This rule allows the `!` operator on Map index operations (e.g., `map['key']!`) as this is considered idiomatic in Dart.
+
 ### avoid-missing-controller
 
 Warns when `TextField`, `TextFormField`, or `EditableText` widgets lack adequate mechanisms for tracking user input changes.
