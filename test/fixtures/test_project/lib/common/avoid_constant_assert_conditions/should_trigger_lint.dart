@@ -14,35 +14,11 @@ void test() {
 
   // Case 3: Assert with integer literal
   // expect_lint: avoid_constant_assert_conditions
-  assert(1);
-
-  // Case 4: Assert with zero (falsy in some languages, but truthy in Dart)
-  // expect_lint: avoid_constant_assert_conditions
-  assert(0);
-
-  // Case 5: Assert with double literal
-  // expect_lint: avoid_constant_assert_conditions
-  assert(3.14);
-
-  // Case 6: Assert with string literal
-  // expect_lint: avoid_constant_assert_conditions
-  assert('not empty');
-
-  // Case 7: Assert with empty string literal
-  // expect_lint: avoid_constant_assert_conditions
-  assert('');
-
-  // Case 8: Assert with null literal
-  // expect_lint: avoid_constant_assert_conditions
-  assert(null);
+  assert(1 == 1);
 
   // Case 9: Assert with binary expression of constants
   // expect_lint: avoid_constant_assert_conditions
   assert(5 > 0);
-
-  // Case 10: Assert with const list (not const variable - too complex to detect)
-  // expect_lint: avoid_constant_assert_conditions
-  assert(const []);
 
   print('test');
 }
@@ -60,10 +36,6 @@ void testWithConstVariable() {
   // Case 12: Assert with negation of constant
   // expect_lint: avoid_constant_assert_conditions
   assert(!false);
-
-  // Case 13: Assert with const list
-  // expect_lint: avoid_constant_assert_conditions
-  assert(const [1, 2, 3]);
 
   // Case 14: Assert with binary expression of constants
   // expect_lint: avoid_constant_assert_conditions

@@ -1,5 +1,7 @@
 // Test cases that should NOT trigger the avoid_constant_assert_conditions lint
 
+// ignore_for_file: dead_code
+
 void test() {
   final int value = 5;
   final bool condition = true;
@@ -35,9 +37,6 @@ void test() {
 
   // Valid: Assert with contains check
   assert(list.contains(1));
-
-  // Valid: Assert with type check
-  assert(value is int);
 
   // Valid: Assert with range check
   assert(value >= 0 && value <= 10);
