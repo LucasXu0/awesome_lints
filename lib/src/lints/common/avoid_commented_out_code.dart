@@ -91,6 +91,18 @@ class AvoidCommentedOutCode extends DartLintRule {
       return false;
     }
 
+    // Skip linter directive comments
+    if (comment.contains('ignore:') ||
+        comment.contains('expect_lint:') ||
+        comment.contains('coverage:') ||
+        comment.contains('flutter:') ||
+        comment.contains('dart format') ||
+        comment.contains('analyzer:') ||
+        comment.contains('lint:') ||
+        comment.contains('pragma:')) {
+      return false;
+    }
+
     // Check against code patterns
     for (final pattern in _codePatterns) {
       if (pattern.hasMatch(comment)) {
