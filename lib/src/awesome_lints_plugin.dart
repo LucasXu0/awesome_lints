@@ -11,6 +11,7 @@ import 'lints/avoid_unnecessary_stateful_widgets.dart';
 import 'lints/avoid_wrapping_in_padding.dart';
 import 'lints/dispose_fields.dart';
 import 'lints/pass_existing_future_to_future_builder.dart';
+import 'lints/pass_existing_stream_to_stream_builder.dart';
 import 'lints/prefer_action_button_tooltip.dart';
 import 'lints/prefer_align_over_container.dart';
 import 'lints/prefer_async_callback.dart';
@@ -44,6 +45,7 @@ class _AwesomeLints extends PluginBase {
         AvoidWrappingInPadding(),
         DisposeFields(),
         PassExistingFutureToFutureBuilder(),
+        PassExistingStreamToStreamBuilder(),
         PreferActionButtonTooltip(),
         PreferAlignOverContainer(),
         PreferAsyncCallback(),
