@@ -3,6 +3,7 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'lints/avoid_empty_setstate.dart';
 import 'lints/avoid_mounted_in_setstate.dart';
 import 'lints/avoid_single_child_column_or_row.dart';
+import 'lints/avoid_stateless_widget_initialized_fields.dart';
 import 'lints/avoid_undisposed_instances.dart';
 import 'lints/avoid_unnecessary_gesture_detector.dart';
 import 'lints/avoid_unnecessary_overrides_in_state.dart';
@@ -11,9 +12,14 @@ import 'lints/avoid_wrapping_in_padding.dart';
 import 'lints/dispose_fields.dart';
 import 'lints/pass_existing_future_to_future_builder.dart';
 import 'lints/prefer_action_button_tooltip.dart';
+import 'lints/prefer_align_over_container.dart';
 import 'lints/prefer_async_callback.dart';
+import 'lints/prefer_center_over_align.dart';
 import 'lints/prefer_compute_over_isolate_run.dart';
+import 'lints/prefer_constrained_box_over_container.dart';
+import 'lints/prefer_container.dart';
 import 'lints/prefer_dedicated_media_query_methods.dart';
+import 'lints/prefer_for_loop_in_children.dart';
 import 'lints/prefer_single_setstate.dart';
 import 'lints/prefer_sized_box_square.dart';
 import 'lints/prefer_sliver_prefix.dart';
@@ -30,6 +36,7 @@ class _AwesomeLints extends PluginBase {
         AvoidEmptySetstate(),
         AvoidMountedInSetstate(),
         AvoidSingleChildColumnOrRow(),
+        AvoidStatelessWidgetInitializedFields(),
         AvoidUndisposedInstances(),
         AvoidUnnecessaryGestureDetector(),
         AvoidUnnecessaryOverridesInState(),
@@ -38,9 +45,14 @@ class _AwesomeLints extends PluginBase {
         DisposeFields(),
         PassExistingFutureToFutureBuilder(),
         PreferActionButtonTooltip(),
+        PreferAlignOverContainer(),
         PreferAsyncCallback(),
+        PreferCenterOverAlign(),
         PreferComputeOverIsolateRun(),
+        PreferConstrainedBoxOverContainer(),
+        PreferContainer(),
         PreferDedicatedMediaQueryMethods(),
+        PreferForLoopInChildren(),
         PreferSingleSetstate(),
         PreferSizedBoxSquare(),
         PreferSliverPrefix(),
