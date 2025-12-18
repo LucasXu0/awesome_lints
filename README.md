@@ -124,6 +124,44 @@ class MyWidget extends Widget {
 }
 ```
 
+### pass-existing-stream-to-stream-builder
+
+Warns when streams are created inline in `StreamBuilder`'s stream parameter instead of being created beforehand.
+
+**Why?** Creating streams inline causes the asynchronous task to restart every time the parent widget rebuilds. The stream should be initialized in `initState`, `didUpdateWidget`, or `didChangeDependencies`.
+
+**Bad:**
+```dart
+class MyWidget extends Widget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: getValue(),  // Created during build
+      builder: ...,
+    );
+  }
+
+  Stream<String> getValue() => Stream.fromIterable(['1', '2', '3']);
+}
+```
+
+**Good:**
+```dart
+class MyWidget extends Widget {
+  final _stream = getValue();  // Created beforehand
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: _stream,
+      builder: ...,
+    );
+  }
+
+  static Stream<String> getValue() => Stream.fromIterable(['1', '2', '3']);
+}
+```
+
 ### prefer-void-callback
 
 Recommends using the `VoidCallback` typedef instead of `void Function()` for improved code clarity and consistency.
@@ -256,18 +294,9 @@ dev_dependencies:
 analyzer:
   plugins:
     - custom_lint
-
-custom_lint:
-  rules:
-    - avoid_mounted_in_setstate
-    - avoid_single_child_column_or_row
-    - avoid_unnecessary_overrides_in_state
-    - pass_existing_future_to_future_builder
-    - prefer_align_over_container
-    - prefer_container
-    - prefer_for_loop_in_children
-    - prefer_void_callback
 ```
+
+**Note:** All lints are enabled by default. The `custom_lint: rules:` section is optional and only needed if you want to configure specific rule behavior in the future.
 
 3. Run the linter:
 
