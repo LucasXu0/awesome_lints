@@ -28,10 +28,10 @@ class _SliverCustomGridState extends State<SliverCustomGrid> {
   @override
   Widget build(BuildContext context) {
     return SliverGrid(
+      delegate: SliverChildListDelegate([]),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
       ),
-      delegate: SliverChildListDelegate([]),
     );
   }
 }

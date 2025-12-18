@@ -24,12 +24,12 @@ class GridWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverGrid(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-      ),
       delegate: SliverChildBuilderDelegate(
         (context, index) => Container(),
         childCount: 10,
+      ),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
       ),
     );
   }
@@ -75,10 +75,10 @@ class ConditionalSliver extends StatelessWidget {
   Widget build(BuildContext context) {
     if (useGrid) {
       return SliverGrid(
+        delegate: SliverChildListDelegate([]),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
         ),
-        delegate: SliverChildListDelegate([]),
       );
     }
     return SliverList(

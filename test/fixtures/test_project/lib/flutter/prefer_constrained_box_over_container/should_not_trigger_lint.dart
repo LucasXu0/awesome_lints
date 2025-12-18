@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 void main() {
   // Container with other properties - should not trigger
   Container(
-    constraints: const BoxConstraints(maxWidth: 200),
     padding: const EdgeInsets.all(8),
+    constraints: const BoxConstraints(maxWidth: 200),
   );
 
   Container(
-    constraints: const BoxConstraints(maxWidth: 200),
     color: Colors.red,
+    constraints: const BoxConstraints(maxWidth: 200),
   );
 
   Container(
@@ -18,8 +18,8 @@ void main() {
   );
 
   Container(
-    constraints: const BoxConstraints(maxWidth: 200),
     decoration: const BoxDecoration(color: Colors.blue),
+    constraints: const BoxConstraints(maxWidth: 200),
   );
 
   Container(
@@ -28,8 +28,8 @@ void main() {
   );
 
   Container(
-    constraints: const BoxConstraints(maxWidth: 200),
     alignment: Alignment.center,
+    constraints: const BoxConstraints(maxWidth: 200),
     child: const Text('Hello'),
   );
 

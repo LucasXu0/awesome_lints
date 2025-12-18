@@ -25,6 +25,8 @@ class AvoidAlwaysNullParameters extends DartLintRule {
         <ExecutableElement2, List<FormalParameterElement>>{};
     // Track parameter usages: element -> list of argument values
     final parameterUsages = <FormalParameterElement, List<Expression?>>{};
+    // Track AST nodes for declarations
+    final declarationNodes = <ExecutableElement2, AstNode>{};
 
     // First pass: collect private function/method declarations
     context.registry.addFunctionDeclaration((node) {
@@ -35,6 +37,7 @@ class AvoidAlwaysNullParameters extends DartLintRule {
             .toList();
         if (nullableParams.isNotEmpty) {
           privateDeclarations[element] = nullableParams;
+          declarationNodes[element] = node;
           for (final param in nullableParams) {
             parameterUsages[param] = [];
           }
@@ -50,6 +53,7 @@ class AvoidAlwaysNullParameters extends DartLintRule {
             .toList();
         if (nullableParams.isNotEmpty) {
           privateDeclarations[element] = nullableParams;
+          declarationNodes[element] = node;
           for (final param in nullableParams) {
             parameterUsages[param] = [];
           }
@@ -89,13 +93,15 @@ class AvoidAlwaysNullParameters extends DartLintRule {
 
         if (allNull) {
           // Find the parameter node to report
-          final paramNode =
-              _findParameterNode(resolver, function, param.displayName);
-          if (paramNode != null) {
-            reporter.atNode(
-              paramNode,
-              _code,
-            );
+          final declNode = declarationNodes[function];
+          if (declNode != null) {
+            final paramNode = _findParameterNode(declNode, param.displayName);
+            if (paramNode != null) {
+              reporter.atNode(
+                paramNode,
+                _code,
+              );
+            }
           }
         }
       }
@@ -141,13 +147,28 @@ class AvoidAlwaysNullParameters extends DartLintRule {
   }
 
   AstNode? _findParameterNode(
-    CustomLintResolver resolver,
-    ExecutableElement2 function,
+    AstNode declNode,
     String paramName,
   ) {
-    // This is a simplified approach - in a real implementation,
-    // we would need to navigate the AST to find the exact parameter node
-    // For now, we'll return null and rely on the function element
+    // Get the formal parameter list from the declaration node
+    FormalParameterList? parameterList;
+
+    if (declNode is FunctionDeclaration) {
+      parameterList = declNode.functionExpression.parameters;
+    } else if (declNode is MethodDeclaration) {
+      parameterList = declNode.parameters;
+    }
+
+    if (parameterList == null) return null;
+
+    // Find the parameter with the matching name
+    for (final param in parameterList.parameters) {
+      final identifier = param.name;
+      if (identifier != null && identifier.lexeme == paramName) {
+        return param;
+      }
+    }
+
     return null;
   }
 }

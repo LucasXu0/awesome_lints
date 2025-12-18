@@ -44,31 +44,25 @@ class AvoidAssigningToStaticField extends DartLintRule {
     ErrorReporter reporter,
   ) {
     // Check if we're in an instance method (not static)
-    final enclosingMethod = _getEnclosingMethod(node);
-    if (enclosingMethod == null || enclosingMethod.isStatic) {
+    if (!_isInInstanceMethod(node)) {
       return;
     }
 
     // Check if the assignment target is a static field
-    Element2? element;
+    bool isStaticField = false;
 
     if (leftHandSide is SimpleIdentifier) {
-      element = leftHandSide.element;
+      final element = leftHandSide.element;
+      isStaticField = _isStaticField(element);
     } else if (leftHandSide is PrefixedIdentifier) {
-      element = leftHandSide.element;
+      final element = leftHandSide.identifier.element;
+      isStaticField = _isStaticField(element);
     } else if (leftHandSide is PropertyAccess) {
-      element = leftHandSide.propertyName.element;
+      final element = leftHandSide.propertyName.element;
+      isStaticField = _isStaticField(element);
     }
 
-    if (element is PropertyAccessorElement2) {
-      final variable = element.variable3;
-      if (variable != null && variable.isStatic) {
-        reporter.atNode(
-          leftHandSide,
-          _code,
-        );
-      }
-    } else if (element is FieldElement2 && element.isStatic) {
+    if (isStaticField) {
       reporter.atNode(
         leftHandSide,
         _code,
@@ -76,15 +70,26 @@ class AvoidAssigningToStaticField extends DartLintRule {
     }
   }
 
-  MethodElement2? _getEnclosingMethod(AstNode node) {
+  bool _isStaticField(Element2? element) {
+    if (element is PropertyAccessorElement2) {
+      final variable = element.variable3;
+      return variable != null && variable.isStatic;
+    } else if (element is VariableElement2) {
+      return element.isStatic;
+    }
+    return false;
+  }
+
+  bool _isInInstanceMethod(AstNode node) {
     AstNode? current = node;
     while (current != null) {
       if (current is MethodDeclaration) {
-        final element = current.declaredFragment?.element;
-        return element is MethodElement2 ? element : null;
+        // If it's a static method, return false
+        return !current.isStatic;
       }
       current = current.parent;
     }
-    return null;
+    // Not in a method at all
+    return false;
   }
 }

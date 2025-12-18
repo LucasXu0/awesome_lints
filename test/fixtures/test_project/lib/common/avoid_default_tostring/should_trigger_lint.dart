@@ -13,9 +13,6 @@ void badExamples(SomeClass some, AnotherClass another) {
   print('$some');
 
   // expect_lint: avoid_default_tostring
-  [some].toString();
-
-  // expect_lint: avoid_default_tostring
   another.toString();
 
   // expect_lint: avoid_default_tostring

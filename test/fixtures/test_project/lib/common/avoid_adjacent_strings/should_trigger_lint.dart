@@ -2,19 +2,16 @@
 
 void test() {
   // expect_lint: avoid_adjacent_strings
-  // ignore: unused_local_variable
-  final str1 = 'hello' 'world';
+  final str1 = 'hello' 'world'; // ignore: unused_local_variable
 
   // expect_lint: avoid_adjacent_strings
-  // ignore: unused_local_variable
-  final str2 = 'foo' 'bar' 'baz';
+  final str2 = 'foo' 'bar' 'baz'; // ignore: unused_local_variable
 
   // expect_lint: avoid_adjacent_strings
   someFn('hello' 'world');
 
   // expect_lint: avoid_adjacent_strings
-  // ignore: unused_local_variable
-  final str3 = 'multi'
+  final str3 = 'multi' // ignore: unused_local_variable
       'line'
       'string';
 }

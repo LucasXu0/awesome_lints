@@ -14,8 +14,8 @@ class ShouldNotTriggerLint extends StatelessWidget {
 
     // Case 2: SizedBox with different height and width - should NOT trigger
     final widget2 = SizedBox(
-      height: 10,
       width: 20,
+      height: 10,
     );
 
     // Case 3: SizedBox with only height - should NOT trigger

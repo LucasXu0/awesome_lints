@@ -34,7 +34,7 @@ class ShouldTriggerLint extends StatelessWidget {
         Text('One'),
         SizedBox(height: 8),
         Text('Two'),
-        SizedBox(height: 8),
+        SizedBox(height: 12),
         Text('Three'),
       ],
     );

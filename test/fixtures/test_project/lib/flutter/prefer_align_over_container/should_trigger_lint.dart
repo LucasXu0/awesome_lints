@@ -14,7 +14,7 @@ void trigger() {
 
   // expect_lint: prefer_align_over_container
   Container(
-    child: Text('World'),
     alignment: Alignment.bottomLeft,
+    child: Text('World'),
   );
 }

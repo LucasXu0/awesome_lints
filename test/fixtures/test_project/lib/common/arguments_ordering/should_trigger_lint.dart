@@ -1,5 +1,7 @@
 // Test cases that should trigger the arguments-ordering lint
 
+// ignore_for_file: unused_local_variable
+
 class Person {
   Person({required String name, required String surname, required int age});
 }
@@ -9,7 +11,6 @@ void buildPerson(
 
 void test() {
   // expect_lint: arguments_ordering
-  // ignore: unused_local_variable
   final person1 = Person(age: 42, surname: 'Pooh', name: 'Winnie');
 
   // expect_lint: arguments_ordering
@@ -26,6 +27,5 @@ class Widget {
 
 void createWidget() {
   // expect_lint: arguments_ordering
-  // ignore: unused_local_variable
   final widget = Widget(height: 100, child: 'Test', width: 200);
 }

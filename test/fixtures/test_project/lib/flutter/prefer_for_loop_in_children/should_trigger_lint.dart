@@ -14,8 +14,7 @@ void trigger() {
   // expect_lint: prefer_for_loop_in_children
   Row(
     children: items.fold<List<Widget>>([], (list, item) {
-      list.add(Text(item));
-      return list;
+      return [...list, Text(item)];
     }),
   );
 }

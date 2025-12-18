@@ -82,11 +82,13 @@ class _ConstantIndexAccessVisitor extends RecursiveAstVisitor<void> {
 
     // Check for prefixed identifiers (e.g., ClassName.staticFinal)
     if (expression is PrefixedIdentifier) {
-      final element = expression.element;
-      if (element is VariableElement2) {
-        return element.isConst ||
-            element.isFinal ||
-            element.isStatic && element.isFinal;
+      final element = expression.identifier.element;
+      if (element is PropertyAccessorElement2) {
+        final variable = element.variable3;
+        return variable != null &&
+            (variable.isConst ||
+                (variable.isStatic && variable.isFinal) ||
+                variable.isFinal);
       }
     }
 

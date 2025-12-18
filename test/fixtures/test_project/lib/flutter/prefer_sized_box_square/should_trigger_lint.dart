@@ -11,8 +11,8 @@ class ShouldTriggerLint extends StatelessWidget {
     final widget1 =
         // expect_lint: prefer_sized_box_square
         SizedBox(
-      height: 10,
       width: 10,
+      height: 10,
     );
 
     // Case 2: SizedBox with identical height and width (width first) - should trigger

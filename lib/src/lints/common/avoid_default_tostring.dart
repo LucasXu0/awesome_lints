@@ -51,12 +51,41 @@ class AvoidDefaultTostring extends DartLintRule {
   bool _hasCustomToString(Element2? element) {
     if (element == null) return false;
 
+    final name = element.displayName;
+
     // Primitive types and String have built-in toString
-    if (element.displayName == 'String' ||
-        element.displayName == 'int' ||
-        element.displayName == 'double' ||
-        element.displayName == 'bool' ||
-        element.displayName == 'num') {
+    if (name == 'String' ||
+        name == 'int' ||
+        name == 'double' ||
+        name == 'bool' ||
+        name == 'num' ||
+        name == 'Null') {
+      return true;
+    }
+
+    // Collection types have built-in toString
+    if (name == 'List' ||
+        name == 'Set' ||
+        name == 'Map' ||
+        name == 'Iterable' ||
+        name == 'Queue' ||
+        name == 'LinkedHashSet' ||
+        name == 'LinkedHashMap' ||
+        name == 'HashMap' ||
+        name == 'HashSet') {
+      return true;
+    }
+
+    // Core Dart types with proper toString
+    if (name == 'DateTime' ||
+        name == 'Duration' ||
+        name == 'Uri' ||
+        name == 'RegExp' ||
+        name == 'StackTrace' ||
+        name == 'Symbol' ||
+        name == 'Type' ||
+        name == 'Future' ||
+        name == 'Stream') {
       return true;
     }
 

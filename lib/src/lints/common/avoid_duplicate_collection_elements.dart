@@ -43,15 +43,31 @@ class AvoidDuplicateCollectionElements extends DartLintRule {
       final key = _getElementKey(element);
       if (key != null) {
         if (seen.contains(key)) {
-          reporter.atNode(
-            element,
-            _code,
-          );
+          // Skip if this is inside a function callback (like .expand(), .map())
+          // as duplicates might be intentional
+          if (!_isInsideFunctionCallback(element)) {
+            reporter.atNode(
+              element,
+              _code,
+            );
+          }
         } else {
           seen.add(key);
         }
       }
     }
+  }
+
+  bool _isInsideFunctionCallback(CollectionElement element) {
+    var parent = element.parent;
+    while (parent != null) {
+      // Check if we're inside a function expression (lambda/callback)
+      if (parent is FunctionExpression) {
+        return true;
+      }
+      parent = parent.parent;
+    }
+    return false;
   }
 
   void _checkMapDuplicates(

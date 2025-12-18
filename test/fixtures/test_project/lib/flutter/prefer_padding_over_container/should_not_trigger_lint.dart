@@ -9,14 +9,14 @@ void notTrigger() {
   );
 
   Container(
-    margin: EdgeInsets.all(16),
     decoration: BoxDecoration(color: Color(0xFF000000)),
+    margin: EdgeInsets.all(16),
     child: Text('World'),
   );
 
   Container(
-    padding: EdgeInsets.all(8),
     alignment: Alignment.center,
+    padding: EdgeInsets.all(8),
     child: Text('Foo'),
   );
 

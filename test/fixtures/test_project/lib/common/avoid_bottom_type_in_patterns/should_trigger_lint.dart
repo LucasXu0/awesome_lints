@@ -7,8 +7,8 @@ void fn(Object? object) {
   // expect_lint: avoid_bottom_type_in_patterns
   if (object case Never()) {}
 
-  // expect_lint: avoid_bottom_type_in_patterns
   // ignore: unused_local_variable
+  // expect_lint: avoid_bottom_type_in_patterns
   if (object case final Null value) {}
 
   // ignore: unused_local_variable

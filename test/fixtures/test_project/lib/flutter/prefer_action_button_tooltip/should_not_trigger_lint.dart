@@ -2,36 +2,36 @@ import 'package:flutter/material.dart';
 
 void notTrigger() {
   IconButton(
-    icon: Icon(Icons.add),
     onPressed: () {},
     tooltip: 'Add item',
+    icon: Icon(Icons.add),
   );
 
   IconButton(
-    icon: Icon(Icons.delete),
+    iconSize: 24.0,
     onPressed: () {},
     tooltip: 'Delete item',
-    iconSize: 24.0,
+    icon: Icon(Icons.delete),
   );
 
   FloatingActionButton(
-    onPressed: () {},
     child: Icon(Icons.add),
     tooltip: 'Add new item',
+    onPressed: () {},
   );
 
   FloatingActionButton(
-    onPressed: () {},
     child: Icon(Icons.edit),
-    backgroundColor: Colors.blue,
     tooltip: 'Edit',
+    backgroundColor: Colors.blue,
+    onPressed: () {},
   );
 
   FloatingActionButton.extended(
-    onPressed: () {},
-    label: Text('Add'),
-    icon: Icon(Icons.add),
     tooltip: 'Add new entry',
+    onPressed: () {},
+    icon: Icon(Icons.add),
+    label: Text('Add'),
   );
 
   // Not an action button, should not trigger

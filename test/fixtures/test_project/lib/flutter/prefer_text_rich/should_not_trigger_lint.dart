@@ -64,8 +64,8 @@ void notTrigger() {
   Text(
     'No spans here',
     style: TextStyle(
-      fontSize: 14,
       color: Colors.black,
+      fontSize: 14,
       fontWeight: FontWeight.w400,
     ),
     textAlign: TextAlign.left,
@@ -82,7 +82,6 @@ void notTrigger() {
   Text.rich(
     TextSpan(
       text: 'Complex ',
-      style: TextStyle(fontSize: 16),
       children: [
         TextSpan(
           text: 'formatted ',
@@ -93,6 +92,7 @@ void notTrigger() {
           style: TextStyle(fontStyle: FontStyle.italic),
         ),
       ],
+      style: TextStyle(fontSize: 16),
     ),
   );
 

@@ -108,8 +108,8 @@ class _MyWidget5State extends State<MyWidget5>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      vsync: this,
       duration: const Duration(seconds: 1),
+      vsync: this,
     );
   }
 
