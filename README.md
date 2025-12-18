@@ -103,15 +103,9 @@ class Test {
     if (field != null) {
       field.contains('other');
     }
-
-    // Map index operations are allowed (idiomatic Dart)
-    final map = {'key': 'value'};
-    map['key']!.contains('other');
   }
 }
 ```
-
-**Note:** This rule allows the `!` operator on Map index operations (e.g., `map['key']!`) as this is considered idiomatic in Dart.
 
 ### avoid-missing-controller
 

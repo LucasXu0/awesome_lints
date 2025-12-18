@@ -68,3 +68,22 @@ class MyClass {
   // expect_lint: avoid_non_null_assertion
   late String value = nullable!;
 }
+
+// Map index operations with non-null assertion
+void mapOperations() {
+  final map = <String, String>{'a': 'alpha', 'b': 'beta'};
+
+  // expect_lint: avoid_non_null_assertion
+  final value1 = map['a']!;
+
+  // expect_lint: avoid_non_null_assertion
+  final value2 = map['b']!.toUpperCase();
+
+  // Nested maps
+  final nestedMap = <String, Map<String, String>>{
+    'outer': {'inner': 'value'}
+  };
+
+  // expect_lint: avoid_non_null_assertion
+  final innerValue = nestedMap['outer']!['inner']!;
+}

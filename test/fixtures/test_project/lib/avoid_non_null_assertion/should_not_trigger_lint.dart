@@ -30,16 +30,6 @@ class Test {
       localField.contains('test');
     }
 
-    // Map index operation with ! (explicitly allowed by DCM)
-    final map = {'key': 'value'};
-    map['key']!.contains('other');
-
-    // Nested map access with !
-    final nested = {
-      'outer': {'inner': 'value'}
-    };
-    nested['outer']!['inner']!.toUpperCase();
-
     // Null-aware method call
     object?.method();
 
@@ -76,21 +66,6 @@ void processStringNullAware(String? input) {
 // Non-nullable parameter (no assertion needed)
 void processNonNullable(String input) {
   print(input.toUpperCase());
-}
-
-// Map operations (allowed)
-void mapOperations() {
-  final map = <String, String>{'a': 'alpha', 'b': 'beta'};
-
-  // These are allowed per DCM documentation
-  final value1 = map['a']!;
-  final value2 = map['b']!.toUpperCase();
-
-  // Nested maps
-  final nestedMap = <String, Map<String, String>>{
-    'outer': {'inner': 'value'}
-  };
-  final innerValue = nestedMap['outer']!['inner']!;
 }
 
 // Using is check with smart cast

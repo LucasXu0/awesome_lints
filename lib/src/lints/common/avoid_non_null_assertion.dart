@@ -1,4 +1,3 @@
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
@@ -16,23 +15,6 @@ class AvoidNonNullAssertion extends DartLintRule {
     errorSeverity: analyzer_error.ErrorSeverity.WARNING,
   );
 
-  bool _isMapIndexOperation(PostfixExpression node) {
-    // Check if the operand is an IndexExpression
-    if (node.operand is! IndexExpression) {
-      return false;
-    }
-
-    final indexExpr = node.operand as IndexExpression;
-    final targetType = indexExpr.target?.staticType;
-
-    // Check if the target is a Map type
-    if (targetType != null && targetType.isDartCoreMap) {
-      return true;
-    }
-
-    return false;
-  }
-
   @override
   void run(
     CustomLintResolver resolver,
@@ -41,20 +23,12 @@ class AvoidNonNullAssertion extends DartLintRule {
   ) {
     context.registry.addPostfixExpression((node) {
       // Check if the operator is the null assertion operator (!)
-      if (node.operator.type != TokenType.BANG) {
-        return;
+      if (node.operator.type == TokenType.BANG) {
+        reporter.atToken(
+          node.operator,
+          _code,
+        );
       }
-
-      // Exclude Map index operations (e.g., map['key']!)
-      // This is considered idiomatic in Dart
-      if (_isMapIndexOperation(node)) {
-        return;
-      }
-
-      reporter.atToken(
-        node.operator,
-        _code,
-      );
     });
   }
 }
