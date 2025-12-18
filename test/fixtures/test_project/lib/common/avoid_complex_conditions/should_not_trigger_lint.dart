@@ -1,5 +1,7 @@
 // Test cases that should NOT trigger the avoid_complex_conditions lint
 
+// ignore_for_file: dead_code
+
 void test() {
   final bool a = true, b = false, c = true;
   final List<int> list = [1, 2, 3];
@@ -51,7 +53,7 @@ void test() {
   }
 
   // Valid: Simple while loop condition
-  while (a && b) {
+  while (a) {
     break;
   }
 

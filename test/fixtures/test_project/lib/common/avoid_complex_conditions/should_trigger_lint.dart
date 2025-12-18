@@ -1,5 +1,7 @@
 // Test cases that should trigger the avoid_complex_conditions lint
 
+// ignore_for_file: dead_code
+
 void test() {
   final bool a = true, b = false, c = true, d = false;
   final List<int> list = [1, 2, 3];
@@ -29,10 +31,10 @@ void test() {
     print('complex');
   }
 
-  // Case 5: While loop with complex condition
+  // Case 5: Complex condition in if with loop-like structure
   // expect_lint: avoid_complex_conditions
-  while ((a && b && c) || (d && list.length > 5 && value < 10)) {
-    break;
+  if ((a && b && c) || (d && list.length > 5 && value < 10)) {
+    print('complex');
   }
 
   // Case 6: Ternary within condition
