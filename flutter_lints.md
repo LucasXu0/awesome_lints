@@ -16,6 +16,7 @@ This document lists the Flutter lints supported and not supported by awesome_lin
 - `avoid-wrapping-in-padding`
 - `dispose-fields`
 - `pass-existing-future-to-future-builder`
+- `pass-existing-stream-to-stream-builder`
 - `prefer-action-button-tooltip`
 - `prefer-align-over-container`
 - `prefer-async-callback`
@@ -50,7 +51,6 @@ The following Flutter lints are currently not supported:
 - `avoid-missing-image-alt`
 - `avoid-recursive-widget-calls`
 - `avoid-state-constructors`
-- `pass-existing-stream-to-stream-builder`
 - `prefer-padding-over-container`
 - `prefer-spacing`
 - `prefer-transform-over-container`
