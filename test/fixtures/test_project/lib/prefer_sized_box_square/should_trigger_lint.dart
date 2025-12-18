@@ -8,15 +8,17 @@ class ShouldTriggerLint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Case 1: SizedBox with identical height and width (height first) - should trigger
-    // expect_lint: prefer_sized_box_square
-    final widget1 = SizedBox(
+    final widget1 =
+        // expect_lint: prefer_sized_box_square
+        SizedBox(
       height: 10,
       width: 10,
     );
 
     // Case 2: SizedBox with identical height and width (width first) - should trigger
-    // expect_lint: prefer_sized_box_square
-    final widget2 = SizedBox(
+    final widget2 =
+        // expect_lint: prefer_sized_box_square
+        SizedBox(
       width: 20,
       height: 20,
     );

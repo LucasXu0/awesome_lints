@@ -3,8 +3,10 @@
 /// Test cases where prefer_void_callback lint should trigger
 
 // Case 1: Function parameter with void Function()
-// expect_lint: prefer_void_callback
-void functionWithCallback(void Function() callback) {
+void functionWithCallback(
+  // expect_lint: prefer_void_callback
+  void Function() callback,
+) {
   callback();
 }
 
@@ -24,10 +26,12 @@ void Function() returnCallback() {
 
 // Case 4: Generic type argument with void Function()
 void genericTypes() {
-  // expect_lint: prefer_void_callback
-  final List<void Function()> callbacks = [];
-  // expect_lint: prefer_void_callback
-  final Map<String, void Function()> callbackMap = {};
+  final List<
+      // expect_lint: prefer_void_callback
+      void Function()> callbacks = [];
+  final Map<String,
+      // expect_lint: prefer_void_callback
+      void Function()> callbackMap = {};
 }
 
 // Case 5: Class field with void Function()
@@ -46,20 +50,25 @@ typedef CallbackAlias = void Function();
 
 // Case 7: Constructor parameter with void Function()
 class MyWidget {
+  final
   // expect_lint: prefer_void_callback
-  final void Function()? onTap;
+  void Function()? onTap;
 
   const MyWidget({this.onTap});
 }
 
 // Case 8: Optional parameter with void Function()
-// expect_lint: prefer_void_callback
-void optionalParameters([void Function()? callback]) {
+void optionalParameters([
+  // expect_lint: prefer_void_callback
+  void Function()? callback,
+]) {
   callback?.call();
 }
 
 // Case 9: Named parameter with void Function()
-// expect_lint: prefer_void_callback
-void namedParameters({void Function()? onComplete}) {
+void namedParameters({
+  // expect_lint: prefer_void_callback
+  void Function()? onComplete,
+}) {
   onComplete?.call();
 }
