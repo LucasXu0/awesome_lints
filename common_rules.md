@@ -6,7 +6,7 @@ This document lists all 331 common lint rules available in DCM (Dart Code Metric
 
 **Last Updated:** 2025-12-18
 
-**Implementation Progress:** 35 / 331 rules implemented (10.6%)
+**Implementation Progress:** 51 / 331 rules implemented (15.4%)
 
 ---
 
@@ -220,9 +220,9 @@ Legend: ✅ = Implemented
 ### B-D
 
 201. banned-usage
-202. binary-expression-operand-order
-203. dispose-class-fields
-204. double-literal-format
+202. ✅ binary-expression-operand-order
+203. ✅ dispose-class-fields
+204. ✅ double-literal-format
 
 ### E-H
 
@@ -251,22 +251,22 @@ Legend: ✅ = Implemented
 
 ### N
 
-224. newline-before-case
-225. newline-before-constructor
-226. newline-before-method
-227. newline-before-return
-228. no-boolean-literal-compare
-229. no-empty-block
-230. no-empty-string
-231. no-equal-arguments
-232. no-equal-conditions
-233. no-equal-nested-conditions
-234. no-equal-switch-case
-235. no-equal-switch-expression-cases
-236. no-equal-then-else
-237. no-magic-number
-238. no-magic-string
-239. no-object-declaration
+224. ✅ newline-before-case
+225. ✅ newline-before-constructor
+226. ✅ newline-before-method
+227. ✅ newline-before-return
+228. ✅ no-boolean-literal-compare
+229. ✅ no-empty-block
+230. ✅ no-empty-string
+231. ✅ no-equal-arguments
+232. ✅ no-equal-conditions
+233. ✅ no-equal-nested-conditions
+234. ✅ no-equal-switch-case
+235. ✅ no-equal-switch-expression-cases
+236. ✅ no-equal-then-else
+237. ✅ no-magic-number
+238. ✅ no-magic-string
+239. ✅ no-object-declaration
 
 ### P
 
