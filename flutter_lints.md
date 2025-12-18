@@ -6,6 +6,7 @@ This document lists the Flutter lints supported and not supported by awesome_lin
 
 ### Flutter
 - `avoid-empty-setstate`
+- `avoid-late-context`
 - `avoid-missing-controller`
 - `avoid-mounted-in-setstate`
 - `avoid-single-child-column-or-row`
@@ -31,6 +32,7 @@ This document lists the Flutter lints supported and not supported by awesome_lin
 - `prefer-single-setstate`
 - `prefer-sized-box-square`
 - `prefer-sliver-prefix`
+- `prefer-spacing`
 - `prefer-text-rich`
 - `prefer-void-callback`
 - `prefer-widget-private-members`
@@ -47,9 +49,7 @@ The following Flutter lints are currently not supported:
 - `avoid-flexible-outside-flex`
 - `avoid-incomplete-copy-with`
 - `avoid-inherited-widget-in-initstate`
-- `avoid-late-context`
 - `avoid-recursive-widget-calls`
 - `avoid-state-constructors`
-- `prefer-spacing`
 - `prefer-transform-over-container`
 - `use-closest-build-context`
