@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code, unused_local_variable
+
 const _another = 10;
 
 abstract final class Some {
@@ -29,6 +31,7 @@ void badExamples() {
   // expect_lint: avoid_constant_conditions
   final result = x < y ? 'less' : 'greater';
 
-  // expect_lint: avoid_constant_conditions
+  // Note: Assert statements with constant conditions are handled by
+  // the avoid_constant_assert_conditions lint rule, not this one.
   assert(_another == 10);
 }

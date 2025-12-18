@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code, unused_local_variable
+
 void goodExamples(String value, int number) {
   // Using variables instead of constants
   if (value == '1') {
