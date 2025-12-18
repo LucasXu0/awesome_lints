@@ -1,13 +1,3 @@
 analyzer:
   plugins:
     - custom_lint
-
-custom_lint:
-  rules:
-    - avoid_single_child_column_or_row
-    - avoid_mounted_in_setstate
-    - avoid_undisposed_instances
-    - avoid_unnecessary_gesture_detector
-    - avoid_unnecessary_stateful_widgets
-    - avoid_wrapping_in_padding
-    - prefer_compute_over_isolate_run
