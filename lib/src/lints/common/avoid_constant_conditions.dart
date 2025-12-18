@@ -38,9 +38,9 @@ class AvoidConstantConditions extends DartLintRule {
       _checkCondition(node.condition, reporter);
     });
 
-    context.registry.addAssertStatement((node) {
-      _checkCondition(node.condition, reporter);
-    });
+    // Note: Assert statements are intentionally NOT checked here.
+    // The avoid_constant_assert_conditions lint rule handles constant
+    // expressions in assert statements more comprehensively.
   }
 
   void _checkCondition(Expression condition, ErrorReporter reporter) {
