@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 // ignore_for_file: unused_field, prefer_const_constructors
 
@@ -42,8 +42,6 @@ class _ShouldNotTriggerLintState extends State<ShouldNotTriggerLint> {
 
   @override
   Widget build(BuildContext context) {
-    // Using context in build is fine
-    final theme = Theme.of(context);
     return Container();
   }
 }

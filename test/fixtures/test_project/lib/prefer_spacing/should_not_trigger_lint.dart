@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 // ignore_for_file: unused_local_variable, prefer_const_constructors, prefer_sized_box_square
 
