@@ -135,10 +135,7 @@ class _ShouldNotTriggerLintState extends State<ShouldNotTriggerLint> {
       appBar: AppBar(title: Text('Test')),
       body: Center(
         child: Column(
-          children: [
-            Text('Counter: $_counter'),
-            Text('Message: $_message'),
-          ],
+          children: [Text('Counter: $_counter'), Text('Message: $_message')],
         ),
       ),
     );

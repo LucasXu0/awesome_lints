@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 
 void main() {
   // expect_lint: prefer_constrained_box_over_container
-  Container(
-    constraints: const BoxConstraints(maxWidth: 200),
-  );
+  Container(constraints: const BoxConstraints(maxWidth: 200));
 
   // expect_lint: prefer_constrained_box_over_container
   Container(
@@ -15,9 +13,7 @@ void main() {
   );
 
   // expect_lint: prefer_constrained_box_over_container
-  Container(
-    constraints: const BoxConstraints(),
-  );
+  Container(constraints: const BoxConstraints());
 
   // expect_lint: prefer_constrained_box_over_container
   Container(

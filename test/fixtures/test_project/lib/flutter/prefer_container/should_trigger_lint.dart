@@ -20,10 +20,7 @@ void trigger() {
     transform: Matrix4.identity(),
     child: Padding(
       padding: EdgeInsets.all(16),
-      child: Align(
-        alignment: Alignment.topRight,
-        child: Text('World'),
-      ),
+      child: Align(alignment: Alignment.topRight, child: Text('World')),
     ),
   );
 
@@ -32,11 +29,7 @@ void trigger() {
     padding: EdgeInsets.symmetric(horizontal: 12),
     child: Align(
       alignment: Alignment.bottomCenter,
-      child: SizedBox(
-        width: 100,
-        height: 50,
-        child: Text('Foo'),
-      ),
+      child: SizedBox(width: 100, height: 50, child: Text('Foo')),
     ),
   );
 }

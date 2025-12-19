@@ -27,12 +27,16 @@ Future<void> Function() returnCallback() {
 // Case 4: Generic type argument with Future<void> Function()
 void genericTypes() {
   final List<
-      // expect_lint: prefer_async_callback
-      Future<void> Function()> callbacks = [];
+    // expect_lint: prefer_async_callback
+    Future<void> Function()
+  >
+  callbacks = [];
   final Map<
-      String,
-      // expect_lint: prefer_async_callback
-      Future<void> Function()> callbackMap = {};
+    String,
+    // expect_lint: prefer_async_callback
+    Future<void> Function()
+  >
+  callbackMap = {};
 }
 
 // Case 5: Class field with Future<void> Function()
@@ -52,8 +56,9 @@ typedef CallbackAlias = Future<void> Function();
 // Case 7: Constructor parameter with Future<void> Function()
 class MyWidget {
   final
-      // expect_lint: prefer_async_callback
-      Future<void> Function()? onTap;
+  // expect_lint: prefer_async_callback
+  Future<void> Function()?
+  onTap;
 
   const MyWidget({this.onTap});
 }

@@ -38,5 +38,6 @@ void test() {
   final result8 = a ~/ b + c ~/ d + e ~/ f + g + h;
 
   print(
-      '$result1 $result2 $result3 $result4 $result5 $result6 $result7 $result8');
+    '$result1 $result2 $result3 $result4 $result5 $result6 $result7 $result8',
+  );
 }

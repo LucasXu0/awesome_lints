@@ -13,7 +13,7 @@ void test() {
   }
 
   // Valid: For loop with no condition
-  for (var i = 0;; i++) {
+  for (var i = 0; ; i++) {
     if (i >= max) break;
     print(i);
   }

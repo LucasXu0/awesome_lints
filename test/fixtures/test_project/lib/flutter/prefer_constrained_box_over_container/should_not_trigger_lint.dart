@@ -37,16 +37,9 @@ void main() {
 
   // Container without constraints - should not trigger
 
-  Container(
-    padding: const EdgeInsets.all(8),
-    child: const Text('Hello'),
-  );
+  Container(padding: const EdgeInsets.all(8), child: const Text('Hello'));
 
-  Container(
-    width: 200,
-    height: 200,
-    child: const Text('Hello'),
-  );
+  Container(width: 200, height: 200, child: const Text('Hello'));
 
   // Already using ConstrainedBox - should not trigger
   ConstrainedBox(

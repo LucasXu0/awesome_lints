@@ -3,11 +3,7 @@
 import 'package:flutter/material.dart';
 
 void notTrigger() {
-  IconButton(
-    onPressed: () {},
-    tooltip: 'Add item',
-    icon: Icon(Icons.add),
-  );
+  IconButton(onPressed: () {}, tooltip: 'Add item', icon: Icon(Icons.add));
 
   IconButton(
     iconSize: 24.0,
@@ -37,14 +33,8 @@ void notTrigger() {
   );
 
   // Not an action button, should not trigger
-  TextButton(
-    onPressed: () {},
-    child: Text('Click me'),
-  );
+  TextButton(onPressed: () {}, child: Text('Click me'));
 
   // Not an action button, should not trigger
-  ElevatedButton(
-    onPressed: () {},
-    child: Text('Submit'),
-  );
+  ElevatedButton(onPressed: () {}, child: Text('Submit'));
 }

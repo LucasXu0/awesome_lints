@@ -23,16 +23,10 @@ void notTrigger() {
   );
 
   // Padding is the correct widget
-  Padding(
-    padding: EdgeInsets.all(8),
-    child: Text('Bar'),
-  );
+  Padding(padding: EdgeInsets.all(8), child: Text('Bar'));
 
   // Container without padding or margin
-  Container(
-    color: Color(0xFF000000),
-    child: Text('Baz'),
-  );
+  Container(color: Color(0xFF000000), child: Text('Baz'));
 
   // Container with both padding and other properties
   Container(

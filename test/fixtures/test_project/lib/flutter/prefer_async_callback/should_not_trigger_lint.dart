@@ -41,7 +41,8 @@ void functionWithParameters(Future<void> Function(int) callback) {
 
 // Case 7: Future<void> Function with multiple parameters (should NOT trigger)
 void functionWithMultipleParameters(
-    Future<void> Function(String, int) callback) {
+  Future<void> Function(String, int) callback,
+) {
   callback('hello', 42);
 }
 

@@ -62,11 +62,14 @@ void test() {
   final asSet = list.toSet();
 
   print(
-      '$length $first $last $isEmpty $isNotEmpty $contains $indexOf $sublist $reversed $joined');
+    '$length $first $last $isEmpty $isNotEmpty $contains $indexOf $sublist $reversed $joined',
+  );
   print(
-      '$setLength $setFirst $setLast $setContains $union $intersection $difference');
+    '$setLength $setFirst $setLast $setContains $union $intersection $difference',
+  );
   print(
-      '$mapLength $mapIsEmpty $mapKeys $mapValues $mapEntries $mapContainsKey $mapContainsValue');
+    '$mapLength $mapIsEmpty $mapKeys $mapValues $mapEntries $mapContainsKey $mapContainsValue',
+  );
   print('$mapped $filtered $expanded $folded $reduced');
   print('$any $every $firstWhere');
   print('$newList $newSet $newMap');

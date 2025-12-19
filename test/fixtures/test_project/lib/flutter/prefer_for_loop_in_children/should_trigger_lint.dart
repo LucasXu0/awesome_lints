@@ -9,9 +9,7 @@ void trigger() {
   Column(children: items.map((item) => Text(item)).toList());
 
   // expect_lint: prefer_for_loop_in_children
-  Row(
-    children: [...items.map((item) => Text(item)).toList()],
-  );
+  Row(children: [...items.map((item) => Text(item)).toList()]);
 
   // expect_lint: prefer_for_loop_in_children
   Row(

@@ -77,9 +77,7 @@ class _ShouldNotTriggerLintState extends State<ShouldNotTriggerLint> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Test')),
-      body: Center(
-        child: Text('Counter: $_counter'),
-      ),
+      body: Center(child: Text('Counter: $_counter')),
     );
   }
 }

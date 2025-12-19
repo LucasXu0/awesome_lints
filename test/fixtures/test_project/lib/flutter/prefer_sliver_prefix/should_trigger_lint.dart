@@ -46,9 +46,7 @@ class AppBarWidget extends StatefulWidget {
 class _AppBarWidgetState extends State<AppBarWidget> {
   @override
   Widget build(BuildContext context) {
-    return SliverAppBar(
-      title: const Text('Title'),
-    );
+    return SliverAppBar(title: const Text('Title'));
   }
 }
 
@@ -58,11 +56,9 @@ class PaddedContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SliverPadding(
-        padding: const EdgeInsets.all(16),
-        sliver: SliverList(
-          delegate: SliverChildListDelegate([]),
-        ),
-      );
+    padding: const EdgeInsets.all(16),
+    sliver: SliverList(delegate: SliverChildListDelegate([])),
+  );
 }
 
 // expect_lint: prefer_sliver_prefix
@@ -82,9 +78,7 @@ class ConditionalSliver extends StatelessWidget {
       );
     }
 
-    return SliverList(
-      delegate: SliverChildListDelegate([]),
-    );
+    return SliverList(delegate: SliverChildListDelegate([]));
   }
 }
 
@@ -94,9 +88,7 @@ class FillRemainingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverFillRemaining(
-      child: Container(),
-    );
+    return SliverFillRemaining(child: Container());
   }
 }
 
@@ -106,8 +98,6 @@ class ToBoxAdapterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(),
-    );
+    return SliverToBoxAdapter(child: Container());
   }
 }

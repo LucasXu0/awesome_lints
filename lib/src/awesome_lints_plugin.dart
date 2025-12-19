@@ -2,6 +2,7 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 import 'lints/common/common.dart';
 import 'lints/flutter/flutter.dart';
+import 'lints/provider/provider.dart';
 
 PluginBase createPlugin() => _AwesomeLints();
 
@@ -10,6 +11,7 @@ class _AwesomeLints extends PluginBase {
   List<LintRule> getLintRules(CustomLintConfigs configs) => [
     ...commonLintRules,
     ...flutterLintRules,
+    ...providerLintRules,
   ];
 
   List<LintRule> commonLintRules = [
@@ -102,5 +104,16 @@ class _AwesomeLints extends PluginBase {
     PreferVoidCallback(),
     PreferWidgetPrivateMembers(),
     ProperSuperCalls(),
+  ];
+
+  List<LintRule> providerLintRules = [
+    AvoidInstantiatingInValueProvider(),
+    AvoidReadInsideBuild(),
+    AvoidWatchOutsideBuild(),
+    DisposeProviders(),
+    PreferImmutableSelectorValue(),
+    PreferMultiProvider(),
+    PreferNullableProviderTypes(),
+    PreferProviderExtensions(),
   ];
 }

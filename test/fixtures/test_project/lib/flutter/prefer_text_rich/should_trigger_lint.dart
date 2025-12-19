@@ -12,9 +12,7 @@ void trigger() {
   RichText(
     text: TextSpan(
       text: 'Hello ',
-      children: [
-        TextSpan(text: 'World'),
-      ],
+      children: [TextSpan(text: 'World')],
     ),
   );
 
@@ -41,11 +39,7 @@ void trigger() {
   );
 
   // expect_lint: prefer_text_rich
-  RichText(
-    text: WidgetSpan(
-      child: Icon(Icons.star),
-    ),
-  );
+  RichText(text: WidgetSpan(child: Icon(Icons.star)));
 
   // expect_lint: prefer_text_rich
   RichText(

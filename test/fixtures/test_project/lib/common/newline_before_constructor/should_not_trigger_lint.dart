@@ -117,14 +117,9 @@ class ComplexConstructors {
 
   ComplexConstructors(this.a, this.b);
 
-  ComplexConstructors.defaultValues()
-      : a = 0,
-        b = '';
+  ComplexConstructors.defaultValues() : a = 0, b = '';
 
   factory ComplexConstructors.fromJson(Map<String, dynamic> json) {
-    return ComplexConstructors(
-      json['a'] as int,
-      json['b'] as String,
-    );
+    return ComplexConstructors(json['a'] as int, json['b'] as String);
   }
 }

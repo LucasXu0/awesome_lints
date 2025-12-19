@@ -10,9 +10,7 @@ void trigger() {
   TextFormField();
 
   // expect_lint: avoid_missing_controller
-  TextField(
-    decoration: InputDecoration(hintText: 'Enter text'),
-  );
+  TextField(decoration: InputDecoration(hintText: 'Enter text'));
 
   // expect_lint: avoid_missing_controller
   TextFormField(

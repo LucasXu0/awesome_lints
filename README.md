@@ -6,6 +6,7 @@ A comprehensive collection of custom lint rules for Dart and Flutter application
 
 - 🎯 **32 Flutter-specific lints** - Catch Flutter widget issues, lifecycle problems, and performance pitfalls
 - 🔍 **54 Common Dart lints** - General-purpose rules for any Dart codebase
+- 📦 **8 Provider-specific lints** - Best practices for the Provider state management package
 - ⚡ **Fast analysis** - Built on custom_lint for efficient, real-time feedback
 - 🛠️ **Easy to configure** - All rules enabled by default, with optional customization
 - 📚 **Well-documented** - Every rule includes examples and explanations
@@ -93,6 +94,23 @@ Popular rules include:
 - `avoid-collection-equality-checks` - Prevents identity vs value equality bugs
 - `no-magic-number` - Requires named constants for numeric literals
 
+### Provider Rules
+
+8 rules designed specifically for applications using the Provider package:
+- Provider usage patterns and best practices
+- Memory leak prevention
+- Correctness checks for read/watch usage
+- Code maintainability improvements
+
+**[📖 View all Provider lints →](lib/src/lints/provider/PROVIDER_LINTS.md)**
+
+Popular rules include:
+- `avoid-read-inside-build` - Prevents read() usage in build methods
+- `avoid-watch-outside-build` - Ensures watch() is only used in build
+- `dispose-providers` - Checks for proper resource disposal
+- `prefer-multi-provider` - Suggests MultiProvider over nested providers
+- `prefer-provider-extensions` - Prefers context.read/watch over Provider.of
+
 ## Configuration
 
 All lints are enabled by default. To customize rule behavior or disable specific rules, add configuration to your `analysis_options.yaml`:
@@ -120,8 +138,11 @@ awesome_lints/
 │       │   ├── flutter/           # Flutter-specific lints
 │       │   │   ├── FLUTTER_LINTS.md
 │       │   │   └── *.dart
-│       │   └── common/            # Common Dart lints
-│       │       ├── COMMON_LINTS.md
+│       │   ├── common/            # Common Dart lints
+│       │   │   ├── COMMON_LINTS.md
+│       │   │   └── *.dart
+│       │   └── provider/          # Provider-specific lints
+│       │       ├── PROVIDER_LINTS.md
 │       │       └── *.dart
 │       └── awesome_lints_plugin.dart
 ├── test/
@@ -135,6 +156,7 @@ awesome_lints/
 1. **Create the rule file:**
    - For Flutter rules: `lib/src/lints/flutter/your_rule_name.dart`
    - For common rules: `lib/src/lints/common/your_rule_name.dart`
+   - For Provider rules: `lib/src/lints/provider/your_rule_name.dart`
 
 2. **Implement the `DartLintRule` class:**
 ```dart
@@ -164,7 +186,7 @@ class YourRuleName extends DartLintRule {
 ```
 
 3. **Register the rule:**
-   - Add export to `lib/src/lints/flutter/flutter.dart` or `lib/src/lints/common/common.dart`
+   - Add export to `lib/src/lints/flutter/flutter.dart`, `lib/src/lints/common/common.dart`, or `lib/src/lints/provider/provider.dart`
    - Add the rule instance in `lib/src/awesome_lints_plugin.dart`
 
 4. **Create test fixtures:**
@@ -175,7 +197,7 @@ test/fixtures/test_project/lib/your_rule_name/
 ```
 
 5. **Document the rule:**
-   - Add entry to `FLUTTER_LINTS.md` or `COMMON_LINTS.md`
+   - Add entry to `FLUTTER_LINTS.md`, `COMMON_LINTS.md`, or `PROVIDER_LINTS.md`
    - Include "Why?", "Bad", and "Good" examples
 
 ### Running Tests

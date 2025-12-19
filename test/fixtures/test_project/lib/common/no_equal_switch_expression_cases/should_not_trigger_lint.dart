@@ -141,13 +141,13 @@ void nestedSwitchExpressions() {
 
   final result = switch (x) {
     1 => switch (y) {
-        1 => 'one-one',
-        _ => 'one-other',
-      },
+      1 => 'one-one',
+      _ => 'one-other',
+    },
     2 => switch (y) {
-        1 => 'two-one',
-        _ => 'two-other',
-      },
+      1 => 'two-one',
+      _ => 'two-other',
+    },
     _ => 'other',
   };
 }

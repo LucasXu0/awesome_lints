@@ -65,5 +65,6 @@ void test() {
   final keys = intStringMap.keys;
 
   print(
-      '$contains1 $contains2 $index1 $index2 $hasKey $hasValue $hasKey2 $value $item $lastIndex $numContains $numIndex $lookup1 $dynIndex $length $isEmpty $keys');
+    '$contains1 $contains2 $index1 $index2 $hasKey $hasValue $hasKey2 $value $item $lastIndex $numContains $numIndex $lookup1 $dynIndex $length $isEmpty $keys',
+  );
 }
