@@ -16,6 +16,8 @@ jobs:
 
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.10.4
 
       - name: Setup Flutter with FVM
         uses: kuhnroyal/flutter-fvm-config-action@v3
