@@ -12,13 +12,13 @@ class PreferForLoopInChildren extends DartLintRule {
         'Prefer using for-loop instead of functional methods in children arguments.',
     correctionMessage:
         'Replace .map().toList(), List.generate(), or fold() with a for-loop.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {

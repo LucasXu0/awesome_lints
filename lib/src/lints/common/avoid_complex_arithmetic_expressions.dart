@@ -13,7 +13,7 @@ class AvoidComplexArithmeticExpressions extends DartLintRule {
         'Avoid complex arithmetic expressions with too many operations.',
     correctionMessage:
         'Consider breaking the expression into multiple lines or extracting it into a separate method with a descriptive name.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   static const int _maxOperations = 6;
@@ -21,7 +21,7 @@ class AvoidComplexArithmeticExpressions extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addBinaryExpression((node) {
@@ -43,10 +43,7 @@ class AvoidComplexArithmeticExpressions extends DartLintRule {
       final operationCount = _countArithmeticOperations(node);
 
       if (operationCount > _maxOperations) {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

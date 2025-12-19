@@ -11,13 +11,13 @@ class PreferSizedBoxSquare extends DartLintRule {
     problemMessage: 'Use SizedBox.square when height and width are identical.',
     correctionMessage:
         'Consider using SizedBox.square(dimension: value) instead of SizedBox(height: value, width: value).',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
@@ -54,10 +54,7 @@ class PreferSizedBoxSquare extends DartLintRule {
 
       if (heightSource == widthSource) {
         // Report the issue
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

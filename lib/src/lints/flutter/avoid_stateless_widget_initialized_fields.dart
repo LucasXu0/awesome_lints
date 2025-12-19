@@ -14,13 +14,13 @@ class AvoidStatelessWidgetInitializedFields extends DartLintRule {
         'Consider using static fields or converting to StatefulWidget.',
     correctionMessage:
         'Make field static or convert widget to StatefulWidget if state is needed.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addClassDeclaration((node) {
@@ -29,7 +29,7 @@ class AvoidStatelessWidgetInitializedFields extends DartLintRule {
 
       // Check if it extends StatelessWidget
       final superType = element.supertype;
-      if (superType == null || superType.element3.name3 != 'StatelessWidget') {
+      if (superType == null || superType.element.name != 'StatelessWidget') {
         return;
       }
 
@@ -41,7 +41,7 @@ class AvoidStatelessWidgetInitializedFields extends DartLintRule {
 }
 
 class _StatelessFieldVisitor extends RecursiveAstVisitor<void> {
-  final ErrorReporter reporter;
+  final DiagnosticReporter reporter;
   final LintCode code;
 
   _StatelessFieldVisitor(this.reporter, this.code);

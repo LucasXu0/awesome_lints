@@ -12,22 +12,19 @@ class AvoidNonNullAssertion extends DartLintRule {
         'Avoid using the non-null assertion operator (!) as it can cause runtime exceptions.',
     correctionMessage:
         'Use null-aware operators (?., ??) or proper null checks instead.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addPostfixExpression((node) {
       // Check if the operator is the null assertion operator (!)
       if (node.operator.type == TokenType.BANG) {
-        reporter.atToken(
-          node.operator,
-          _code,
-        );
+        reporter.atToken(node.operator, _code);
       }
     });
   }

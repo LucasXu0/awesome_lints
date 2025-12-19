@@ -13,7 +13,7 @@ class AvoidComplexConditions extends DartLintRule {
         'Avoid overly complex conditional expressions that are difficult to understand.',
     correctionMessage:
         'Consider breaking down the condition into smaller, more readable parts or extracting it into a well-named method.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   static const int _maxComplexity = 10;
@@ -21,7 +21,7 @@ class AvoidComplexConditions extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addIfStatement((node) {
@@ -41,14 +41,11 @@ class AvoidComplexConditions extends DartLintRule {
     });
   }
 
-  void _checkCondition(Expression condition, ErrorReporter reporter) {
+  void _checkCondition(Expression condition, DiagnosticReporter reporter) {
     final complexity = _calculateComplexity(condition);
 
     if (complexity > _maxComplexity) {
-      reporter.atNode(
-        condition,
-        _code,
-      );
+      reporter.atNode(condition, _code);
     }
   }
 
@@ -62,7 +59,7 @@ class AvoidComplexConditions extends DartLintRule {
     if (expression is BinaryExpression) {
       final isLogicalOperator =
           expression.operator.type == TokenType.AMPERSAND_AMPERSAND ||
-              expression.operator.type == TokenType.BAR_BAR;
+          expression.operator.type == TokenType.BAR_BAR;
 
       if (isLogicalOperator) {
         // Each logical operator adds complexity

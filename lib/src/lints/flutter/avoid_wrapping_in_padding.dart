@@ -11,19 +11,19 @@ class AvoidWrappingInPadding extends DartLintRule {
     problemMessage:
         'Avoid wrapping a widget that has a padding property in a Padding widget.',
     correctionMessage: 'Use the padding property of the child widget instead.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
       final type = node.staticType;
       if (type == null) return;
-      if (type.element3?.name3 != 'Padding') return;
+      if (type.element?.name != 'Padding') return;
 
       // Get 'child' argument
       Expression? childArg;
@@ -45,8 +45,9 @@ class AvoidWrappingInPadding extends DartLintRule {
         // Checking constructor parameter is more robust.
         final constructorElement = childArg.constructorName.element;
         if (constructorElement != null) {
-          final hasPaddingParam = constructorElement.formalParameters
-              .any((p) => p.name3 == 'padding');
+          final hasPaddingParam = constructorElement.formalParameters.any(
+            (p) => p.name == 'padding',
+          );
           if (hasPaddingParam) {
             reporter.atNode(node, _code);
           }

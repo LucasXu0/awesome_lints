@@ -10,42 +10,33 @@ class AvoidDoubleSlashImports extends DartLintRule {
     problemMessage:
         'Import/export URIs should not contain double slashes as they can cause runtime issues.',
     correctionMessage: 'Replace double slashes with a single slash.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addImportDirective((node) {
       final uri = node.uri.stringValue;
       if (uri != null && uri.contains('//')) {
-        reporter.atNode(
-          node.uri,
-          _code,
-        );
+        reporter.atNode(node.uri, _code);
       }
     });
 
     context.registry.addExportDirective((node) {
       final uri = node.uri.stringValue;
       if (uri != null && uri.contains('//')) {
-        reporter.atNode(
-          node.uri,
-          _code,
-        );
+        reporter.atNode(node.uri, _code);
       }
     });
 
     context.registry.addPartDirective((node) {
       final uri = node.uri.stringValue;
       if (uri != null && uri.contains('//')) {
-        reporter.atNode(
-          node.uri,
-          _code,
-        );
+        reporter.atNode(node.uri, _code);
       }
     });
   }

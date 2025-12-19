@@ -11,22 +11,19 @@ class AvoidDeclaringCallMethod extends DartLintRule {
         'Avoid implementing a call method. Use a named method instead.',
     correctionMessage:
         'Replace the call method with a descriptive method name for better clarity.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addMethodDeclaration((node) {
       final methodName = node.name.lexeme;
       if (methodName == 'call') {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

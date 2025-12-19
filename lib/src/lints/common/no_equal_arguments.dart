@@ -11,13 +11,13 @@ class NoEqualArguments extends DartLintRule {
     problemMessage:
         'Identical arguments are passed to this invocation, which may indicate a bug.',
     correctionMessage: 'Ensure each argument has the intended unique value.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     // Check function invocations
@@ -36,7 +36,7 @@ class NoEqualArguments extends DartLintRule {
     });
   }
 
-  void _checkArguments(ArgumentList argumentList, ErrorReporter reporter) {
+  void _checkArguments(ArgumentList argumentList, DiagnosticReporter reporter) {
     final arguments = argumentList.arguments;
 
     // Need at least 2 arguments to compare
@@ -53,10 +53,7 @@ class NoEqualArguments extends DartLintRule {
           // For named arguments, compare them separately
           if (arg1 is NamedExpression && arg2 is NamedExpression) {
             if (_areExpressionsEqual(arg1.expression, arg2.expression)) {
-              reporter.atNode(
-                argumentList,
-                _code,
-              );
+              reporter.atNode(argumentList, _code);
               return;
             }
           }
@@ -65,10 +62,7 @@ class NoEqualArguments extends DartLintRule {
 
         // Compare the expressions
         if (_areExpressionsEqual(arg1, arg2)) {
-          reporter.atNode(
-            argumentList,
-            _code,
-          );
+          reporter.atNode(argumentList, _code);
           return; // Only report once per argument list
         }
       }

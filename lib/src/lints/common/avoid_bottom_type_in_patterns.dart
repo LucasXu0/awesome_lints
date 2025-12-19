@@ -12,7 +12,7 @@ class AvoidBottomTypeInPatterns extends DartLintRule {
         'Avoid using bottom types (void, Never, Null) in pattern matching.',
     correctionMessage:
         'Use null checks (== null) or wildcard patterns instead of bottom type patterns.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   static const _bottomTypeNames = {'void', 'Never', 'Null'};
@@ -20,7 +20,7 @@ class AvoidBottomTypeInPatterns extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addObjectPattern((node) {
@@ -42,14 +42,11 @@ class AvoidBottomTypeInPatterns extends DartLintRule {
     });
   }
 
-  void _checkTypeAnnotation(TypeAnnotation type, ErrorReporter reporter) {
+  void _checkTypeAnnotation(TypeAnnotation type, DiagnosticReporter reporter) {
     if (type is NamedType) {
-      final typeName = type.name2.lexeme;
+      final typeName = type.name.lexeme;
       if (_bottomTypeNames.contains(typeName)) {
-        reporter.atNode(
-          type,
-          _code,
-        );
+        reporter.atNode(type, _code);
       }
     }
   }

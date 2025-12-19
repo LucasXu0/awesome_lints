@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -12,7 +13,7 @@ class PreferConstrainedBoxOverContainer extends DartLintRule {
         'Prefer ConstrainedBox over Container when only constraints are needed.',
     correctionMessage:
         'Replace Container with ConstrainedBox for better performance.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   // Container properties that make it inappropriate to convert to ConstrainedBox
@@ -33,23 +34,24 @@ class PreferConstrainedBoxOverContainer extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
       final type = node.staticType;
       if (type == null) return;
 
-      final typeName = type.element3?.name3;
+      final typeName = type.element?.name;
       if (typeName != 'Container') return;
 
       // Extract named arguments
-      final namedArgs =
-          node.argumentList.arguments.whereType<NamedExpression>();
+      final namedArgs = node.argumentList.arguments
+          .whereType<NamedExpression>();
 
       // Check if constraints argument exists
-      final hasConstraints =
-          namedArgs.any((arg) => arg.name.label.name == 'constraints');
+      final hasConstraints = namedArgs.any(
+        (arg) => arg.name.label.name == 'constraints',
+      );
 
       if (!hasConstraints) return;
 
@@ -76,8 +78,8 @@ class _ReplaceContainerWithConstrainedBox extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    analyzer_error.AnalysisError analysisError,
-    List<analyzer_error.AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     context.registry.addInstanceCreationExpression((node) {
       if (!analysisError.sourceRange.intersects(node.sourceRange)) return;
@@ -85,12 +87,12 @@ class _ReplaceContainerWithConstrainedBox extends DartFix {
       final type = node.staticType;
       if (type == null) return;
 
-      final typeName = type.element3?.name3;
+      final typeName = type.element?.name;
       if (typeName != 'Container') return;
 
       // Extract named arguments
-      final namedArgs =
-          node.argumentList.arguments.whereType<NamedExpression>();
+      final namedArgs = node.argumentList.arguments
+          .whereType<NamedExpression>();
 
       // Find constraints argument
       final constraintsArg = namedArgs
@@ -100,12 +102,14 @@ class _ReplaceContainerWithConstrainedBox extends DartFix {
       if (constraintsArg == null) return;
 
       // Find child argument
-      final childArg =
-          namedArgs.where((arg) => arg.name.label.name == 'child').firstOrNull;
+      final childArg = namedArgs
+          .where((arg) => arg.name.label.name == 'child')
+          .firstOrNull;
 
       // Find key argument
-      final keyArg =
-          namedArgs.where((arg) => arg.name.label.name == 'key').firstOrNull;
+      final keyArg = namedArgs
+          .where((arg) => arg.name.label.name == 'key')
+          .firstOrNull;
 
       // Build replacement code
       final buffer = StringBuffer('ConstrainedBox(');
@@ -130,10 +134,7 @@ class _ReplaceContainerWithConstrainedBox extends DartFix {
       );
 
       changeBuilder.addDartFileEdit((builder) {
-        builder.addSimpleReplacement(
-          node.sourceRange,
-          buffer.toString(),
-        );
+        builder.addSimpleReplacement(node.sourceRange, buffer.toString());
       });
     });
   }

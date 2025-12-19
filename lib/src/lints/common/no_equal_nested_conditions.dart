@@ -13,13 +13,13 @@ class NoEqualNestedConditions extends DartLintRule {
         'Nested if statement has the same condition as the parent if statement.',
     correctionMessage:
         'Remove the redundant nested condition or use a different condition.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addIfStatement((node) {
@@ -36,17 +36,14 @@ class _NestedIfVisitor extends RecursiveAstVisitor<void> {
   _NestedIfVisitor(this.parentCondition, this.reporter);
 
   final String parentCondition;
-  final ErrorReporter reporter;
+  final DiagnosticReporter reporter;
 
   @override
   void visitIfStatement(IfStatement node) {
     final nestedCondition = node.expression.toString();
 
     if (nestedCondition == parentCondition) {
-      reporter.atNode(
-        node.expression,
-        NoEqualNestedConditions._code,
-      );
+      reporter.atNode(node.expression, NoEqualNestedConditions._code);
     }
 
     // Continue visiting nested statements

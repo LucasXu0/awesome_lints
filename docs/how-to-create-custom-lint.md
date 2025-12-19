@@ -39,13 +39,13 @@ class AvoidSingleChildColumnOrRow extends DartLintRule {
         'Avoid using Column or Row with a single child. Consider removing the wrapper.',
     correctionMessage:
         'Remove the Column/Row wrapper and use the child directly.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     // Register a visitor for the AST nodes you want to check

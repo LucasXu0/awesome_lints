@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
@@ -13,13 +13,13 @@ class AvoidAlwaysNullParameters extends DartLintRule {
     name: 'avoid_always_null_parameters',
     problemMessage: 'This parameter always receives null and can be removed.',
     correctionMessage: 'Remove the parameter from the function signature.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addCompilationUnit((node) {
@@ -58,10 +58,7 @@ class AvoidAlwaysNullParameters extends DartLintRule {
           final declNode = visitor.declarationNodes[function];
           if (declNode != null) {
             final reportNode = _getFunctionNameNode(declNode);
-            reporter.atNode(
-              reportNode,
-              _code,
-            );
+            reporter.atNode(reportNode, _code);
           }
         }
       }
@@ -85,11 +82,11 @@ class AvoidAlwaysNullParameters extends DartLintRule {
 class _AlwaysNullParametersVisitor extends RecursiveAstVisitor<void> {
   // Collect all private function/method declarations and their parameters
   final privateDeclarations =
-      <ExecutableElement2, List<FormalParameterElement>>{};
+      <ExecutableElement, List<FormalParameterElement>>{};
   // Track parameter usages: element -> list of argument values
   final parameterUsages = <FormalParameterElement, List<Expression?>>{};
   // Track AST nodes for declarations
-  final declarationNodes = <ExecutableElement2, AstNode>{};
+  final declarationNodes = <ExecutableElement, AstNode>{};
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
@@ -99,7 +96,8 @@ class _AlwaysNullParametersVisitor extends RecursiveAstVisitor<void> {
       if (!privateDeclarations.containsKey(element)) {
         final nullableParams = element.formalParameters
             .where(
-                (p) => p.type.nullabilitySuffix == NullabilitySuffix.question)
+              (p) => p.type.nullabilitySuffix == NullabilitySuffix.question,
+            )
             .toList();
         if (nullableParams.isNotEmpty) {
           privateDeclarations[element] = nullableParams;
@@ -121,7 +119,8 @@ class _AlwaysNullParametersVisitor extends RecursiveAstVisitor<void> {
       if (!privateDeclarations.containsKey(element)) {
         final nullableParams = element.formalParameters
             .where(
-                (p) => p.type.nullabilitySuffix == NullabilitySuffix.question)
+              (p) => p.type.nullabilitySuffix == NullabilitySuffix.question,
+            )
             .toList();
         if (nullableParams.isNotEmpty) {
           privateDeclarations[element] = nullableParams;
@@ -138,7 +137,7 @@ class _AlwaysNullParametersVisitor extends RecursiveAstVisitor<void> {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     final element = node.methodName.element;
-    if (element is ExecutableElement2 &&
+    if (element is ExecutableElement &&
         privateDeclarations.containsKey(element)) {
       _recordArguments(node.argumentList, element);
     }
@@ -154,10 +153,7 @@ class _AlwaysNullParametersVisitor extends RecursiveAstVisitor<void> {
     super.visitFunctionExpressionInvocation(node);
   }
 
-  void _recordArguments(
-    ArgumentList argumentList,
-    ExecutableElement2 function,
-  ) {
+  void _recordArguments(ArgumentList argumentList, ExecutableElement function) {
     for (final param in function.formalParameters) {
       if (!parameterUsages.containsKey(param)) continue;
 

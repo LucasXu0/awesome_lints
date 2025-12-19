@@ -11,13 +11,13 @@ class AvoidDuplicateCascades extends DartLintRule {
     problemMessage:
         'This cascade operation is duplicated, which is likely a typo or bug.',
     correctionMessage: 'Remove or modify the duplicate cascade operation.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addCascadeExpression((node) {
@@ -28,10 +28,7 @@ class AvoidDuplicateCascades extends DartLintRule {
         final key = _getCascadeKey(section);
         if (key != null) {
           if (seen.contains(key)) {
-            reporter.atNode(
-              section,
-              _code,
-            );
+            reporter.atNode(section, _code);
           } else {
             seen.add(key);
           }
@@ -89,12 +86,14 @@ class AvoidDuplicateCascades extends DartLintRule {
   }
 
   String _getArgumentsKey(ArgumentList argumentList) {
-    return argumentList.arguments.map((arg) {
-      if (arg is NamedExpression) {
-        return '${arg.name.label.name}:${_getExpressionKey(arg.expression)}';
-      }
-      return _getExpressionKey(arg);
-    }).join(',');
+    return argumentList.arguments
+        .map((arg) {
+          if (arg is NamedExpression) {
+            return '${arg.name.label.name}:${_getExpressionKey(arg.expression)}';
+          }
+          return _getExpressionKey(arg);
+        })
+        .join(',');
   }
 
   String _getExpressionKey(Expression expr) {

@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:analyzer/source/line_info.dart';
@@ -12,13 +13,13 @@ class NewlineBeforeReturn extends DartLintRule {
     name: 'newline_before_return',
     problemMessage: 'Missing a blank line before return statement.',
     correctionMessage: 'Add a blank line before the return statement.',
-    errorSeverity: analyzer_error.ErrorSeverity.INFO,
+    errorSeverity: analyzer_error.DiagnosticSeverity.INFO,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addCompilationUnit((unit) {
@@ -34,7 +35,7 @@ class NewlineBeforeReturn extends DartLintRule {
 
 class _ReturnVisitor extends RecursiveAstVisitor<void> {
   final LineInfo lineInfo;
-  final ErrorReporter reporter;
+  final DiagnosticReporter reporter;
 
   _ReturnVisitor(this.lineInfo, this.reporter);
 
@@ -55,16 +56,14 @@ class _ReturnVisitor extends RecursiveAstVisitor<void> {
     // Get the previous statement
     final previousStatement = statements[returnIndex - 1];
 
-    final previousStatementEndLine =
-        lineInfo.getLocation(previousStatement.end).lineNumber;
+    final previousStatementEndLine = lineInfo
+        .getLocation(previousStatement.end)
+        .lineNumber;
     final returnStartLine = lineInfo.getLocation(node.offset).lineNumber;
 
     // If there's no blank line between them (consecutive lines)
     if (returnStartLine - previousStatementEndLine < 2) {
-      reporter.atNode(
-        node,
-        NewlineBeforeReturn._code,
-      );
+      reporter.atNode(node, NewlineBeforeReturn._code);
     }
   }
 }
@@ -75,17 +74,13 @@ class _AddBlankLineBeforeReturn extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    analyzer_error.AnalysisError analysisError,
-    List<analyzer_error.AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     context.registry.addCompilationUnit((unit) {
       final lineInfo = unit.lineInfo;
 
-      unit.visitChildren(_ReturnFixVisitor(
-        lineInfo,
-        reporter,
-        analysisError,
-      ));
+      unit.visitChildren(_ReturnFixVisitor(lineInfo, reporter, analysisError));
     });
   }
 }
@@ -93,7 +88,7 @@ class _AddBlankLineBeforeReturn extends DartFix {
 class _ReturnFixVisitor extends RecursiveAstVisitor<void> {
   final LineInfo lineInfo;
   final ChangeReporter reporter;
-  final analyzer_error.AnalysisError analysisError;
+  final Diagnostic analysisError;
 
   _ReturnFixVisitor(this.lineInfo, this.reporter, this.analysisError);
 
@@ -117,8 +112,9 @@ class _ReturnFixVisitor extends RecursiveAstVisitor<void> {
     // Get the previous statement
     final previousStatement = statements[returnIndex - 1];
 
-    final previousStatementEndLine =
-        lineInfo.getLocation(previousStatement.end).lineNumber;
+    final previousStatementEndLine = lineInfo
+        .getLocation(previousStatement.end)
+        .lineNumber;
     final returnStartLine = lineInfo.getLocation(node.offset).lineNumber;
 
     // If there's no blank line between them

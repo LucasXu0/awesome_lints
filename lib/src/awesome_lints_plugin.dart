@@ -7,8 +7,10 @@ PluginBase createPlugin() => _AwesomeLints();
 
 class _AwesomeLints extends PluginBase {
   @override
-  List<LintRule> getLintRules(CustomLintConfigs configs) =>
-      [...commonLintRules, ...flutterLintRules];
+  List<LintRule> getLintRules(CustomLintConfigs configs) => [
+    ...commonLintRules,
+    ...flutterLintRules,
+  ];
 
   List<LintRule> commonLintRules = [
     ArgumentsOrdering(),

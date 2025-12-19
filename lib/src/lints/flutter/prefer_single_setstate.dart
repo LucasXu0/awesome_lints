@@ -13,13 +13,13 @@ class PreferSingleSetstate extends DartLintRule {
         'Combine multiple consecutive setState calls into a single call. Multiple setState calls can cause unnecessary rebuilds.',
     correctionMessage:
         'Merge the consecutive setState calls into a single setState call.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addMethodDeclaration((node) {
@@ -34,10 +34,7 @@ class PreferSingleSetstate extends DartLintRule {
 
       // Report each consecutive setState call after the first one
       for (final setStateNode in visitor.consecutiveSetStateCalls) {
-        reporter.atNode(
-          setStateNode,
-          _code,
-        );
+        reporter.atNode(setStateNode, _code);
       }
     });
   }

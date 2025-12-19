@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -12,13 +13,13 @@ class BinaryExpressionOperandOrder extends DartLintRule {
         'Literal value should be on the right side of the operator.',
     correctionMessage:
         'Move the literal to the right side of the binary expression.',
-    errorSeverity: analyzer_error.ErrorSeverity.INFO,
+    errorSeverity: analyzer_error.DiagnosticSeverity.INFO,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addBinaryExpression((node) {
@@ -27,10 +28,7 @@ class BinaryExpressionOperandOrder extends DartLintRule {
 
       // Check if left operand is a literal and right is not
       if (_isLiteral(leftOperand) && !_isLiteral(rightOperand)) {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }
@@ -56,8 +54,8 @@ class _SwapOperands extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    analyzer_error.AnalysisError analysisError,
-    List<analyzer_error.AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     context.registry.addBinaryExpression((node) {
       if (!analysisError.sourceRange.intersects(node.sourceRange)) return;

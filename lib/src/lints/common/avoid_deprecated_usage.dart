@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -10,13 +10,13 @@ class AvoidDeprecatedUsage extends DartLintRule {
     name: 'avoid_deprecated_usage',
     problemMessage: 'This element is deprecated and should not be used.',
     correctionMessage: 'Replace with a non-deprecated alternative.',
-    errorSeverity: analyzer_error.ErrorSeverity.INFO,
+    errorSeverity: analyzer_error.DiagnosticSeverity.INFO,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     // Check simple identifiers (variables, classes, etc.)
@@ -28,10 +28,7 @@ class AvoidDeprecatedUsage extends DartLintRule {
 
       final element = node.element;
       if (element != null && _hasDeprecatedAnnotation(element)) {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
 
@@ -39,10 +36,7 @@ class AvoidDeprecatedUsage extends DartLintRule {
     context.registry.addInstanceCreationExpression((node) {
       final element = node.constructorName.element;
       if (element != null && _hasDeprecatedAnnotation(element)) {
-        reporter.atNode(
-          node.constructorName,
-          _code,
-        );
+        reporter.atNode(node.constructorName, _code);
       }
     });
 
@@ -50,15 +44,12 @@ class AvoidDeprecatedUsage extends DartLintRule {
     context.registry.addMethodInvocation((node) {
       final element = node.methodName.element;
       if (element != null && _hasDeprecatedAnnotation(element)) {
-        reporter.atNode(
-          node.methodName,
-          _code,
-        );
+        reporter.atNode(node.methodName, _code);
       }
     });
   }
 
-  bool _hasDeprecatedAnnotation(Element2? element) {
+  bool _hasDeprecatedAnnotation(Element? element) {
     if (element == null) return false;
 
     // Note: This is a simplified implementation.

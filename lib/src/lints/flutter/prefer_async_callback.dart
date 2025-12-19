@@ -12,13 +12,13 @@ class PreferAsyncCallback extends DartLintRule {
         'Prefer using AsyncCallback typedef instead of Future<void> Function().',
     correctionMessage:
         'Replace Future<void> Function() with AsyncCallback from dart:ui or flutter.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addGenericFunctionType((node) {
@@ -26,10 +26,7 @@ class PreferAsyncCallback extends DartLintRule {
       if (!_isFutureVoidFunctionWithNoParameters(node)) return;
 
       // Report the issue
-      reporter.atNode(
-        node,
-        _code,
-      );
+      reporter.atNode(node, _code);
     });
   }
 
@@ -41,7 +38,7 @@ class PreferAsyncCallback extends DartLintRule {
     // Check if the return type is Future<void>
     final returnType = node.returnType;
     if (returnType is! NamedType) return false;
-    if (returnType.name2.toString() != 'Future') return false;
+    if (returnType.name.toString() != 'Future') return false;
 
     // Check if Future has a type argument of void
     final typeArguments = returnType.typeArguments;
@@ -50,7 +47,7 @@ class PreferAsyncCallback extends DartLintRule {
 
     final typeArg = typeArguments.arguments.first;
     if (typeArg is! NamedType) return false;
-    if (typeArg.name2.toString() != 'void') return false;
+    if (typeArg.name.toString() != 'void') return false;
 
     return true;
   }

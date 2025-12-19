@@ -12,13 +12,13 @@ class NoEqualConditions extends DartLintRule {
         'Duplicate condition found in if-else chain. This branch is unreachable.',
     correctionMessage:
         'Use a different condition or remove the duplicate branch.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addIfStatement((node) {
@@ -38,10 +38,7 @@ class NoEqualConditions extends DartLintRule {
 
           // Check if this condition already exists
           if (conditions.contains(condition)) {
-            reporter.atNode(
-              currentElse.expression,
-              _code,
-            );
+            reporter.atNode(currentElse.expression, _code);
           } else {
             conditions.add(condition);
           }

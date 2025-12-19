@@ -12,23 +12,20 @@ class AvoidConstantAssertConditions extends DartLintRule {
         'Avoid assert statements with constant conditions that are always true or always false.',
     correctionMessage:
         'Remove assertions with constant conditions or use dynamic conditions that can actually fail.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addAssertStatement((node) {
       final condition = node.condition;
 
       if (_isConstantExpression(condition)) {
-        reporter.atNode(
-          condition,
-          _code,
-        );
+        reporter.atNode(condition, _code);
       }
     });
   }

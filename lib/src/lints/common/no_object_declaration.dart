@@ -12,13 +12,13 @@ class NoObjectDeclaration extends DartLintRule {
         'Avoid declaring class members with the Object type. Use a more specific type instead.',
     correctionMessage:
         'Replace Object with a more specific type that better describes the member.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     // Check field declarations
@@ -51,7 +51,7 @@ class NoObjectDeclaration extends DartLintRule {
 
     // Handle NamedType (previously known as TypeName)
     if (type is NamedType) {
-      final name = type.name2;
+      final name = type.name;
       // Check if it's exactly "Object" (not nullable Object?)
       if (name.lexeme == 'Object') {
         return true;

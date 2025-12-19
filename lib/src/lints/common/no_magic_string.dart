@@ -12,7 +12,7 @@ class NoMagicString extends DartLintRule {
         'Avoid using magic strings. Extract them into named constants for better maintainability and localization.',
     correctionMessage:
         'Define a named constant with a descriptive name for this string.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   // Default ignored invocations
@@ -21,7 +21,7 @@ class NoMagicString extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addSimpleStringLiteral((node) {

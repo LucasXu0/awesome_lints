@@ -12,13 +12,13 @@ class NoEqualThenElse extends DartLintRule {
         'The then and else branches contain identical code, making the condition redundant.',
     correctionMessage:
         'Remove the conditional statement and use the common code directly.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     // Check if statements
@@ -37,20 +37,14 @@ class NoEqualThenElse extends DartLintRule {
 
       // Compare the source code of both branches
       if (_areStatementsEqual(thenStatement, elseStatement)) {
-        reporter.atNode(
-          node.expression,
-          _code,
-        );
+        reporter.atNode(node.expression, _code);
       }
     });
 
     // Check conditional expressions (ternary operator)
     context.registry.addConditionalExpression((node) {
       if (_areExpressionsEqual(node.thenExpression, node.elseExpression)) {
-        reporter.atNode(
-          node.condition,
-          _code,
-        );
+        reporter.atNode(node.condition, _code);
       }
     });
   }

@@ -13,20 +13,20 @@ class AvoidConditionsWithBooleanLiterals extends DartLintRule {
         'Avoid using boolean literals in logical expressions as they are redundant or make the result constant.',
     correctionMessage:
         'Remove the boolean literal and simplify the expression, or remove the entire condition if it always evaluates to the same value.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addBinaryExpression((node) {
       // Check if the operator is a logical AND (&&) or OR (||)
       final isLogicalOperator =
           node.operator.type == TokenType.AMPERSAND_AMPERSAND ||
-              node.operator.type == TokenType.BAR_BAR;
+          node.operator.type == TokenType.BAR_BAR;
 
       if (!isLogicalOperator) return;
 
@@ -35,10 +35,7 @@ class AvoidConditionsWithBooleanLiterals extends DartLintRule {
       final isRightBooleanLiteral = node.rightOperand is BooleanLiteral;
 
       if (isLeftBooleanLiteral || isRightBooleanLiteral) {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

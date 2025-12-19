@@ -2,13 +2,13 @@ name: Lint
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  lint-lib:
-    name: Lint lib folder
+  lint:
+    name: Lint and Analyze
     runs-on: ubuntu-latest
 
     steps:
@@ -17,37 +17,45 @@ jobs:
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
         with:
-          sdk: stable
+          sdk: 3.10.4
+
+      - name: Setup Flutter with FVM
+        uses: kuhnroyal/flutter-fvm-config-action@v3
+        with:
+          path: ".fvmrc"
+
+      - name: Install FVM
+        run: |
+          dart pub global activate fvm
+          fvm install
 
       - name: Install dependencies
-        run: dart pub get
+        run: fvm flutter pub get
 
       - name: Check dart format in lib
-        run: dart format --set-exit-if-changed lib
+        run: fvm dart format --set-exit-if-changed lib
 
       - name: Run dart analyze in lib
-        run: dart analyze lib
-
-  lint-test:
-    name: Lint test folder
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Dart
-        uses: dart-lang/setup-dart@v1
-        with:
-          sdk: stable
-
-      - name: Install dependencies
-        run: dart pub get
+        run: fvm dart analyze lib
 
       - name: Check dart format in test
-        run: dart format --set-exit-if-changed test
+        run: fvm dart format test
+
+      - name: Debug versions and diff
+        run: |
+          fvm dart --version
+          fvm flutter --version
+          git rev-parse HEAD
+          git status --porcelain
+          git diff --name-only
+
+      - name: Install dependencies in fixture project
+        run: |
+          cd test/fixtures/test_project
+          fvm flutter pub get
 
       - name: Run dart analyze in test
-        run: dart analyze test
+        run: fvm dart analyze test
 
       - name: Run custom_lint in test
-        run: dart run custom_lint test
+        run: fvm dart run custom_lint test

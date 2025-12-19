@@ -13,18 +13,19 @@ class NoBooleanLiteralCompare extends DartLintRule {
         'Avoid comparing boolean values to boolean literals (true or false).',
     correctionMessage:
         'Use the boolean value directly or negate it with ! instead of comparing to literals.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addBinaryExpression((node) {
       // Check if the operator is == or !=
-      final isEqualityOperator = node.operator.type == TokenType.EQ_EQ ||
+      final isEqualityOperator =
+          node.operator.type == TokenType.EQ_EQ ||
           node.operator.type == TokenType.BANG_EQ;
 
       if (!isEqualityOperator) return;
@@ -34,10 +35,7 @@ class NoBooleanLiteralCompare extends DartLintRule {
       final isRightBooleanLiteral = node.rightOperand is BooleanLiteral;
 
       if (isLeftBooleanLiteral || isRightBooleanLiteral) {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

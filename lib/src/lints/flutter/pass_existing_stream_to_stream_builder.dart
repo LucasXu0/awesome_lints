@@ -12,13 +12,13 @@ class PassExistingStreamToStreamBuilder extends DartLintRule {
         'Avoid creating streams inline in StreamBuilder. Create the stream beforehand (e.g., in initState).',
     correctionMessage:
         'Create the stream in initState or didUpdateWidget and assign it to a field, then pass that field to StreamBuilder.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
@@ -33,10 +33,9 @@ class PassExistingStreamToStreamBuilder extends DartLintRule {
       // Find the 'stream' argument
       NamedExpression? streamArg;
       try {
-        streamArg =
-            node.argumentList.arguments.whereType<NamedExpression>().firstWhere(
-                  (arg) => arg.name.label.name == 'stream',
-                );
+        streamArg = node.argumentList.arguments
+            .whereType<NamedExpression>()
+            .firstWhere((arg) => arg.name.label.name == 'stream');
       } catch (_) {
         // No stream argument found, skip
         return;

@@ -10,22 +10,19 @@ class AvoidAdjacentStrings extends DartLintRule {
     problemMessage: 'Avoid using adjacent string literals.',
     correctionMessage:
         'Combine adjacent strings into a single string literal or use string interpolation.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addAdjacentStrings((node) {
       // AdjacentStrings node represents string literals placed side-by-side
       // This is the exact pattern we want to flag
-      reporter.atNode(
-        node,
-        _code,
-      );
+      reporter.atNode(node, _code);
     });
   }
 }

@@ -13,7 +13,7 @@ class AvoidBitwiseOperatorsWithBooleans extends DartLintRule {
         'Avoid using bitwise operators (&, |) with boolean expressions.',
     correctionMessage:
         'Use logical operators (&& for AND, || for OR) instead of bitwise operators with booleans.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   bool _isBooleanExpression(Expression? expr) {
@@ -42,12 +42,13 @@ class AvoidBitwiseOperatorsWithBooleans extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addBinaryExpression((node) {
       // Check if the operator is a bitwise AND or OR
-      final isBitwiseOperator = node.operator.type == TokenType.AMPERSAND ||
+      final isBitwiseOperator =
+          node.operator.type == TokenType.AMPERSAND ||
           node.operator.type == TokenType.BAR;
 
       if (!isBitwiseOperator) return;
@@ -57,10 +58,7 @@ class AvoidBitwiseOperatorsWithBooleans extends DartLintRule {
       final isRightBoolean = _isBooleanExpression(node.rightOperand);
 
       if (isLeftBoolean || isRightBoolean) {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

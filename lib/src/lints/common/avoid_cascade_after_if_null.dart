@@ -13,13 +13,13 @@ class AvoidCascadeAfterIfNull extends DartLintRule {
         'Avoid using cascade expressions after if-null (??) operator without parentheses.',
     correctionMessage:
         'Add parentheses around the if-null expression to clarify the execution order: (expression ?? value)..method()',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addCascadeExpression((node) {
@@ -36,10 +36,7 @@ class AvoidCascadeAfterIfNull extends DartLintRule {
       if (binaryExpr != null) {
         // The cascade is directly applied to an if-null expression
         // This is problematic as it may not work as expected
-        reporter.atNode(
-          binaryExpr,
-          _code,
-        );
+        reporter.atNode(binaryExpr, _code);
       }
     });
 
@@ -54,10 +51,7 @@ class AvoidCascadeAfterIfNull extends DartLintRule {
       if (rightOperand is CascadeExpression) {
         // The right side of ?? is a cascade expression
         // This is problematic as it may not work as expected
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

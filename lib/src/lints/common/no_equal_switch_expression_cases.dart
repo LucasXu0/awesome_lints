@@ -12,13 +12,13 @@ class NoEqualSwitchExpressionCases extends DartLintRule {
         'This switch expression case has the same body as a previous case. Consider combining them.',
     correctionMessage:
         'Combine cases with identical expressions using the OR operator (||).',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addSwitchExpression((node) {
@@ -31,10 +31,7 @@ class NoEqualSwitchExpressionCases extends DartLintRule {
         // Check if we've seen this body before
         if (caseBodies.containsKey(body)) {
           // Report on the duplicate case
-          reporter.atNode(
-            caseNode,
-            _code,
-          );
+          reporter.atNode(caseNode, _code);
         } else {
           // Store this body for future comparison
           caseBodies[body] = caseNode;

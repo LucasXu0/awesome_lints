@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -12,13 +13,13 @@ class AvoidSingleChildColumnOrRow extends DartLintRule {
         'Avoid using Column or Row with a single child. Consider removing the wrapper.',
     correctionMessage:
         'Remove the Column/Row wrapper and use the child directly.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
@@ -33,10 +34,9 @@ class AvoidSingleChildColumnOrRow extends DartLintRule {
       // Find the 'children' argument
       NamedExpression? childrenArg;
       try {
-        childrenArg =
-            node.argumentList.arguments.whereType<NamedExpression>().firstWhere(
-                  (arg) => arg.name.label.name == 'children',
-                );
+        childrenArg = node.argumentList.arguments
+            .whereType<NamedExpression>()
+            .firstWhere((arg) => arg.name.label.name == 'children');
       } catch (_) {
         return;
       }
@@ -73,10 +73,7 @@ class AvoidSingleChildColumnOrRow extends DartLintRule {
       }
 
       // Report the issue
-      reporter.atNode(
-        node,
-        _code,
-      );
+      reporter.atNode(node, _code);
     });
   }
 
@@ -90,8 +87,8 @@ class _RemoveSingleChildWrapper extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    analyzer_error.AnalysisError analysisError,
-    List<analyzer_error.AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     context.registry.addInstanceCreationExpression((node) {
       if (!analysisError.sourceRange.intersects(node.sourceRange)) return;
@@ -105,10 +102,9 @@ class _RemoveSingleChildWrapper extends DartFix {
       // Find the 'children' argument
       NamedExpression? childrenArg;
       try {
-        childrenArg =
-            node.argumentList.arguments.whereType<NamedExpression>().firstWhere(
-                  (arg) => arg.name.label.name == 'children',
-                );
+        childrenArg = node.argumentList.arguments
+            .whereType<NamedExpression>()
+            .firstWhere((arg) => arg.name.label.name == 'children');
       } catch (_) {
         return;
       }
@@ -150,10 +146,7 @@ class _RemoveSingleChildWrapper extends DartFix {
       );
 
       changeBuilder.addDartFileEdit((builder) {
-        builder.addSimpleReplacement(
-          node.sourceRange,
-          singleChild.toSource(),
-        );
+        builder.addSimpleReplacement(node.sourceRange, singleChild.toSource());
       });
     });
   }
