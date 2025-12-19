@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
@@ -14,13 +14,13 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
         'Avoid calling async functions in synchronous contexts without awaiting or handling the Future.',
     correctionMessage:
         'Make the function async and await the call, use unawaited(), or call .ignore() on the Future.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addMethodInvocation((node) {
@@ -38,13 +38,10 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
 
       // Check if the invoked method is async
       final element = node.methodName.element;
-      if (element is ExecutableElement2) {
+      if (element is ExecutableElement) {
         final returnType = element.returnType;
         if (_isFutureType(returnType) && element.firstFragment.isAsynchronous) {
-          reporter.atNode(
-            node.methodName,
-            _code,
-          );
+          reporter.atNode(node.methodName, _code);
         }
       }
     });
@@ -64,13 +61,10 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
 
       // Check if the function returns a Future
       final element = node.element;
-      if (element is ExecutableElement2) {
+      if (element is ExecutableElement) {
         final returnType = element.returnType;
         if (_isFutureType(returnType) && element.firstFragment.isAsynchronous) {
-          reporter.atNode(
-            node,
-            _code,
-          );
+          reporter.atNode(node, _code);
         }
       }
     });
@@ -129,7 +123,7 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
   }
 
   bool _isFutureType(DartType type) {
-    final element = type.element3;
+    final element = type.element;
     if (element == null) return false;
 
     // Check if it's a Future or FutureOr
@@ -149,10 +143,10 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
         // Get the parameter element for this named argument
         if (invocation is InstanceCreationExpression) {
           final constructor = invocation.constructorName.element;
-          if (constructor is ConstructorElement2) {
+          if (constructor is ConstructorElement) {
             try {
               final parameter = constructor.formalParameters.firstWhere(
-                (p) => p.name3 == parent.name.label.name,
+                (p) => p.name == parent.name.label.name,
               );
               return _isFutureType(parameter.type);
             } catch (_) {
@@ -162,10 +156,10 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
           }
         } else if (invocation is MethodInvocation) {
           final method = invocation.methodName.element;
-          if (method is ExecutableElement2) {
+          if (method is ExecutableElement) {
             try {
               final parameter = method.formalParameters.firstWhere(
-                (p) => p.name3 == parent.name.label.name,
+                (p) => p.name == parent.name.label.name,
               );
               return _isFutureType(parameter.type);
             } catch (_) {
@@ -185,14 +179,14 @@ class AvoidAsyncCallInSyncFunction extends DartLintRule {
       if (index >= 0) {
         if (invocation is InstanceCreationExpression) {
           final constructor = invocation.constructorName.element;
-          if (constructor is ConstructorElement2) {
+          if (constructor is ConstructorElement) {
             if (index < constructor.formalParameters.length) {
               return _isFutureType(constructor.formalParameters[index].type);
             }
           }
         } else if (invocation is MethodInvocation) {
           final method = invocation.methodName.element;
-          if (method is ExecutableElement2) {
+          if (method is ExecutableElement) {
             if (index < method.formalParameters.length) {
               return _isFutureType(method.formalParameters[index].type);
             }

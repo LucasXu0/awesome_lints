@@ -14,13 +14,13 @@ class DisposeFields extends DartLintRule {
         'Field with dispose(), close(), or cancel() method is not disposed in the dispose method.',
     correctionMessage:
         'Call the dispose(), close(), or cancel() method on this field in the dispose method.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addClassDeclaration((node) {
@@ -37,10 +37,7 @@ class DisposeFields extends DartLintRule {
       // If there's no dispose method, all disposable fields are undisposed
       if (disposeMethod == null) {
         for (final field in disposableFields) {
-          reporter.atNode(
-            field,
-            _code,
-          );
+          reporter.atNode(field, _code);
         }
         return;
       }
@@ -52,10 +49,7 @@ class DisposeFields extends DartLintRule {
       for (final field in disposableFields) {
         final fieldName = _getFieldName(field);
         if (fieldName != null && !disposedFields.contains(fieldName)) {
-          reporter.atNode(
-            field,
-            _code,
-          );
+          reporter.atNode(field, _code);
         }
       }
     });
@@ -67,7 +61,7 @@ class DisposeFields extends DartLintRule {
     if (extendsClause == null) return false;
 
     final superclass = extendsClause.superclass;
-    final superclassName = superclass.element2?.displayName;
+    final superclassName = superclass.element?.displayName;
 
     return superclassName == 'State';
   }
@@ -107,10 +101,10 @@ class DisposeFields extends DartLintRule {
     if (type is! InterfaceType) return false;
 
     // Look for dispose(), close(), or cancel() methods
-    // Use lookUpMethod3 to search through the class hierarchy
-    final disposeMethod = type.lookUpMethod3('dispose', type.element3.library2);
-    final closeMethod = type.lookUpMethod3('close', type.element3.library2);
-    final cancelMethod = type.lookUpMethod3('cancel', type.element3.library2);
+    // Use lookUpMethod to search through the class hierarchy
+    final disposeMethod = type.lookUpMethod('dispose', type.element.library);
+    final closeMethod = type.lookUpMethod('close', type.element.library);
+    final cancelMethod = type.lookUpMethod('cancel', type.element.library);
 
     return disposeMethod != null || closeMethod != null || cancelMethod != null;
   }

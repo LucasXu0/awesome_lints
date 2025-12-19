@@ -11,13 +11,13 @@ class AvoidDuplicateCollectionElements extends DartLintRule {
     problemMessage:
         'This collection contains duplicate elements, which is likely a typo or bug.',
     correctionMessage: 'Remove duplicate elements from the collection.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addListLiteral((node) {
@@ -39,7 +39,7 @@ class AvoidDuplicateCollectionElements extends DartLintRule {
 
   void _checkDuplicates(
     NodeList<CollectionElement> elements,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
   ) {
     final seen = <String>{};
 
@@ -50,10 +50,7 @@ class AvoidDuplicateCollectionElements extends DartLintRule {
           // Skip if this is inside a function callback (like .expand(), .map())
           // as duplicates might be intentional
           if (!_isInsideFunctionCallback(element)) {
-            reporter.atNode(
-              element,
-              _code,
-            );
+            reporter.atNode(element, _code);
           }
         } else {
           seen.add(key);
@@ -84,7 +81,7 @@ class AvoidDuplicateCollectionElements extends DartLintRule {
 
   void _checkMapDuplicates(
     NodeList<CollectionElement> elements,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
   ) {
     final seen = <String>{};
 
@@ -93,10 +90,7 @@ class AvoidDuplicateCollectionElements extends DartLintRule {
         final key = _getExpressionKey(element.key);
         if (key != null) {
           if (seen.contains(key)) {
-            reporter.atNode(
-              element,
-              _code,
-            );
+            reporter.atNode(element, _code);
           } else {
             seen.add(key);
           }

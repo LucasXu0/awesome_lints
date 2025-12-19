@@ -12,7 +12,7 @@ class NoMagicNumber extends DartLintRule {
         'Avoid using magic numbers. Extract them into named constants for better readability and maintainability.',
     correctionMessage:
         'Define a named constant with a descriptive name for this number.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   // Default allowed numbers
@@ -21,7 +21,7 @@ class NoMagicNumber extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addIntegerLiteral((node) {

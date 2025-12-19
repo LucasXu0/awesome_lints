@@ -10,13 +10,13 @@ class AvoidAssignmentsAsConditions extends DartLintRule {
     name: 'avoid_assignments_as_conditions',
     problemMessage: 'Avoid using assignments as conditions.',
     correctionMessage: 'Move the assignment outside the conditional statement.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addIfStatement((node) {
@@ -45,15 +45,12 @@ class AvoidAssignmentsAsConditions extends DartLintRule {
     });
   }
 
-  void _checkCondition(Expression condition, ErrorReporter reporter) {
+  void _checkCondition(Expression condition, DiagnosticReporter reporter) {
     // Check for assignment expression (=)
     if (condition is AssignmentExpression) {
       if (condition.operator.type.lexeme == '=' ||
           condition.operator.type.lexeme == '??=') {
-        reporter.atNode(
-          condition,
-          _code,
-        );
+        reporter.atNode(condition, _code);
         return;
       }
     }
@@ -71,14 +68,11 @@ class AvoidAssignmentsAsConditions extends DartLintRule {
     }
   }
 
-  void _checkForAssignment(Expression expression, ErrorReporter reporter) {
+  void _checkForAssignment(Expression expression, DiagnosticReporter reporter) {
     if (expression is AssignmentExpression) {
       if (expression.operator.type.lexeme == '=' ||
           expression.operator.type.lexeme == '??=') {
-        reporter.atNode(
-          expression,
-          _code,
-        );
+        reporter.atNode(expression, _code);
       }
     } else if (expression is ParenthesizedExpression) {
       _checkForAssignment(expression.expression, reporter);

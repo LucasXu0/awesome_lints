@@ -10,20 +10,17 @@ class AvoidContinue extends DartLintRule {
     problemMessage: 'Avoid using continue statements in loops.',
     correctionMessage:
         'Invert the condition to eliminate the need for continue.',
-    errorSeverity: analyzer_error.ErrorSeverity.INFO,
+    errorSeverity: analyzer_error.DiagnosticSeverity.INFO,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addContinueStatement((node) {
-      reporter.atNode(
-        node,
-        _code,
-      );
+      reporter.atNode(node, _code);
     });
   }
 }

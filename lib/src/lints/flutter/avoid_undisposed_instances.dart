@@ -13,13 +13,13 @@ class AvoidUndisposedInstances extends DartLintRule {
         'Avoid creating disposable instances that are not disposed.',
     correctionMessage:
         'Assign the instance to a variable and dispose it later (e.g. in the dispose method).',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
@@ -59,7 +59,7 @@ class AvoidUndisposedInstances extends DartLintRule {
     // Check current class and superclasses
     var current = type;
     while (true) {
-      if (current.methods2.any((m) => m.name3 == 'dispose')) {
+      if (current.methods.any((m) => m.name == 'dispose')) {
         return true;
       }
       final superType = current.superclass;

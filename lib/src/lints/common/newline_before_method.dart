@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:analyzer/source/line_info.dart';
@@ -12,13 +13,13 @@ class NewlineBeforeMethod extends DartLintRule {
     name: 'newline_before_method',
     problemMessage: 'Missing a blank line before this method declaration.',
     correctionMessage: 'Add a blank line before the method declaration.',
-    errorSeverity: analyzer_error.ErrorSeverity.INFO,
+    errorSeverity: analyzer_error.DiagnosticSeverity.INFO,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addCompilationUnit((unit) {
@@ -34,7 +35,7 @@ class NewlineBeforeMethod extends DartLintRule {
 
 class _MethodVisitor extends RecursiveAstVisitor<void> {
   final LineInfo lineInfo;
-  final ErrorReporter reporter;
+  final DiagnosticReporter reporter;
 
   _MethodVisitor(this.lineInfo, this.reporter);
 
@@ -56,16 +57,14 @@ class _MethodVisitor extends RecursiveAstVisitor<void> {
       // Get the previous member
       final previousMember = members[i - 1];
 
-      final previousMemberEndLine =
-          lineInfo.getLocation(previousMember.end).lineNumber;
+      final previousMemberEndLine = lineInfo
+          .getLocation(previousMember.end)
+          .lineNumber;
       final methodStartLine = lineInfo.getLocation(member.offset).lineNumber;
 
       // If there's no blank line between them (consecutive lines)
       if (methodStartLine - previousMemberEndLine < 2) {
-        reporter.atNode(
-          member,
-          NewlineBeforeMethod._code,
-        );
+        reporter.atNode(member, NewlineBeforeMethod._code);
       }
     }
   }
@@ -77,17 +76,13 @@ class _AddBlankLineBeforeMethod extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    analyzer_error.AnalysisError analysisError,
-    List<analyzer_error.AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     context.registry.addCompilationUnit((unit) {
       final lineInfo = unit.lineInfo;
 
-      unit.visitChildren(_MethodFixVisitor(
-        lineInfo,
-        reporter,
-        analysisError,
-      ));
+      unit.visitChildren(_MethodFixVisitor(lineInfo, reporter, analysisError));
     });
   }
 }
@@ -95,7 +90,7 @@ class _AddBlankLineBeforeMethod extends DartFix {
 class _MethodFixVisitor extends RecursiveAstVisitor<void> {
   final LineInfo lineInfo;
   final ChangeReporter reporter;
-  final analyzer_error.AnalysisError analysisError;
+  final Diagnostic analysisError;
 
   _MethodFixVisitor(this.lineInfo, this.reporter, this.analysisError);
 
@@ -120,8 +115,9 @@ class _MethodFixVisitor extends RecursiveAstVisitor<void> {
       // Get the previous member
       final previousMember = members[i - 1];
 
-      final previousMemberEndLine =
-          lineInfo.getLocation(previousMember.end).lineNumber;
+      final previousMemberEndLine = lineInfo
+          .getLocation(previousMember.end)
+          .lineNumber;
       final methodStartLine = lineInfo.getLocation(member.offset).lineNumber;
 
       // If there's no blank line between them

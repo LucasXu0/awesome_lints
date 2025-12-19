@@ -14,7 +14,7 @@ class DisposeClassFields extends DartLintRule {
         'Field has a disposal method but is not disposed in the cleanup method.',
     correctionMessage:
         'Call the disposal method (dispose, close, or cancel) in the class cleanup method.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   static const _disposalMethods = ['dispose', 'close', 'cancel'];
@@ -22,7 +22,7 @@ class DisposeClassFields extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addClassDeclaration((node) {
@@ -69,10 +69,7 @@ class DisposeClassFields extends DartLintRule {
           if (fieldType != null && _hasDisposalMethod(fieldType)) {
             // Check if this field is disposed
             if (!disposedFields.contains(fieldName)) {
-              reporter.atNode(
-                variable,
-                _code,
-              );
+              reporter.atNode(variable, _code);
             }
           }
         }
@@ -83,12 +80,12 @@ class DisposeClassFields extends DartLintRule {
   bool _hasDisposalMethod(DartType type) {
     if (type is! InterfaceType) return false;
 
-    final element = type.element3;
+    final element = type.element;
 
     // Check if the type has any of the disposal methods
-    // Use lookUpMethod3 to search through the class hierarchy
+    // Use lookUpMethod to search through the class hierarchy
     for (final methodName in _disposalMethods) {
-      final method = type.lookUpMethod3(methodName, element.library2);
+      final method = type.lookUpMethod(methodName, element.library);
       if (method != null) {
         return true;
       }

@@ -11,18 +11,15 @@ class PreferActionButtonTooltip extends DartLintRule {
     problemMessage: 'Add tooltip to action buttons for accessibility.',
     correctionMessage:
         'Add a tooltip parameter to improve accessibility for users.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
-  static const _actionButtonTypes = {
-    'IconButton',
-    'FloatingActionButton',
-  };
+  static const _actionButtonTypes = {'IconButton', 'FloatingActionButton'};
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
@@ -30,7 +27,7 @@ class PreferActionButtonTooltip extends DartLintRule {
       if (type == null) return;
 
       // Check if it is an action button widget
-      final typeName = type.element3?.name3;
+      final typeName = type.element?.name;
       if (typeName == null || !_actionButtonTypes.contains(typeName)) return;
 
       // Check if tooltip parameter is present

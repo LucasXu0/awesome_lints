@@ -12,7 +12,7 @@ class AvoidCommentedOutCode extends DartLintRule {
     problemMessage: 'Avoid commented out code.',
     correctionMessage:
         'Remove commented out code. Use version control to track code history instead.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   // Patterns that indicate code rather than regular comments
@@ -37,7 +37,11 @@ class AvoidCommentedOutCode extends DartLintRule {
     // Method/function calls with semicolon (with or without dot)
     RegExp(r'^\s*//\s*[\w.]+\([^)]*\);'),
     // Import/export statements
-    RegExp(r'^\s*//\s*(import|export)\s+[' "'" r'"]'),
+    RegExp(
+      r'^\s*//\s*(import|export)\s+['
+      "'"
+      r'"]',
+    ),
     // Annotations (with or without parentheses)
     RegExp(r'^\s*//\s*@\w+'),
     // Closing braces (only standalone)
@@ -47,7 +51,7 @@ class AvoidCommentedOutCode extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addCompilationUnit((node) {
@@ -56,7 +60,11 @@ class AvoidCommentedOutCode extends DartLintRule {
     });
   }
 
-  void _processTokens(Token token, LineInfo lineInfo, ErrorReporter reporter) {
+  void _processTokens(
+    Token token,
+    LineInfo lineInfo,
+    DiagnosticReporter reporter,
+  ) {
     Token? currentToken = token;
 
     while (currentToken != null) {
@@ -72,7 +80,10 @@ class AvoidCommentedOutCode extends DartLintRule {
   }
 
   void _processCommentToken(
-      Token? commentToken, LineInfo lineInfo, ErrorReporter reporter) {
+    Token? commentToken,
+    LineInfo lineInfo,
+    DiagnosticReporter reporter,
+  ) {
     Token? current = commentToken;
 
     while (current != null) {
@@ -83,7 +94,7 @@ class AvoidCommentedOutCode extends DartLintRule {
         reporter.atOffset(
           offset: current.offset,
           length: current.length,
-          errorCode: _code,
+          diagnosticCode: _code,
         );
       }
 
@@ -120,10 +131,11 @@ class AvoidCommentedOutCode extends DartLintRule {
     }
 
     // Skip explanatory comments (start with common words followed by colon)
-    if (RegExp(r'^\s*//\s*(Valid|Invalid|Test|Example|Note|Warning|Error|Info|'
-            r'Good|Bad|Correct|Incorrect|Expected|Actual|Input|Output|Result|'
-            r'Before|After|Step|Case|Scenario|Given|When|Then):')
-        .hasMatch(comment)) {
+    if (RegExp(
+      r'^\s*//\s*(Valid|Invalid|Test|Example|Note|Warning|Error|Info|'
+      r'Good|Bad|Correct|Incorrect|Expected|Actual|Input|Output|Result|'
+      r'Before|After|Step|Case|Scenario|Given|When|Then):',
+    ).hasMatch(comment)) {
       return false;
     }
 

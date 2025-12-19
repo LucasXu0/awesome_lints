@@ -12,7 +12,7 @@ class PreferDedicatedMediaQueryMethods extends DartLintRule {
         'Prefer using dedicated MediaQuery methods (like sizeOf, highContrastOf) instead of of() or maybeOf().',
     correctionMessage:
         'Use specific MediaQuery methods such as sizeOf(), highContrastOf(), platformBrightnessOf(), etc. These methods only rebuild when the specific property changes, improving performance.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   static const _deprecatedMethods = {'of', 'maybeOf'};
@@ -20,7 +20,7 @@ class PreferDedicatedMediaQueryMethods extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addMethodInvocation((node) {
@@ -32,10 +32,7 @@ class PreferDedicatedMediaQueryMethods extends DartLintRule {
       if (!_isMediaQueryMethod(node)) return;
 
       // Report the issue
-      reporter.atNode(
-        node,
-        _code,
-      );
+      reporter.atNode(node, _code);
     });
   }
 

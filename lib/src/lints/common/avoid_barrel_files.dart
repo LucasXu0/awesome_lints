@@ -12,13 +12,13 @@ class AvoidBarrelFiles extends DartLintRule {
         'Avoid barrel files that only re-export declarations from other modules.',
     correctionMessage:
         'Consider importing directly from the source files or add local declarations to this file.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addCompilationUnit((node) {
@@ -38,10 +38,7 @@ class AvoidBarrelFiles extends DartLintRule {
       if (hasOnlyExports && !hasDeclarations) {
         // Report on the first export directive
         final firstExport = node.directives.whereType<ExportDirective>().first;
-        reporter.atNode(
-          firstExport,
-          _code,
-        );
+        reporter.atNode(firstExport, _code);
       }
     });
   }

@@ -13,13 +13,13 @@ class AvoidComplexLoopConditions extends DartLintRule {
         'Avoid complex loop conditions that combine multiple logical operations.',
     correctionMessage:
         'Consider simplifying the loop condition or moving additional checks into the loop body.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addForStatement((node) {
@@ -41,7 +41,7 @@ class AvoidComplexLoopConditions extends DartLintRule {
     });
   }
 
-  void _checkCondition(Expression condition, ErrorReporter reporter) {
+  void _checkCondition(Expression condition, DiagnosticReporter reporter) {
     // Check through parenthesized expressions
     if (condition is ParenthesizedExpression) {
       _checkCondition(condition.expression, reporter);
@@ -52,13 +52,10 @@ class AvoidComplexLoopConditions extends DartLintRule {
     if (condition is BinaryExpression) {
       final isLogicalOperator =
           condition.operator.type == TokenType.AMPERSAND_AMPERSAND ||
-              condition.operator.type == TokenType.BAR_BAR;
+          condition.operator.type == TokenType.BAR_BAR;
 
       if (isLogicalOperator) {
-        reporter.atNode(
-          condition,
-          _code,
-        );
+        reporter.atNode(condition, _code);
       }
     }
   }

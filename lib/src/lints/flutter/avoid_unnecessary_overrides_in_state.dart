@@ -12,13 +12,13 @@ class AvoidUnnecessaryOverridesInState extends DartLintRule {
         'Avoid unnecessary method overrides that only call super. This override can be removed.',
     correctionMessage:
         'Remove the override if it only calls super with no additional logic.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addMethodDeclaration((node) {
@@ -33,7 +33,7 @@ class AvoidUnnecessaryOverridesInState extends DartLintRule {
       if (extendsClause == null) return;
 
       final superclass = extendsClause.superclass;
-      final superclassName = superclass.element2?.displayName;
+      final superclassName = superclass.element?.displayName;
 
       // Check if it extends State
       if (superclassName != 'State') return;
@@ -42,10 +42,7 @@ class AvoidUnnecessaryOverridesInState extends DartLintRule {
       if (!_isUnnecessaryOverride(node)) return;
 
       // Report the issue
-      reporter.atNode(
-        node,
-        _code,
-      );
+      reporter.atNode(node, _code);
     });
   }
 

@@ -11,13 +11,13 @@ class AvoidUnnecessaryStatefulWidgets extends DartLintRule {
     name: 'avoid_unnecessary_stateful_widgets',
     problemMessage: 'Avoid using StatefulWidget when the state is not used.',
     correctionMessage: 'Convert to StatelessWidget.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addClassDeclaration((node) {
@@ -30,7 +30,7 @@ class AvoidUnnecessaryStatefulWidgets extends DartLintRule {
 
       // This is a simplified check. We need to check if it extends State.
       final superType = element.supertype;
-      if (superType == null || superType.element3.name3 != 'State') return;
+      if (superType == null || superType.element.name != 'State') return;
 
       // Now check usage inside the class.
       // 1. Check if setState is used.

@@ -13,7 +13,7 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
         'Collection method is called with an incompatible type that will never match.',
     correctionMessage:
         'Ensure the argument type matches the collection\'s element type.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   // Methods that take an element type parameter
@@ -25,19 +25,14 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
   };
 
   // Map-specific methods
-  static const _mapKeyMethods = {
-    'containsKey',
-    'remove',
-  };
+  static const _mapKeyMethods = {'containsKey', 'remove'};
 
-  static const _mapValueMethods = {
-    'containsValue',
-  };
+  static const _mapValueMethods = {'containsValue'};
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     // Check method invocations
@@ -102,19 +97,13 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
         if (typeArgs.isNotEmpty) {
           final keyType = typeArgs[0];
           if (!_isCompatibleType(indexType, keyType)) {
-            reporter.atNode(
-              index,
-              _code,
-            );
+            reporter.atNode(index, _code);
           }
         }
       } else if (targetType.isDartCoreList) {
         // List indexing should be int
         if (!indexType.isDartCoreInt) {
-          reporter.atNode(
-            index,
-            _code,
-          );
+          reporter.atNode(index, _code);
         }
       }
     });
@@ -125,7 +114,7 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
     DartType argumentType,
     String methodName,
     Expression argument,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
   ) {
     if (!_elementMethods.contains(methodName)) return;
 
@@ -135,10 +124,7 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
     final elementType = typeArgs.first;
 
     if (!_isCompatibleType(argumentType, elementType)) {
-      reporter.atNode(
-        argument,
-        _code,
-      );
+      reporter.atNode(argument, _code);
     }
   }
 
@@ -147,7 +133,7 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
     DartType argumentType,
     String methodName,
     Expression argument,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
   ) {
     final typeArgs = mapType.typeArguments;
     if (typeArgs.length < 2) return; // Dynamic map
@@ -155,26 +141,20 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
     if (_mapKeyMethods.contains(methodName)) {
       final keyType = typeArgs[0];
       if (!_isCompatibleType(argumentType, keyType)) {
-        reporter.atNode(
-          argument,
-          _code,
-        );
+        reporter.atNode(argument, _code);
       }
     } else if (_mapValueMethods.contains(methodName)) {
       final valueType = typeArgs[1];
       if (!_isCompatibleType(argumentType, valueType)) {
-        reporter.atNode(
-          argument,
-          _code,
-        );
+        reporter.atNode(argument, _code);
       }
     }
   }
 
   bool _isCompatibleType(DartType argumentType, DartType expectedType) {
     // Check if types have dynamic element (dynamic type)
-    if (argumentType.element3?.name3 == 'dynamic' ||
-        expectedType.element3?.name3 == 'dynamic') {
+    if (argumentType.element?.name == 'dynamic' ||
+        expectedType.element?.name == 'dynamic') {
       return true;
     }
 
@@ -184,7 +164,7 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
     }
 
     // Null type is compatible with nullable types
-    if (argumentType.element3?.name3 == 'Null') {
+    if (argumentType.element?.name == 'Null') {
       return true;
     }
 
@@ -195,7 +175,7 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
 
     // Check subtype relationship for interface types
     if (argumentType is InterfaceType && expectedType is InterfaceType) {
-      if (argumentType.element3 == expectedType.element3) {
+      if (argumentType.element == expectedType.element) {
         return true;
       }
     }
@@ -203,8 +183,8 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
     // Simple name-based check for compatibility
     // This is a simplified approach that may have some false negatives
     // but avoids the complexity of full type hierarchy analysis
-    final argName = argumentType.element3?.name3;
-    final expName = expectedType.element3?.name3;
+    final argName = argumentType.element?.name;
+    final expName = expectedType.element?.name;
 
     if (argName == expName) {
       return true;

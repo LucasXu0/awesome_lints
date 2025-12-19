@@ -13,13 +13,13 @@ class AvoidContradictoryExpressions extends DartLintRule {
         'This expression contains contradictory conditions that always evaluate to false.',
     correctionMessage:
         'Use OR operator or fix the logic to make conditions non-contradictory.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addBinaryExpression((node) {
@@ -53,15 +53,12 @@ class AvoidContradictoryExpressions extends DartLintRule {
 
   void _checkForContradictions(
     List<Expression> conditions,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
   ) {
     for (var i = 0; i < conditions.length; i++) {
       for (var j = i + 1; j < conditions.length; j++) {
         if (_areContradictory(conditions[i], conditions[j])) {
-          reporter.atNode(
-            conditions[j],
-            _code,
-          );
+          reporter.atNode(conditions[j], _code);
         }
       }
     }

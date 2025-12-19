@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -12,27 +13,28 @@ class PreferAlignOverContainer extends DartLintRule {
         'Prefer using Align instead of Container when only alignment is needed.',
     correctionMessage:
         'Replace Container with Align for alignment-only scenarios.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
       final type = node.staticType;
       if (type == null) return;
-      if (type.element3?.name3 != 'Container') return;
+      if (type.element?.name != 'Container') return;
 
       // Get all named arguments
-      final namedArgs =
-          node.argumentList.arguments.whereType<NamedExpression>();
+      final namedArgs = node.argumentList.arguments
+          .whereType<NamedExpression>();
 
       // Check if there's an alignment argument
-      final hasAlignment =
-          namedArgs.any((arg) => arg.name.label.name == 'alignment');
+      final hasAlignment = namedArgs.any(
+        (arg) => arg.name.label.name == 'alignment',
+      );
       if (!hasAlignment) return;
 
       // Check if there are other arguments besides alignment and child
@@ -59,18 +61,18 @@ class _ReplaceWithAlign extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    analyzer_error.AnalysisError analysisError,
-    List<analyzer_error.AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     context.registry.addInstanceCreationExpression((node) {
       if (!analysisError.sourceRange.intersects(node.sourceRange)) return;
 
       final type = node.staticType;
       if (type == null) return;
-      if (type.element3?.name3 != 'Container') return;
+      if (type.element?.name != 'Container') return;
 
-      final namedArgs =
-          node.argumentList.arguments.whereType<NamedExpression>();
+      final namedArgs = node.argumentList.arguments
+          .whereType<NamedExpression>();
 
       // Find alignment and child arguments
       NamedExpression? alignmentArg;
@@ -105,10 +107,7 @@ class _ReplaceWithAlign extends DartFix {
             ? 'Align(\n  alignment: $alignmentValue,\n  child: $childValue,\n)'
             : 'Align(\n  alignment: $alignmentValue,\n)';
 
-        builder.addSimpleReplacement(
-          node.sourceRange,
-          alignWidget,
-        );
+        builder.addSimpleReplacement(node.sourceRange, alignWidget);
       });
     });
   }

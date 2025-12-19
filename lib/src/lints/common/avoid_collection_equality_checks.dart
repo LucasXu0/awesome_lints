@@ -14,18 +14,19 @@ class AvoidCollectionEqualityChecks extends DartLintRule {
         'Avoid using == or != to compare collections as it uses reference equality, not deep equality.',
     correctionMessage:
         'Use collection equality packages like collection or package:collection for deep equality checks, or compare individual elements.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addBinaryExpression((node) {
       // Check if the operator is == or !=
-      final isEqualityOperator = node.operator.type == TokenType.EQ_EQ ||
+      final isEqualityOperator =
+          node.operator.type == TokenType.EQ_EQ ||
           node.operator.type == TokenType.BANG_EQ;
 
       if (!isEqualityOperator) return;
@@ -39,14 +40,12 @@ class AvoidCollectionEqualityChecks extends DartLintRule {
       // Check if either operand is a collection type (not const)
       final leftIsCollection =
           _isCollectionType(leftType) && !_isConstExpression(node.leftOperand);
-      final rightIsCollection = _isCollectionType(rightType) &&
+      final rightIsCollection =
+          _isCollectionType(rightType) &&
           !_isConstExpression(node.rightOperand);
 
       if (leftIsCollection || rightIsCollection) {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

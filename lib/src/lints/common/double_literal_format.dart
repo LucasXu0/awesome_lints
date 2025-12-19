@@ -10,13 +10,13 @@ class DoubleLiteralFormat extends DartLintRule {
     problemMessage: 'Double literal has incorrect formatting.',
     correctionMessage:
         'Use proper formatting: add leading 0 before decimal point, remove trailing zeros, and avoid unnecessary leading zeros.',
-    errorSeverity: analyzer_error.ErrorSeverity.INFO,
+    errorSeverity: analyzer_error.DiagnosticSeverity.INFO,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addDoubleLiteral((node) {
@@ -24,10 +24,7 @@ class DoubleLiteralFormat extends DartLintRule {
 
       // Check for missing leading 0 (e.g., .257 instead of 0.257)
       if (source.startsWith('.')) {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
         return;
       }
 
@@ -37,10 +34,7 @@ class DoubleLiteralFormat extends DartLintRule {
         if (parts.length == 2) {
           final decimalPart = parts[1];
           if (decimalPart.endsWith('0') && decimalPart.length > 1) {
-            reporter.atNode(
-              node,
-              _code,
-            );
+            reporter.atNode(node, _code);
             return;
           }
 
@@ -49,10 +43,7 @@ class DoubleLiteralFormat extends DartLintRule {
           if (integerPart.length > 1 &&
               integerPart.startsWith('0') &&
               !integerPart.startsWith('0.')) {
-            reporter.atNode(
-              node,
-              _code,
-            );
+            reporter.atNode(node, _code);
             return;
           }
         }

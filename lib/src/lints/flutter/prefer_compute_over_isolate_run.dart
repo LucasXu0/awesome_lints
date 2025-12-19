@@ -12,13 +12,13 @@ class PreferComputeOverIsolateRun extends DartLintRule {
         'Use compute() instead of Isolate.run() in Flutter for better integration.',
     correctionMessage:
         'Replace Isolate.run() with Flutter\'s compute() function for better integration with the framework and automatic error handling.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addMethodInvocation((node) {
@@ -42,10 +42,7 @@ class PreferComputeOverIsolateRun extends DartLintRule {
 
       if (isIsolateTarget) {
         // Report the issue
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

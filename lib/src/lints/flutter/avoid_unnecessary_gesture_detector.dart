@@ -11,13 +11,13 @@ class AvoidUnnecessaryGestureDetector extends DartLintRule {
     problemMessage: 'Avoid using GestureDetector without any callbacks.',
     correctionMessage:
         'Add a callback (e.g. onTap) or remove the GestureDetector.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
@@ -27,7 +27,7 @@ class AvoidUnnecessaryGestureDetector extends DartLintRule {
       // Check if it is a GestureDetector
       // We check the name. checking type element is safer but name is faster and usually sufficient for this specific widget name.
       // But let's try to check type name safely.
-      if (type.element3?.name3 != 'GestureDetector') return;
+      if (type.element?.name != 'GestureDetector') return;
 
       // Also check if it's from flutter/widgets.dart or similar?
       // Checking name is usually fine for "GestureDetector".

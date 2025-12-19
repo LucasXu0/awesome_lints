@@ -12,7 +12,7 @@ class PreferWidgetPrivateMembers extends DartLintRule {
         'Make widget members private to encapsulate implementation details.',
     correctionMessage:
         'Prefix the member name with an underscore (_) to make it private.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   // Standard State lifecycle methods that should not trigger the lint
@@ -43,7 +43,7 @@ class PreferWidgetPrivateMembers extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addMethodDeclaration((node) {
@@ -73,7 +73,7 @@ class PreferWidgetPrivateMembers extends DartLintRule {
     if (extendsClause == null) return null;
 
     final superclass = extendsClause.superclass;
-    final superclassName = superclass.element2?.displayName;
+    final superclassName = superclass.element?.displayName;
 
     switch (superclassName) {
       case 'State':
@@ -93,7 +93,7 @@ class PreferWidgetPrivateMembers extends DartLintRule {
   void _checkMethod(
     MethodDeclaration method,
     _ClassType classType,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
   ) {
     final methodName = method.name.lexeme;
 
@@ -127,7 +127,7 @@ class PreferWidgetPrivateMembers extends DartLintRule {
   void _checkField(
     FieldDeclaration field,
     _ClassType classType,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
   ) {
     // Only check fields for State classes
     if (classType != _ClassType.state) return;
@@ -158,9 +158,4 @@ class PreferWidgetPrivateMembers extends DartLintRule {
   }
 }
 
-enum _ClassType {
-  state,
-  widget,
-  statefulWidget,
-  statelessWidget,
-}
+enum _ClassType { state, widget, statefulWidget, statelessWidget }

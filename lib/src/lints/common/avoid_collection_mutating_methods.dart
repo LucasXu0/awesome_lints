@@ -12,7 +12,7 @@ class AvoidCollectionMutatingMethods extends DartLintRule {
         'Avoid calling mutating methods on collections as they can cause unexpected side effects.',
     correctionMessage:
         'Consider creating a copy of the collection before mutating it, or ensure this behavior is intentional.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   // Common mutating methods for collections
@@ -46,7 +46,7 @@ class AvoidCollectionMutatingMethods extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addMethodInvocation((node) {
@@ -64,10 +64,7 @@ class AvoidCollectionMutatingMethods extends DartLintRule {
       if (targetType == null) return;
 
       if (_isCollectionType(targetType)) {
-        reporter.atNode(
-          node.methodName,
-          _code,
-        );
+        reporter.atNode(node.methodName, _code);
       }
     });
   }

@@ -11,13 +11,13 @@ class PreferTextRich extends DartLintRule {
         'Prefer Text.rich() over RichText() for better integration with DefaultTextStyle.',
     correctionMessage:
         'Replace RichText() with Text.rich() for automatic style inheritance and better Material integration.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
@@ -25,7 +25,7 @@ class PreferTextRich extends DartLintRule {
       if (type == null) return;
 
       // Check if it's a RichText widget
-      final typeName = type.element3?.name3;
+      final typeName = type.element?.name;
       if (typeName != 'RichText') return;
 
       // Check if it's using the default constructor

@@ -12,13 +12,13 @@ class AvoidEmptySetstate extends DartLintRule {
         'Avoid calling setState with an empty callback. Empty setState still triggers a re-render but is usually a bug.',
     correctionMessage:
         'Add state changes inside the setState callback or remove the setState call.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addMethodInvocation((node) {
@@ -38,10 +38,7 @@ class AvoidEmptySetstate extends DartLintRule {
 
       // Check if the function body is empty
       if (_isEmptyBody(functionBody)) {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

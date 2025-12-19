@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -14,13 +14,13 @@ class AvoidAccessingCollectionsByConstantIndex extends DartLintRule {
         'Avoid accessing collection elements by constant index inside a loop.',
     correctionMessage:
         'Use the loop variable as index or move the access outside the loop.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addForStatement((node) {
@@ -36,15 +36,12 @@ class AvoidAccessingCollectionsByConstantIndex extends DartLintRule {
     });
   }
 
-  void _checkLoop(Statement body, ErrorReporter reporter) {
+  void _checkLoop(Statement body, DiagnosticReporter reporter) {
     final visitor = _ConstantIndexAccessVisitor();
     body.visitChildren(visitor);
 
     for (final indexAccess in visitor.constantIndexAccesses) {
-      reporter.atNode(
-        indexAccess,
-        _code,
-      );
+      reporter.atNode(indexAccess, _code);
     }
   }
 }
@@ -73,7 +70,7 @@ class _ConstantIndexAccessVisitor extends RecursiveAstVisitor<void> {
     // Check for simple identifiers that are const or final
     if (expression is SimpleIdentifier) {
       final element = expression.element;
-      if (element is VariableElement2) {
+      if (element is VariableElement) {
         return element.isConst ||
             element.isFinal ||
             element.isStatic && element.isFinal;
@@ -83,19 +80,18 @@ class _ConstantIndexAccessVisitor extends RecursiveAstVisitor<void> {
     // Check for prefixed identifiers (e.g., ClassName.staticFinal)
     if (expression is PrefixedIdentifier) {
       final element = expression.identifier.element;
-      if (element is PropertyAccessorElement2) {
-        final variable = element.variable3;
-        return variable != null &&
-            (variable.isConst ||
-                (variable.isStatic && variable.isFinal) ||
-                variable.isFinal);
+      if (element is PropertyAccessorElement) {
+        final variable = element.variable;
+        return (variable.isConst ||
+            (variable.isStatic && variable.isFinal) ||
+            variable.isFinal);
       }
     }
 
     // Check for property access (e.g., object.constantField)
     if (expression is PropertyAccess) {
       final element = expression.propertyName.element;
-      if (element is VariableElement2) {
+      if (element is VariableElement) {
         return element.isConst ||
             element.isFinal ||
             element.isStatic && element.isFinal;

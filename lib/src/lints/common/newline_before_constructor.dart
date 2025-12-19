@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:analyzer/source/line_info.dart';
@@ -12,13 +13,13 @@ class NewlineBeforeConstructor extends DartLintRule {
     name: 'newline_before_constructor',
     problemMessage: 'Missing a blank line before this constructor declaration.',
     correctionMessage: 'Add a blank line before the constructor declaration.',
-    errorSeverity: analyzer_error.ErrorSeverity.INFO,
+    errorSeverity: analyzer_error.DiagnosticSeverity.INFO,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addCompilationUnit((unit) {
@@ -34,7 +35,7 @@ class NewlineBeforeConstructor extends DartLintRule {
 
 class _ConstructorVisitor extends RecursiveAstVisitor<void> {
   final LineInfo lineInfo;
-  final ErrorReporter reporter;
+  final DiagnosticReporter reporter;
 
   _ConstructorVisitor(this.lineInfo, this.reporter);
 
@@ -56,17 +57,16 @@ class _ConstructorVisitor extends RecursiveAstVisitor<void> {
       // Get the previous member
       final previousMember = members[i - 1];
 
-      final previousMemberEndLine =
-          lineInfo.getLocation(previousMember.end).lineNumber;
-      final constructorStartLine =
-          lineInfo.getLocation(member.offset).lineNumber;
+      final previousMemberEndLine = lineInfo
+          .getLocation(previousMember.end)
+          .lineNumber;
+      final constructorStartLine = lineInfo
+          .getLocation(member.offset)
+          .lineNumber;
 
       // If there's no blank line between them (consecutive lines)
       if (constructorStartLine - previousMemberEndLine < 2) {
-        reporter.atNode(
-          member,
-          NewlineBeforeConstructor._code,
-        );
+        reporter.atNode(member, NewlineBeforeConstructor._code);
       }
     }
   }
@@ -78,17 +78,15 @@ class _AddBlankLineBeforeConstructor extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    analyzer_error.AnalysisError analysisError,
-    List<analyzer_error.AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     context.registry.addCompilationUnit((unit) {
       final lineInfo = unit.lineInfo;
 
-      unit.visitChildren(_ConstructorFixVisitor(
-        lineInfo,
-        reporter,
-        analysisError,
-      ));
+      unit.visitChildren(
+        _ConstructorFixVisitor(lineInfo, reporter, analysisError),
+      );
     });
   }
 }
@@ -96,7 +94,7 @@ class _AddBlankLineBeforeConstructor extends DartFix {
 class _ConstructorFixVisitor extends RecursiveAstVisitor<void> {
   final LineInfo lineInfo;
   final ChangeReporter reporter;
-  final analyzer_error.AnalysisError analysisError;
+  final Diagnostic analysisError;
 
   _ConstructorFixVisitor(this.lineInfo, this.reporter, this.analysisError);
 
@@ -121,10 +119,12 @@ class _ConstructorFixVisitor extends RecursiveAstVisitor<void> {
       // Get the previous member
       final previousMember = members[i - 1];
 
-      final previousMemberEndLine =
-          lineInfo.getLocation(previousMember.end).lineNumber;
-      final constructorStartLine =
-          lineInfo.getLocation(member.offset).lineNumber;
+      final previousMemberEndLine = lineInfo
+          .getLocation(previousMember.end)
+          .lineNumber;
+      final constructorStartLine = lineInfo
+          .getLocation(member.offset)
+          .lineNumber;
 
       // If there's no blank line between them
       if (constructorStartLine - previousMemberEndLine < 2) {

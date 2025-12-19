@@ -11,13 +11,13 @@ class NoEmptyBlock extends DartLintRule {
     problemMessage: 'Avoid empty blocks as they may indicate missing code.',
     correctionMessage:
         'Add implementation or a TODO comment explaining why the block is empty.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addBlock((node) {
@@ -28,10 +28,7 @@ class NoEmptyBlock extends DartLintRule {
 
         // Only report if there are no comments
         if (!hasComments) {
-          reporter.atNode(
-            node,
-            _code,
-          );
+          reporter.atNode(node, _code);
         }
       }
     });

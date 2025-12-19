@@ -12,7 +12,7 @@ class ProperSuperCalls extends DartLintRule {
         'Super call must be in correct position for this lifecycle method.',
     correctionMessage:
         'For initState/activate/didUpdateWidget: super must be first statement. For dispose/deactivate: super must be last statement.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   // Lifecycle methods where super must be called FIRST
@@ -23,15 +23,12 @@ class ProperSuperCalls extends DartLintRule {
   };
 
   // Lifecycle methods where super must be called LAST
-  static const _superLastMethods = {
-    'dispose',
-    'deactivate',
-  };
+  static const _superLastMethods = {'dispose', 'deactivate'};
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addMethodDeclaration((node) {
@@ -43,7 +40,7 @@ class ProperSuperCalls extends DartLintRule {
       if (extendsClause == null) return;
 
       final superclass = extendsClause.superclass;
-      final superclassName = superclass.element2?.displayName;
+      final superclassName = superclass.element?.displayName;
 
       // Check if it extends State (could be "State" or "State<Widget>")
       if (superclassName == null ||
@@ -86,18 +83,12 @@ class ProperSuperCalls extends DartLintRule {
       if (_superFirstMethods.contains(methodName)) {
         // Super must be first statement
         if (superCallIndex != 0) {
-          reporter.atNode(
-            node,
-            _code,
-          );
+          reporter.atNode(node, _code);
         }
       } else if (_superLastMethods.contains(methodName)) {
         // Super must be last statement
         if (superCallIndex != statements.length - 1) {
-          reporter.atNode(
-            node,
-            _code,
-          );
+          reporter.atNode(node, _code);
         }
       }
     });

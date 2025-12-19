@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -12,13 +12,13 @@ class AvoidAccessingOtherClassesPrivateMembers extends DartLintRule {
     problemMessage: 'Avoid accessing private members of other classes.',
     correctionMessage:
         'Make the member public or provide a public getter/method.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addPropertyAccess((node) {
@@ -37,7 +37,7 @@ class AvoidAccessingOtherClassesPrivateMembers extends DartLintRule {
   void _checkPrivateAccess(
     AstNode node,
     SimpleIdentifier identifier,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
   ) {
     final name = identifier.name;
 
@@ -48,19 +48,19 @@ class AvoidAccessingOtherClassesPrivateMembers extends DartLintRule {
     if (element == null) return;
 
     // Get the enclosing class of the member being accessed
-    ClassElement2? memberClass;
-    if (element is PropertyAccessorElement2) {
-      memberClass = element.enclosingElement2 as ClassElement2?;
-    } else if (element is FieldElement2) {
-      memberClass = element.enclosingElement2 as ClassElement2?;
-    } else if (element is MethodElement2) {
-      memberClass = element.enclosingElement2 as ClassElement2?;
+    ClassElement? memberClass;
+    if (element is PropertyAccessorElement) {
+      memberClass = element.enclosingElement as ClassElement?;
+    } else if (element is FieldElement) {
+      memberClass = element.enclosingElement as ClassElement?;
+    } else if (element is MethodElement) {
+      memberClass = element.enclosingElement as ClassElement?;
     }
 
     if (memberClass == null) return;
 
     // Get the enclosing class of the code making the access
-    ClassElement2? currentClass;
+    ClassElement? currentClass;
     AstNode? current = node;
     while (current != null) {
       if (current is ClassDeclaration) {
@@ -72,10 +72,7 @@ class AvoidAccessingOtherClassesPrivateMembers extends DartLintRule {
 
     // If accessing from a different class, report it
     if (currentClass != null && currentClass != memberClass) {
-      reporter.atNode(
-        identifier,
-        _code,
-      );
+      reporter.atNode(identifier, _code);
     }
   }
 }

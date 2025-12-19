@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -13,19 +13,20 @@ class ArgumentsOrdering extends DartLintRule {
         'Named arguments should follow the parameter declaration order.',
     correctionMessage:
         'Reorder the named arguments to match the parameter declaration order.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addArgumentList((node) {
       // Get all named arguments
-      final namedArguments =
-          node.arguments.whereType<NamedExpression>().toList();
+      final namedArguments = node.arguments
+          .whereType<NamedExpression>()
+          .toList();
 
       // Need at least 2 named arguments to check ordering
       if (namedArguments.length < 2) return;
@@ -39,7 +40,7 @@ class ArgumentsOrdering extends DartLintRule {
 
       if (parent is MethodInvocation) {
         final element = parent.methodName.element;
-        if (element is ExecutableElement2) {
+        if (element is ExecutableElement) {
           parameterOrder = element.formalParameters
               .where((p) => p.isNamed)
               .map((p) => p.displayName)
@@ -47,7 +48,7 @@ class ArgumentsOrdering extends DartLintRule {
         }
       } else if (parent is FunctionExpressionInvocation) {
         final element = parent.element;
-        if (element is ExecutableElement2) {
+        if (element is ExecutableElement) {
           parameterOrder = element.formalParameters
               .where((p) => p.isNamed)
               .map((p) => p.displayName)
@@ -55,7 +56,7 @@ class ArgumentsOrdering extends DartLintRule {
         }
       } else if (parent is InstanceCreationExpression) {
         final element = parent.constructorName.element;
-        if (element is ConstructorElement2) {
+        if (element is ConstructorElement) {
           parameterOrder = element.formalParameters
               .where((p) => p.isNamed)
               .map((p) => p.displayName)
@@ -66,8 +67,9 @@ class ArgumentsOrdering extends DartLintRule {
       if (parameterOrder == null || parameterOrder.isEmpty) return;
 
       // Check if arguments follow the declaration order
-      final argumentNames =
-          namedArguments.map((arg) => arg.name.label.name).toList();
+      final argumentNames = namedArguments
+          .map((arg) => arg.name.label.name)
+          .toList();
 
       // Filter parameter order to only include arguments that are present
       final relevantParameterOrder = parameterOrder
@@ -85,10 +87,7 @@ class ArgumentsOrdering extends DartLintRule {
       }
 
       if (!isOrdered) {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

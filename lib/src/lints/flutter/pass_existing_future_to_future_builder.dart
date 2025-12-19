@@ -12,13 +12,13 @@ class PassExistingFutureToFutureBuilder extends DartLintRule {
         'Avoid creating futures inline in FutureBuilder. Create the future beforehand (e.g., in initState).',
     correctionMessage:
         'Create the future in initState or didUpdateWidget and assign it to a field, then pass that field to FutureBuilder.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
@@ -33,10 +33,9 @@ class PassExistingFutureToFutureBuilder extends DartLintRule {
       // Find the 'future' argument
       NamedExpression? futureArg;
       try {
-        futureArg =
-            node.argumentList.arguments.whereType<NamedExpression>().firstWhere(
-                  (arg) => arg.name.label.name == 'future',
-                );
+        futureArg = node.argumentList.arguments
+            .whereType<NamedExpression>()
+            .firstWhere((arg) => arg.name.label.name == 'future');
       } catch (_) {
         // No future argument found, skip
         return;

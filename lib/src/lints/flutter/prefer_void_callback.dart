@@ -12,13 +12,13 @@ class PreferVoidCallback extends DartLintRule {
         'Prefer using VoidCallback typedef instead of void Function().',
     correctionMessage:
         'Replace void Function() with VoidCallback from dart:ui or flutter.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addGenericFunctionType((node) {
@@ -26,10 +26,7 @@ class PreferVoidCallback extends DartLintRule {
       if (!_isVoidFunctionWithNoParameters(node)) return;
 
       // Report the issue
-      reporter.atNode(
-        node,
-        _code,
-      );
+      reporter.atNode(node, _code);
     });
   }
 
@@ -37,7 +34,7 @@ class PreferVoidCallback extends DartLintRule {
     // Check if the return type is void
     final returnType = node.returnType;
     if (returnType is! NamedType) return false;
-    if (returnType.name2.toString() != 'void') return false;
+    if (returnType.name.toString() != 'void') return false;
 
     // Check if there are no parameters
     final parameters = node.parameters;

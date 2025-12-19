@@ -12,7 +12,7 @@ class AvoidBottomTypeInRecords extends DartLintRule {
         'Avoid using bottom types (void, Never, Null) in record type declarations.',
     correctionMessage:
         'Use appropriate types instead of bottom types. For void, consider Future<void>. For Null, use nullable types.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   static const _bottomTypeNames = {'void', 'Never', 'Null'};
@@ -20,7 +20,7 @@ class AvoidBottomTypeInRecords extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addRecordTypeAnnotation((node) {
@@ -38,14 +38,11 @@ class AvoidBottomTypeInRecords extends DartLintRule {
     });
   }
 
-  void _checkTypeAnnotation(TypeAnnotation type, ErrorReporter reporter) {
+  void _checkTypeAnnotation(TypeAnnotation type, DiagnosticReporter reporter) {
     if (type is NamedType) {
-      final typeName = type.name2.lexeme;
+      final typeName = type.name.lexeme;
       if (_bottomTypeNames.contains(typeName)) {
-        reporter.atNode(
-          type,
-          _code,
-        );
+        reporter.atNode(type, _code);
       }
     }
   }

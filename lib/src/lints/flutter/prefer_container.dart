@@ -11,7 +11,7 @@ class PreferContainer extends DartLintRule {
     problemMessage:
         'Consider using a single Container instead of nested widgets.',
     correctionMessage: 'Replace the nested sequence with a Container widget.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   static const _minSequence = 3;
@@ -29,14 +29,14 @@ class PreferContainer extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
       final type = node.staticType;
       if (type == null) return;
 
-      final typeName = type.element3?.name3;
+      final typeName = type.element?.name;
       if (typeName == null) return;
 
       // Check if this widget can be containerized
@@ -57,7 +57,7 @@ class PreferContainer extends DartLintRule {
     InstanceCreationExpression? current = node;
 
     while (current != null) {
-      final typeName = current.staticType?.element3?.name3;
+      final typeName = current.staticType?.element?.name;
       if (typeName == null || !_containerizableWidgets.contains(typeName)) {
         break;
       }

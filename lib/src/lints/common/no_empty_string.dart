@@ -11,22 +11,19 @@ class NoEmptyString extends DartLintRule {
         'Avoid using empty string literals as they may indicate incomplete code.',
     correctionMessage:
         'Replace with a meaningful value or use a named constant for valid empty string use cases.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addSimpleStringLiteral((node) {
       // Check if the string is empty
       if (node.value.isEmpty) {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

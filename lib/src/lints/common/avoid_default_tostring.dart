@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -12,13 +12,13 @@ class AvoidDefaultTostring extends DartLintRule {
         'Avoid calling toString() on a class without a custom toString() implementation.',
     correctionMessage:
         'Implement a custom toString() method or use a different approach.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     // Check explicit toString() calls
@@ -26,11 +26,8 @@ class AvoidDefaultTostring extends DartLintRule {
       if (node.methodName.name == 'toString' &&
           node.argumentList.arguments.isEmpty) {
         final targetType = node.realTarget?.staticType;
-        if (targetType != null && !_hasCustomToString(targetType.element3)) {
-          reporter.atNode(
-            node.methodName,
-            _code,
-          );
+        if (targetType != null && !_hasCustomToString(targetType.element)) {
+          reporter.atNode(node.methodName, _code);
         }
       }
     });
@@ -39,16 +36,13 @@ class AvoidDefaultTostring extends DartLintRule {
     context.registry.addInterpolationExpression((node) {
       final expression = node.expression;
       final type = expression.staticType;
-      if (type != null && !_hasCustomToString(type.element3)) {
-        reporter.atNode(
-          expression,
-          _code,
-        );
+      if (type != null && !_hasCustomToString(type.element)) {
+        reporter.atNode(expression, _code);
       }
     });
   }
 
-  bool _hasCustomToString(Element2? element) {
+  bool _hasCustomToString(Element? element) {
     if (element == null) return false;
 
     final name = element.displayName;
@@ -90,11 +84,11 @@ class AvoidDefaultTostring extends DartLintRule {
     }
 
     // Check if the class has a custom toString implementation
-    if (element is InterfaceElement2) {
-      for (final method in element.methods2) {
+    if (element is InterfaceElement) {
+      for (final method in element.methods) {
         if (method.displayName == 'toString') {
           // Check if it's not just inherited from Object
-          final enclosingElement = method.enclosingElement2;
+          final enclosingElement = method.enclosingElement;
           if (enclosingElement?.displayName != 'Object') {
             return true;
           }

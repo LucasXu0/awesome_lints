@@ -12,13 +12,13 @@ class AvoidCastingToExtensionType extends DartLintRule {
         'Avoid casting to extension types as it may fail at runtime.',
     correctionMessage:
         'Use direct instantiation of the extension type instead of casting: ExtensionType(value)',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addAsExpression((node) {
@@ -36,10 +36,7 @@ class AvoidCastingToExtensionType extends DartLintRule {
       final erasure = dartType.extensionTypeErasure;
       if (dartType != erasure) {
         // This is an extension type
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

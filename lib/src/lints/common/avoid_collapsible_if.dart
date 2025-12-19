@@ -12,13 +12,13 @@ class AvoidCollapsibleIf extends DartLintRule {
         'Nested if statements can be collapsed into a single if with a compound condition.',
     correctionMessage:
         'Combine the conditions using && operator into a single if statement.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addIfStatement((node) {
@@ -51,10 +51,7 @@ class AvoidCollapsibleIf extends DartLintRule {
       }
 
       // This is a collapsible if - report it
-      reporter.atNode(
-        node.expression,
-        _code,
-      );
+      reporter.atNode(node.expression, _code);
     });
   }
 }

@@ -12,13 +12,13 @@ class PreferSpacing extends DartLintRule {
         'Prefer using the "spacing" parameter instead of inserting SizedBox widgets for spacing.',
     correctionMessage:
         'Use the "spacing" parameter available in Row, Column, and Flex widgets (Flutter 3.27+).',
-    errorSeverity: analyzer_error.ErrorSeverity.INFO,
+    errorSeverity: analyzer_error.DiagnosticSeverity.INFO,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
@@ -35,10 +35,9 @@ class PreferSpacing extends DartLintRule {
       // Find the 'children' argument
       NamedExpression? childrenArg;
       try {
-        childrenArg =
-            node.argumentList.arguments.whereType<NamedExpression>().firstWhere(
-                  (arg) => arg.name.label.name == 'children',
-                );
+        childrenArg = node.argumentList.arguments
+            .whereType<NamedExpression>()
+            .firstWhere((arg) => arg.name.label.name == 'children');
       } catch (_) {
         return;
       }
@@ -68,10 +67,7 @@ class PreferSpacing extends DartLintRule {
       }
 
       if (hasSizedBoxSpacing) {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

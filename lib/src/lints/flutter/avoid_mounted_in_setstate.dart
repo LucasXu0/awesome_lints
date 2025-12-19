@@ -12,13 +12,13 @@ class AvoidMountedInSetstate extends DartLintRule {
     problemMessage:
         'Avoid checking mounted inside setState callback. Check mounted before calling setState instead.',
     correctionMessage: 'Move the mounted check before the setState call.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addMethodInvocation((node) {
@@ -41,10 +41,7 @@ class AvoidMountedInSetstate extends DartLintRule {
       functionBody.visitChildren(visitor);
 
       if (visitor.hasMountedCheck) {
-        reporter.atNode(
-          node,
-          _code,
-        );
+        reporter.atNode(node, _code);
       }
     });
   }

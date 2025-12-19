@@ -1,12 +1,14 @@
-// ignore_for_file: unused_local_variable, dead_code
+// ignore_for_file: unused_local_variable, dead_code, no_empty_block
 
 void functionWithNoBlankLineBeforeReturn() {
   final value = 42;
+  // expect_lint: newline_before_return
   return;
 }
 
 String functionWithStatementBeforeReturn() {
   final name = 'test';
+  // 
   return name;
 }
 

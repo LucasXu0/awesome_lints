@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -12,13 +12,13 @@ class AvoidAssigningToStaticField extends DartLintRule {
     problemMessage: 'Avoid assigning to static fields from instance methods.',
     correctionMessage:
         'Make the method static or refactor to avoid mutable global state.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addAssignmentExpression((node) {
@@ -36,28 +36,25 @@ class AvoidAssigningToStaticField extends DartLintRule {
 
   void _checkAssignmentExpression(
     AssignmentExpression node,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
   ) {
     // Check if we're in an instance method (not static)
     if (!_isInInstanceMethod(node)) {
       return;
     }
 
-    // For AssignmentExpression, use writeElement2 to get the element being assigned to
-    final element = node.writeElement2;
+    // For AssignmentExpression, use writeElement to get the element being assigned to
+    final element = node.writeElement;
 
     if (element != null && _isStaticField(element)) {
-      reporter.atNode(
-        node.leftHandSide,
-        _code,
-      );
+      reporter.atNode(node.leftHandSide, _code);
     }
   }
 
   void _checkCompoundAssignment(
     AstNode node,
     Expression operand,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
   ) {
     // Check if we're in an instance method (not static)
     if (!_isInInstanceMethod(node)) {
@@ -66,22 +63,19 @@ class AvoidAssigningToStaticField extends DartLintRule {
 
     // For PrefixExpression and PostfixExpression, they implement CompoundAssignmentExpression
     if (node is CompoundAssignmentExpression) {
-      final element = node.writeElement2;
+      final element = node.writeElement;
 
       if (element != null && _isStaticField(element)) {
-        reporter.atNode(
-          operand,
-          _code,
-        );
+        reporter.atNode(operand, _code);
       }
     }
   }
 
-  bool _isStaticField(Element2 element) {
-    if (element is PropertyAccessorElement2) {
-      final variable = element.variable3;
-      return variable != null && variable.isStatic;
-    } else if (element is VariableElement2) {
+  bool _isStaticField(Element element) {
+    if (element is PropertyAccessorElement) {
+      final variable = element.variable;
+      return variable.isStatic;
+    } else if (element is VariableElement) {
       return element.isStatic;
     }
     return false;

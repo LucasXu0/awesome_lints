@@ -12,13 +12,13 @@ class NoEqualSwitchCase extends DartLintRule {
         'This switch case has the same body as a previous case. Consider combining them.',
     correctionMessage:
         'Combine cases with identical bodies using fall-through syntax.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addSwitchStatement((node) {
@@ -37,10 +37,7 @@ class NoEqualSwitchCase extends DartLintRule {
         // Check if we've seen this body before
         if (caseBodies.containsKey(body)) {
           // Report on the duplicate case
-          reporter.atNode(
-            member,
-            _code,
-          );
+          reporter.atNode(member, _code);
         } else {
           // Store this body for future comparison
           caseBodies[body] = member;

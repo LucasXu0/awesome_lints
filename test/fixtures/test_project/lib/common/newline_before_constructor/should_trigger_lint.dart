@@ -2,12 +2,10 @@
 
 class MultipleConstructorsNoSpacing {
   MultipleConstructorsNoSpacing();
-  
 }
 
 class ConstructorAfterField {
   int value = 0;
-  
 }
 
 class ConstructorAfterMultipleFields {
@@ -55,8 +53,8 @@ class ConstructorWithInitializer {
 
 class GenerativeConstructors {
   final String value;
-  
-GenerativeConstructors(this.value);
+
+  GenerativeConstructors(this.value);
   GenerativeConstructors.empty() : value = '';
 }
 

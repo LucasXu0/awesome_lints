@@ -14,13 +14,13 @@ class PreferSliverPrefix extends DartLintRule {
         'Add "Sliver" prefix to widget classes that return sliver widgets.',
     correctionMessage:
         'Rename the class to start with "Sliver" to indicate it returns a sliver widget.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     // Two-pass approach:
@@ -34,13 +34,13 @@ class PreferSliverPrefix extends DartLintRule {
       final element = node.declaredFragment?.element;
       if (element == null) return;
 
-      final className = element.name3;
+      final className = element.name;
       if (className == null) return;
 
       final superType = element.supertype;
       if (superType == null) return;
 
-      final superTypeName = superType.element3.name3;
+      final superTypeName = superType.element.name;
 
       if (superTypeName == 'StatefulWidget') {
         statefulWidgetNodes[className] = node;
@@ -48,7 +48,7 @@ class PreferSliverPrefix extends DartLintRule {
         final typeArguments = superType.typeArguments;
         if (typeArguments.isNotEmpty) {
           final statefulWidgetType = typeArguments.first;
-          final statefulWidgetName = statefulWidgetType.element3?.name3;
+          final statefulWidgetName = statefulWidgetType.element?.name;
           if (statefulWidgetName != null) {
             stateNodes[className] = node;
             stateToWidgetMap[className] = statefulWidgetName;
@@ -62,7 +62,7 @@ class PreferSliverPrefix extends DartLintRule {
       final element = node.declaredFragment?.element;
       if (element == null) return;
 
-      final className = element.name3;
+      final className = element.name;
       if (className == null) return;
 
       // Skip if class name already starts with "Sliver"
@@ -71,7 +71,7 @@ class PreferSliverPrefix extends DartLintRule {
       final superType = element.supertype;
       if (superType == null) return;
 
-      final superTypeName = superType.element3.name3;
+      final superTypeName = superType.element.name;
 
       // Handle StatelessWidget
       if (superTypeName == 'StatelessWidget') {
@@ -79,8 +79,9 @@ class PreferSliverPrefix extends DartLintRule {
         node.visitChildren(visitor);
 
         if (visitor.buildMethod != null) {
-          final returnsSliverWidget =
-              _returnsSliverWidget(visitor.buildMethod!);
+          final returnsSliverWidget = _returnsSliverWidget(
+            visitor.buildMethod!,
+          );
 
           if (returnsSliverWidget) {
             reporter.atNode(node, _code);
@@ -99,8 +100,9 @@ class PreferSliverPrefix extends DartLintRule {
         node.visitChildren(visitor);
 
         if (visitor.buildMethod != null) {
-          final returnsSliverWidget =
-              _returnsSliverWidget(visitor.buildMethod!);
+          final returnsSliverWidget = _returnsSliverWidget(
+            visitor.buildMethod!,
+          );
 
           if (returnsSliverWidget) {
             // Report on the StatefulWidget class, not the State class
@@ -149,7 +151,7 @@ class PreferSliverPrefix extends DartLintRule {
     final typeName = type.getDisplayString();
 
     // Also check the element name directly
-    final elementName = type.element3?.name3 ?? '';
+    final elementName = type.element?.name ?? '';
 
     // Check if the type name starts with "Sliver"
     // This covers SliverList, SliverGrid, SliverAppBar, SliverPadding, etc.

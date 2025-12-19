@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -11,25 +12,25 @@ class PreferCenterOverAlign extends DartLintRule {
     problemMessage:
         'Prefer Center widget for centered alignment instead of Align.',
     correctionMessage: 'Replace Align with Center for better semantic clarity.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
       final type = node.staticType;
       if (type == null) return;
 
-      final typeName = type.element3?.name3;
+      final typeName = type.element?.name;
       if (typeName != 'Align') return;
 
       // Extract named arguments
-      final namedArgs =
-          node.argumentList.arguments.whereType<NamedExpression>();
+      final namedArgs = node.argumentList.arguments
+          .whereType<NamedExpression>();
 
       // Find alignment argument
       final alignmentArg = namedArgs
@@ -69,7 +70,7 @@ class PreferCenterOverAlign extends DartLintRule {
 
     // Check for Alignment(0, 0) or Alignment(0.0, 0.0)
     if (expression is InstanceCreationExpression) {
-      final typeName = expression.staticType?.element3?.name3;
+      final typeName = expression.staticType?.element?.name;
       if (typeName == 'Alignment') {
         final args = expression.argumentList.arguments;
         if (args.length == 2) {
@@ -96,8 +97,8 @@ class _ReplaceAlignWithCenter extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    analyzer_error.AnalysisError analysisError,
-    List<analyzer_error.AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     context.registry.addInstanceCreationExpression((node) {
       if (!analysisError.sourceRange.intersects(node.sourceRange)) return;
@@ -105,20 +106,22 @@ class _ReplaceAlignWithCenter extends DartFix {
       final type = node.staticType;
       if (type == null) return;
 
-      final typeName = type.element3?.name3;
+      final typeName = type.element?.name;
       if (typeName != 'Align') return;
 
       // Extract named arguments
-      final namedArgs =
-          node.argumentList.arguments.whereType<NamedExpression>();
+      final namedArgs = node.argumentList.arguments
+          .whereType<NamedExpression>();
 
       // Find child argument
-      final childArg =
-          namedArgs.where((arg) => arg.name.label.name == 'child').firstOrNull;
+      final childArg = namedArgs
+          .where((arg) => arg.name.label.name == 'child')
+          .firstOrNull;
 
       // Find key argument
-      final keyArg =
-          namedArgs.where((arg) => arg.name.label.name == 'key').firstOrNull;
+      final keyArg = namedArgs
+          .where((arg) => arg.name.label.name == 'key')
+          .firstOrNull;
 
       // Build replacement code
       final buffer = StringBuffer('Center(');
@@ -141,10 +144,7 @@ class _ReplaceAlignWithCenter extends DartFix {
       );
 
       changeBuilder.addDartFileEdit((builder) {
-        builder.addSimpleReplacement(
-          node.sourceRange,
-          buffer.toString(),
-        );
+        builder.addSimpleReplacement(node.sourceRange, buffer.toString());
       });
     });
   }

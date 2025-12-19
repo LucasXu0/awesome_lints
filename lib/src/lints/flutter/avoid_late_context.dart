@@ -13,13 +13,13 @@ class AvoidLateContext extends DartLintRule {
         'Avoid accessing "context" in late field initializers. Late fields are initialized lazily, which may result in unexpected behavior.',
     correctionMessage:
         'Remove the context usage from the late field initializer or initialize the field in initState instead.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addFieldDeclaration((node) {
@@ -31,7 +31,7 @@ class AvoidLateContext extends DartLintRule {
       if (extendsClause == null) return;
 
       final superclass = extendsClause.superclass;
-      final superclassName = superclass.element2?.displayName;
+      final superclassName = superclass.element?.displayName;
 
       // Check if it extends State
       if (superclassName != 'State') return;
@@ -47,10 +47,7 @@ class AvoidLateContext extends DartLintRule {
 
         // Check if the initializer uses 'context'
         if (_usesContext(initializer)) {
-          reporter.atNode(
-            field,
-            _code,
-          );
+          reporter.atNode(field, _code);
         }
       }
     });

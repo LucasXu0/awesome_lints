@@ -13,7 +13,7 @@ class AvoidMissingController extends DartLintRule {
         'Try providing a controller or listening to the value change events.',
     correctionMessage:
         'Add a TextEditingController or an onChanged callback to track input changes.',
-    errorSeverity: analyzer_error.ErrorSeverity.WARNING,
+    errorSeverity: analyzer_error.DiagnosticSeverity.WARNING,
   );
 
   static const _textInputWidgets = {
@@ -25,30 +25,33 @@ class AvoidMissingController extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
       final type = node.staticType;
       if (type == null) return;
 
-      final typeName = type.element3?.name3;
+      final typeName = type.element?.name;
       if (typeName == null) return;
 
       // Check if it's a text input widget
       if (!_textInputWidgets.contains(typeName)) return;
 
       // Get all named arguments
-      final namedArgs =
-          node.argumentList.arguments.whereType<NamedExpression>();
+      final namedArgs = node.argumentList.arguments
+          .whereType<NamedExpression>();
 
       // Check if there's a controller or onChanged callback
-      final hasController =
-          namedArgs.any((arg) => arg.name.label.name == 'controller');
-      final hasOnChanged =
-          namedArgs.any((arg) => arg.name.label.name == 'onChanged');
-      final hasOnSaved =
-          namedArgs.any((arg) => arg.name.label.name == 'onSaved');
+      final hasController = namedArgs.any(
+        (arg) => arg.name.label.name == 'controller',
+      );
+      final hasOnChanged = namedArgs.any(
+        (arg) => arg.name.label.name == 'onChanged',
+      );
+      final hasOnSaved = namedArgs.any(
+        (arg) => arg.name.label.name == 'onSaved',
+      );
 
       // If none of these are present, report the issue
       if (!hasController && !hasOnChanged && !hasOnSaved) {
