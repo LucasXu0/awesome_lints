@@ -8,6 +8,7 @@ A comprehensive collection of custom lint rules for Dart and Flutter application
 - 🔍 **54 Common Dart lints** - General-purpose rules for any Dart codebase
 - 📦 **8 Provider-specific lints** - Best practices for the Provider state management package
 - 🧊 **22 Bloc-specific lints** - Best practices for the Bloc state management package
+- ⏱️ **1 FakeAsync-specific lint** - Catch common testing mistakes with fake_async
 - ⚡ **Fast analysis** - Built on custom_lint for efficient, real-time feedback
 - 🛠️ **Easy to configure** - All rules enabled by default, with optional customization
 - 📚 **Well-documented** - Every rule includes examples and explanations
@@ -130,6 +131,18 @@ Popular rules include:
 - `prefer-immutable-bloc-events` - Requires @immutable on event classes
 - `prefer-sealed-bloc-state` - Requires sealed/final modifiers on state classes
 
+### FakeAsync Rules
+
+1 rule designed specifically for applications using the fake_async package for testing:
+- Correctness checks for FakeAsync usage
+- Prevent tests from always passing
+- Ensure proper async testing patterns
+
+**[📖 View all FakeAsync lints →](lib/src/lints/fake_async/FAKE_ASYNC_LINTS.md)**
+
+Rules include:
+- `avoid-async-callback-in-fake-async` - Prevents async callbacks in FakeAsync that aren't awaited
+
 ## Configuration
 
 All lints are enabled by default. To customize rule behavior or disable specific rules, add configuration to your `analysis_options.yaml`:
@@ -160,8 +173,14 @@ awesome_lints/
 │       │   ├── common/            # Common Dart lints
 │       │   │   ├── COMMON_LINTS.md
 │       │   │   └── *.dart
-│       │   └── provider/          # Provider-specific lints
-│       │       ├── PROVIDER_LINTS.md
+│       │   ├── provider/          # Provider-specific lints
+│       │   │   ├── PROVIDER_LINTS.md
+│       │   │   └── *.dart
+│       │   ├── bloc/              # Bloc-specific lints
+│       │   │   ├── BLOC_LINTS.md
+│       │   │   └── *.dart
+│       │   └── fake_async/        # FakeAsync-specific lints
+│       │       ├── FAKE_ASYNC_LINTS.md
 │       │       └── *.dart
 │       └── awesome_lints_plugin.dart
 ├── test/
@@ -176,6 +195,8 @@ awesome_lints/
    - For Flutter rules: `lib/src/lints/flutter/your_rule_name.dart`
    - For common rules: `lib/src/lints/common/your_rule_name.dart`
    - For Provider rules: `lib/src/lints/provider/your_rule_name.dart`
+   - For Bloc rules: `lib/src/lints/bloc/your_rule_name.dart`
+   - For FakeAsync rules: `lib/src/lints/fake_async/your_rule_name.dart`
 
 2. **Implement the `DartLintRule` class:**
 ```dart
@@ -205,7 +226,7 @@ class YourRuleName extends DartLintRule {
 ```
 
 3. **Register the rule:**
-   - Add export to `lib/src/lints/flutter/flutter.dart`, `lib/src/lints/common/common.dart`, or `lib/src/lints/provider/provider.dart`
+   - Add export to `lib/src/lints/flutter/flutter.dart`, `lib/src/lints/common/common.dart`, `lib/src/lints/provider/provider.dart`, `lib/src/lints/bloc/bloc.dart`, or `lib/src/lints/fake_async/fake_async.dart`
    - Add the rule instance in `lib/src/awesome_lints_plugin.dart`
 
 4. **Create test fixtures:**
@@ -216,7 +237,7 @@ test/fixtures/test_project/lib/your_rule_name/
 ```
 
 5. **Document the rule:**
-   - Add entry to `FLUTTER_LINTS.md`, `COMMON_LINTS.md`, or `PROVIDER_LINTS.md`
+   - Add entry to `FLUTTER_LINTS.md`, `COMMON_LINTS.md`, `PROVIDER_LINTS.md`, `BLOC_LINTS.md`, or `FAKE_ASYNC_LINTS.md`
    - Include "Why?", "Bad", and "Good" examples
 
 ### Running Tests
