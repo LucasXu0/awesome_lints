@@ -6,7 +6,7 @@ This document lists all 331 common lint rules available in DCM (Dart Code Metric
 
 **Last Updated:** 2025-12-18
 
-**Implementation Progress:** 51 / 331 rules implemented (15.4%)
+**Implementation Progress:** 54 / 331 rules implemented (16.3%)
 
 ---
 
