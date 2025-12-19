@@ -73,6 +73,17 @@ class _AwesomeLints extends PluginBase {
     NoMagicNumber(),
     NoMagicString(),
     NoObjectDeclaration(),
+    PreferAsyncAwait(),
+    PreferContains(),
+    PreferCorrectForLoopIncrement(),
+    PreferCorrectJsonCasts(),
+    PreferEarlyReturn(),
+    PreferIterableOf(),
+    PreferFirst(),
+    PreferLast(),
+    PreferNamedBooleanParameters(),
+    PreferReturnAwait(),
+    PreferSwitchExpression(),
   ];
 
   List<LintRule> flutterLintRules = [
