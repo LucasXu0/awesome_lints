@@ -24,6 +24,16 @@ jobs:
         with:
           path: ".fvmrc"
 
+      - name: Cache FVM
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ~/.fvm
+          key: ${{ runner.os }}-fvm-${{ hashFiles('.fvmrc') }}
+          restore-keys: |
+            ${{ runner.os }}-fvm-
+
       - name: Install FVM
         run: |
           dart pub global activate fvm

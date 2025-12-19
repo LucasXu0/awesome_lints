@@ -1,15 +1,17 @@
 name: awesome_lints
-description: A starting point for Dart libraries or applications.
+description: Comprehensive custom lint rules for Dart and Flutter.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+homepage: https://github.com/LucasXu0/awesome_lints
+repository: https://github.com/LucasXu0/awesome_lints
+issue_tracker: https://github.com/LucasXu0/awesome_lints/issues
 
 environment:
   sdk: ^3.10.0
 
 dependencies:
-  analyzer:
-  analyzer_plugin:
-  custom_lint_builder:
+  analyzer: ^8.4.0
+  analyzer_plugin: ^0.13.10
+  custom_lint_builder: ^0.8.1
   flutter:
     sdk: flutter
 
