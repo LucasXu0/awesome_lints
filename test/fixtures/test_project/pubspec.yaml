@@ -3,11 +3,12 @@ description: Test project for awesome_lints
 version: 1.0.0
 
 environment:
-  sdk: ^3.6.2
+  sdk: ^3.10.0
 
 dependencies:
   flutter:
     sdk: flutter
+  provider: ^6.1.2
 
 dev_dependencies:
   awesome_lints:
