@@ -55,7 +55,7 @@ class GenerativeConstructors {
   final String value;
 
   GenerativeConstructors(this.value);
-  GenerativeConstructors.empty() : value = '';
+  GenerativeConstructors.empty() : value = 'A';
 }
 
 class ConstructorAfterMethod {
