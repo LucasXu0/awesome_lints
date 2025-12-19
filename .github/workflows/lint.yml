@@ -28,7 +28,7 @@ jobs:
           fvm install
 
       - name: Install dependencies
-        run: fvm dart pub get
+        run: fvm flutter pub get
 
       - name: Check dart format in lib
         run: fvm dart format --set-exit-if-changed lib
