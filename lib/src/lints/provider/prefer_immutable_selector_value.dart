@@ -76,10 +76,15 @@ class PreferImmutableSelectorValue extends DartLintRule {
   bool _isImmutableType(ClassElement classElement) {
     // Check if it's a primitive or built-in immutable type
     final name = classElement.name;
-    return name != null && _isPrimitiveOrImmutable(name);
+    if (name != null && _isPrimitiveOrImmutable(name)) {
+      return true;
+    }
 
-    // TODO: Add check for @immutable annotation
-    // This requires proper handling of Element.metadata which has type inference issues
+    // Note: Checking for @immutable annotation on ClassElement would require
+    // traversing back to the AST node, which is complex for this use case.
+    // For now, we only check primitive types. Users should ensure custom types
+    // used in selectors are properly immutable (using @immutable and implementing ==).
+    return false;
   }
 
   bool _isPrimitiveOrImmutable(String typeName) {
