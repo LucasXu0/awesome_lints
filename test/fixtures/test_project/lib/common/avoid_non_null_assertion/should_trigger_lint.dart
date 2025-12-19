@@ -81,7 +81,7 @@ void mapOperations() {
 
   // Nested maps
   final nestedMap = <String, Map<String, String>>{
-    'outer': {'inner': 'value'}
+    'outer': {'inner': 'value'},
   };
 
   // expect_lint: avoid_non_null_assertion

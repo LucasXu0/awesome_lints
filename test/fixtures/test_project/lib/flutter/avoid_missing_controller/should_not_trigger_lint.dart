@@ -6,14 +6,10 @@ void notTrigger() {
   final controller = TextEditingController();
 
   // TextField with controller - correct
-  TextField(
-    controller: controller,
-  );
+  TextField(controller: controller);
 
   // TextFormField with controller - correct
-  TextFormField(
-    controller: controller,
-  );
+  TextFormField(controller: controller);
 
   // TextField with onChanged - correct
   TextField(
@@ -23,9 +19,7 @@ void notTrigger() {
   );
 
   // TextFormField with onChanged - correct
-  TextFormField(
-    onChanged: (value) {},
-  );
+  TextFormField(onChanged: (value) {});
 
   // TextFormField with onSaved - correct
   TextFormField(
@@ -35,8 +29,5 @@ void notTrigger() {
   );
 
   // TextField with both controller and onChanged - correct
-  TextField(
-    controller: controller,
-    onChanged: (value) {},
-  );
+  TextField(controller: controller, onChanged: (value) {});
 }

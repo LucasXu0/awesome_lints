@@ -39,7 +39,10 @@ void notTrigger() {
     TextSpan(
       children: [
         TextSpan(text: 'First'),
-        TextSpan(text: ' Second', style: TextStyle(color: Colors.red)),
+        TextSpan(
+          text: ' Second',
+          style: TextStyle(color: Colors.red),
+        ),
       ],
     ),
   );
@@ -55,9 +58,7 @@ void notTrigger() {
   );
 
   // Const Text.rich
-  const Text.rich(
-    TextSpan(text: 'Const text'),
-  );
+  const Text.rich(TextSpan(text: 'Const text'));
 
   // Simple const text
   const Text('Constant text');

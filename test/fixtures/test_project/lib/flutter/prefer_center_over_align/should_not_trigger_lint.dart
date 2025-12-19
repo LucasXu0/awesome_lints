@@ -4,30 +4,16 @@ import 'package:flutter/material.dart';
 
 void main() {
   // Non-center alignment - should not trigger
-  const Align(
-    alignment: Alignment.topLeft,
-    child: Text('Hello'),
-  );
+  const Align(alignment: Alignment.topLeft, child: Text('Hello'));
 
-  const Align(
-    alignment: Alignment.bottomRight,
-    child: Text('Hello'),
-  );
+  const Align(alignment: Alignment.bottomRight, child: Text('Hello'));
 
-  const Align(
-    alignment: Alignment.centerLeft,
-    child: Text('Hello'),
-  );
+  const Align(alignment: Alignment.centerLeft, child: Text('Hello'));
 
-  const Align(
-    alignment: Alignment(0.5, 0.5),
-    child: Text('Hello'),
-  );
+  const Align(alignment: Alignment(0.5, 0.5), child: Text('Hello'));
 
   // Already using Center - should not trigger
-  const Center(
-    child: Text('Hello'),
-  );
+  const Center(child: Text('Hello'));
 
   const Center();
 

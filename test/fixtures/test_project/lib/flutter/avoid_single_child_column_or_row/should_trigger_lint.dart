@@ -9,41 +9,25 @@ class ShouldTriggerLint extends StatelessWidget {
   Widget build(BuildContext context) {
     // Case 1: Column with single child - should trigger
     // expect_lint: avoid_single_child_column_or_row
-    final widget1 = Column(
-      children: [
-        Text('Single child'),
-      ],
-    );
+    final widget1 = Column(children: [Text('Single child')]);
 
     // Case 2: Row with single child - should trigger
     // expect_lint: avoid_single_child_column_or_row
-    final widget2 = Row(
-      children: [
-        Text('Single child'),
-      ],
-    );
+    final widget2 = Row(children: [Text('Single child')]);
 
     // Case 3: Column with single child and properties - should trigger
     // expect_lint: avoid_single_child_column_or_row
     final widget3 = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 100,
-          height: 100,
-          child: Text('Hello'),
-        ),
-      ],
+      children: [Container(width: 100, height: 100, child: Text('Hello'))],
     );
 
     // Case 4: Row with single child and properties - should trigger
     // expect_lint: avoid_single_child_column_or_row
     final widget4 = Row(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        Expanded(child: Text('Hello')),
-      ],
+      children: [Expanded(child: Text('Hello'))],
     );
 
     // Case 5: Nested - inner Column with single child should trigger
@@ -51,11 +35,7 @@ class ShouldTriggerLint extends StatelessWidget {
       children: [
         Text('First'),
         // expect_lint: avoid_single_child_column_or_row
-        Column(
-          children: [
-            Text('Nested single child'),
-          ],
-        ),
+        Column(children: [Text('Nested single child')]),
       ],
     );
 

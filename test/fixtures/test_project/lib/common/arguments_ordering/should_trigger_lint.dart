@@ -6,8 +6,11 @@ class Person {
   Person({required String name, required String surname, required int age});
 }
 
-void buildPerson(
-    {required String name, required String surname, required int age}) {}
+void buildPerson({
+  required String name,
+  required String surname,
+  required int age,
+}) {}
 
 void test() {
   // expect_lint: arguments_ordering
@@ -21,8 +24,11 @@ void test() {
 }
 
 class Widget {
-  Widget(
-      {required String child, required double width, required double height});
+  Widget({
+    required String child,
+    required double width,
+    required double height,
+  });
 }
 
 void createWidget() {

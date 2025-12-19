@@ -23,15 +23,9 @@ void notTrigger() {
   );
 
   // Align is the correct widget
-  Align(
-    alignment: Alignment.topRight,
-    child: Text('Bar'),
-  );
+  Align(alignment: Alignment.topRight, child: Text('Bar'));
 
   // Container without alignment
 
-  Container(
-    padding: EdgeInsets.all(8),
-    child: Text('Baz'),
-  );
+  Container(padding: EdgeInsets.all(8), child: Text('Baz'));
 }

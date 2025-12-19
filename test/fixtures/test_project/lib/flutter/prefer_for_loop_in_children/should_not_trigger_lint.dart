@@ -6,38 +6,17 @@ void notTrigger() {
   final items = ['a', 'b', 'c'];
 
   // Using for-loop - correct approach
-  Column(
-    children: [
-      for (final item in items) Text(item),
-    ],
-  );
+  Column(children: [for (final item in items) Text(item)]);
 
   // Using for-loop with index
-  Row(
-    children: [
-      for (var i = 0; i < items.length; i++) Text(items[i]),
-    ],
-  );
+  Row(children: [for (var i = 0; i < items.length; i++) Text(items[i])]);
 
   // Manual list
-  Column(
-    children: [
-      Text('a'),
-      Text('b'),
-      Text('c'),
-    ],
-  );
+  Column(children: [Text('a'), Text('b'), Text('c')]);
 
   // Empty list
-  Row(
-    children: [],
-  );
+  Row(children: []);
 
   // Explicit list
-  Column(
-    children: [
-      Text('a'),
-      Text('b'),
-    ],
-  );
+  Column(children: [Text('a'), Text('b')]);
 }

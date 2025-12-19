@@ -43,9 +43,7 @@ class RegularWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Text('Not a sliver'),
-    );
+    return Container(child: const Text('Not a sliver'));
   }
 }
 
@@ -55,12 +53,7 @@ class ColumnWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
-        Text('Item 1'),
-        Text('Item 2'),
-      ],
-    );
+    return Column(children: const [Text('Item 1'), Text('Item 2')]);
   }
 }
 
@@ -71,11 +64,7 @@ class ScrollableWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      slivers: [
-        SliverList(
-          delegate: SliverChildListDelegate([]),
-        ),
-      ],
+      slivers: [SliverList(delegate: SliverChildListDelegate([]))],
     );
   }
 }
@@ -86,12 +75,7 @@ class ListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: const [
-        Text('Item 1'),
-        Text('Item 2'),
-      ],
-    );
+    return ListView(children: const [Text('Item 1'), Text('Item 2')]);
   }
 }
 
@@ -108,17 +92,14 @@ class SliverArrowWidget extends StatelessWidget {
   const SliverArrowWidget({super.key});
 
   @override
-  Widget build(BuildContext context) => SliverToBoxAdapter(
-        child: const Text('Hello'),
-      );
+  Widget build(BuildContext context) =>
+      SliverToBoxAdapter(child: const Text('Hello'));
 }
 
 // Class that doesn't extend StatelessWidget or StatefulWidget
 class NotAWidget {
   Widget build(BuildContext context) {
-    return SliverList(
-      delegate: SliverChildListDelegate([]),
-    );
+    return SliverList(delegate: SliverChildListDelegate([]));
   }
 }
 
