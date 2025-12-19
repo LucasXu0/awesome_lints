@@ -58,6 +58,17 @@ This document lists all general Dart lint rules provided by Awesome Lints that a
 - [no-magic-number](#no-magic-number)
 - [no-magic-string](#no-magic-string)
 - [no-object-declaration](#no-object-declaration)
+- [prefer-async-await](#prefer-async-await)
+- [prefer-contains](#prefer-contains)
+- [prefer-correct-for-loop-increment](#prefer-correct-for-loop-increment)
+- [prefer-correct-json-casts](#prefer-correct-json-casts)
+- [prefer-early-return](#prefer-early-return)
+- [prefer-first](#prefer-first)
+- [prefer-iterable-of](#prefer-iterable-of)
+- [prefer-last](#prefer-last)
+- [prefer-named-boolean-parameters](#prefer-named-boolean-parameters)
+- [prefer-return-await](#prefer-return-await)
+- [prefer-switch-expression](#prefer-switch-expression)
 
 ---
 
@@ -556,3 +567,333 @@ Warns when string literals appear repeatedly in code.
 Warns when variables are declared with type `Object`.
 
 **Why?** Using `Object` as a type provides no type safety. Use more specific types or `dynamic` if truly needed.
+
+---
+
+## prefer-async-await
+
+Warns when `.then()` is used on Future objects instead of async/await syntax.
+
+**Why?** The async/await syntax is more readable, provides better error handling with try/catch, and makes the control flow clearer compared to chaining `.then()` callbacks.
+
+**Bad:**
+```dart
+Future<String> fetchData() {
+  return getData().then((data) {
+    return processData(data);
+  }).then((processed) {
+    return saveData(processed);
+  });
+}
+```
+
+**Good:**
+```dart
+Future<String> fetchData() async {
+  final data = await getData();
+  final processed = await processData(data);
+  return await saveData(processed);
+}
+```
+
+---
+
+## prefer-contains
+
+Warns when `indexOf() != -1` or `indexOf() == -1` is used instead of the more expressive `contains()` method.
+
+**Why?** Using `contains()` is more readable and expresses intent more clearly than comparing the result of `indexOf()` with -1.
+
+**Bad:**
+```dart
+void checkValue(List<int> numbers) {
+  if (numbers.indexOf(5) != -1) {
+    print('Found');
+  }
+
+  if (numbers.indexOf(10) == -1) {
+    print('Not found');
+  }
+}
+```
+
+**Good:**
+```dart
+void checkValue(List<int> numbers) {
+  if (numbers.contains(5)) {
+    print('Found');
+  }
+
+  if (!numbers.contains(10)) {
+    print('Not found');
+  }
+}
+```
+
+---
+
+## prefer-correct-for-loop-increment
+
+Warns when a for loop increments or decrements a different variable than the one used in the loop condition.
+
+**Why?** Incrementing the wrong variable in a for loop is a common bug, especially in nested loops. This can cause infinite loops or incorrect iteration behavior.
+
+**Bad:**
+```dart
+void processMatrix(List<List<int>> matrix) {
+  for (int i = 0; i < matrix.length; j++) { // Incrementing j instead of i
+    print(matrix[i]);
+  }
+}
+
+void nestedLoop() {
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 5; i++) { // Incrementing i instead of j
+      print('$i, $j');
+    }
+  }
+}
+```
+
+**Good:**
+```dart
+void processMatrix(List<List<int>> matrix) {
+  for (int i = 0; i < matrix.length; i++) {
+    print(matrix[i]);
+  }
+}
+
+void nestedLoop() {
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 5; j++) {
+      print('$i, $j');
+    }
+  }
+}
+```
+
+---
+
+## prefer-correct-json-casts
+
+Warns when direct casting is used with JSON data instead of the safer `.cast()` method.
+
+**Why?** Direct casting of JSON data (e.g., `as Map<String, dynamic>`) can fail at runtime if the JSON structure doesn't match expectations. Using `.cast()` provides better runtime type checking and clearer error messages.
+
+**Bad:**
+```dart
+void parseJson(dynamic json) {
+  final map = json as Map<String, dynamic>;
+  final list = json['items'] as List<String>;
+}
+```
+
+**Good:**
+```dart
+void parseJson(dynamic json) {
+  final map = (json as Map).cast<String, dynamic>();
+  final list = (json['items'] as List).cast<String>();
+}
+```
+
+---
+
+## prefer-early-return
+
+Warns when a function body consists of a single if statement with no else clause.
+
+**Why?** Early returns reduce nesting and improve readability by handling edge cases first. This pattern makes the main logic flow clearer and easier to understand.
+
+**Bad:**
+```dart
+void processUser(User? user) {
+  if (user != null) {
+    print('Processing ${user.name}');
+    user.save();
+    sendNotification(user);
+  }
+}
+```
+
+**Good:**
+```dart
+void processUser(User? user) {
+  if (user == null) return;
+
+  print('Processing ${user.name}');
+  user.save();
+  sendNotification(user);
+}
+```
+
+---
+
+## prefer-first
+
+Warns when `[0]` or `elementAt(0)` is used to access the first element of a collection.
+
+**Why?** Using the `.first` property is more expressive and clearly communicates the intent to access the first element.
+
+**Bad:**
+```dart
+void printFirst(List<String> items) {
+  print(items[0]);
+  print(items.elementAt(0));
+}
+```
+
+**Good:**
+```dart
+void printFirst(List<String> items) {
+  print(items.first);
+}
+```
+
+---
+
+## prefer-iterable-of
+
+Warns when `List.from()` or `Set.from()` is used with a compatible type instead of the type-safe alternative constructors.
+
+**Why?** Using `List.of()` or `Set.of()` provides better type safety and performance when the source iterable's element type is compatible with the target type. The `.of()` constructor preserves type information without unnecessary runtime checks.
+
+**Bad:**
+```dart
+void convertList(List<int> numbers) {
+  final list = List<num>.from(numbers); // Unnecessary conversion
+  final set = Set<int>.from(numbers);
+}
+```
+
+**Good:**
+```dart
+void convertList(List<int> numbers) {
+  final list = List<num>.of(numbers);
+  final set = Set<int>.of(numbers);
+}
+```
+
+---
+
+## prefer-last
+
+Warns when `[length - 1]` or `elementAt(length - 1)` is used to access the last element of a collection.
+
+**Why?** Using the `.last` property is more expressive and clearly communicates the intent to access the last element, while also being less error-prone.
+
+**Bad:**
+```dart
+void printLast(List<String> items) {
+  print(items[items.length - 1]);
+  print(items.elementAt(items.length - 1));
+}
+```
+
+**Good:**
+```dart
+void printLast(List<String> items) {
+  print(items.last);
+}
+```
+
+---
+
+## prefer-named-boolean-parameters
+
+Warns when boolean parameters are positional instead of named.
+
+**Why?** Boolean parameters are hard to understand at call sites without looking at the function signature. Named parameters make the code self-documenting and prevent errors from argument order confusion.
+
+**Bad:**
+```dart
+void createUser(String name, bool isAdmin, bool isActive) {
+  // implementation
+}
+
+// Hard to understand what these booleans mean
+createUser('John', true, false);
+```
+
+**Good:**
+```dart
+void createUser(
+  String name, {
+  required bool isAdmin,
+  required bool isActive,
+}) {
+  // implementation
+}
+
+// Clear and self-documenting
+createUser('John', isAdmin: true, isActive: false);
+```
+
+---
+
+## prefer-return-await
+
+Warns when a Future is returned from a try block without using await.
+
+**Why?** Returning a Future from a try block without await can cause exceptions to escape the catch handler. The exception will occur after the function returns, bypassing your error handling. Always await Futures in try blocks to ensure proper exception handling.
+
+**Bad:**
+```dart
+Future<String> fetchData() async {
+  try {
+    return anotherAsyncMethod(); // Exception escapes catch
+  } catch (e) {
+    print('Error: $e'); // Won't catch exceptions from anotherAsyncMethod
+    rethrow;
+  }
+}
+```
+
+**Good:**
+```dart
+Future<String> fetchData() async {
+  try {
+    return await anotherAsyncMethod(); // Exceptions caught properly
+  } catch (e) {
+    print('Error: $e'); // Will catch exceptions
+    rethrow;
+  }
+}
+```
+
+---
+
+## prefer-switch-expression
+
+Warns when a switch statement can be converted to a more concise switch expression (Dart 3.0+).
+
+**Why?** Switch expressions are more concise, less verbose, and enforce exhaustiveness checking. They're ideal for assignments and returns where each case produces a value.
+
+**Bad:**
+```dart
+String getStatusMessage(Status status) {
+  String message;
+  switch (status) {
+    case Status.pending:
+      message = 'Waiting';
+      break;
+    case Status.active:
+      message = 'Running';
+      break;
+    case Status.completed:
+      message = 'Done';
+      break;
+  }
+  return message;
+}
+```
+
+**Good:**
+```dart
+String getStatusMessage(Status status) {
+  return switch (status) {
+    Status.pending => 'Waiting',
+    Status.active => 'Running',
+    Status.completed => 'Done',
+  };
+}
+```
