@@ -7,6 +7,7 @@ A comprehensive collection of custom lint rules for Dart and Flutter application
 - 🎯 **32 Flutter-specific lints** - Catch Flutter widget issues, lifecycle problems, and performance pitfalls
 - 🔍 **54 Common Dart lints** - General-purpose rules for any Dart codebase
 - 📦 **8 Provider-specific lints** - Best practices for the Provider state management package
+- 🧊 **22 Bloc-specific lints** - Best practices for the Bloc state management package
 - ⚡ **Fast analysis** - Built on custom_lint for efficient, real-time feedback
 - 🛠️ **Easy to configure** - All rules enabled by default, with optional customization
 - 📚 **Well-documented** - Every rule includes examples and explanations
@@ -110,6 +111,24 @@ Popular rules include:
 - `dispose-providers` - Checks for proper resource disposal
 - `prefer-multi-provider` - Suggests MultiProvider over nested providers
 - `prefer-provider-extensions` - Prefers context.read/watch over Provider.of
+
+### Bloc Rules
+
+22 rules designed specifically for applications using the Bloc package:
+- Bloc/Cubit usage patterns and best practices
+- Encapsulation and architectural correctness
+- Event and state management
+- Memory leak prevention
+- Immutability enforcement
+
+**[📖 View all Bloc lints →](lib/src/lints/bloc/BLOC_LINTS.md)**
+
+Popular rules include:
+- `avoid-bloc-public-fields` - Enforces private fields in Blocs/Cubits
+- `avoid-bloc-public-methods` - Prevents public methods except overrides
+- `avoid-passing-build-context-to-blocs` - Prevents BuildContext coupling
+- `prefer-immutable-bloc-events` - Requires @immutable on event classes
+- `prefer-sealed-bloc-state` - Requires sealed/final modifiers on state classes
 
 ## Configuration
 
