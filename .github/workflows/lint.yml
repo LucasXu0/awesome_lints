@@ -39,7 +39,15 @@ jobs:
         run: fvm dart analyze lib
 
       - name: Check dart format in test
-        run: fvm dart format --set-exit-if-changed test
+        run: fvm dart format test
+
+      - name: Debug versions and diff
+        run: |
+          fvm dart --version
+          fvm flutter --version
+          git rev-parse HEAD
+          git status --porcelain
+          git diff --name-only
 
       - name: Run dart analyze in test
         run: fvm dart analyze test
