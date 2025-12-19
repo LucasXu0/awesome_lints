@@ -1,5 +1,6 @@
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+import 'lints/bloc/bloc.dart';
 import 'lints/common/common.dart';
 import 'lints/flutter/flutter.dart';
 import 'lints/provider/provider.dart';
@@ -12,6 +13,7 @@ class _AwesomeLints extends PluginBase {
     ...commonLintRules,
     ...flutterLintRules,
     ...providerLintRules,
+    ...blocLintRules,
   ];
 
   List<LintRule> commonLintRules = [
@@ -115,5 +117,30 @@ class _AwesomeLints extends PluginBase {
     PreferMultiProvider(),
     PreferNullableProviderTypes(),
     PreferProviderExtensions(),
+  ];
+
+  List<LintRule> blocLintRules = [
+    AvoidBlocPublicFields(),
+    AvoidBlocPublicMethods(),
+    AvoidCubits(),
+    AvoidDuplicateBlocEventHandlers(),
+    AvoidEmptyBuildWhen(),
+    AvoidExistingInstancesInBlocProvider(),
+    AvoidInstantiatingInBlocValueProvider(),
+    AvoidPassingBlocToBloc(),
+    AvoidPassingBuildContextToBlocs(),
+    AvoidReturningValueFromCubitMethods(),
+    CheckIsNotClosedAfterAsyncGap(),
+    EmitNewBlocStateInstances(),
+    HandleBlocEventSubclasses(),
+    PreferBlocEventSuffix(),
+    PreferBlocExtensions(),
+    PreferBlocStateSuffix(),
+    PreferCorrectBlocProvider(),
+    PreferImmutableBlocEvents(),
+    PreferImmutableBlocState(),
+    PreferMultiBlocProvider(),
+    PreferSealedBlocEvents(),
+    PreferSealedBlocState(),
   ];
 }
