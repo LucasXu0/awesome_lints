@@ -49,6 +49,11 @@ jobs:
           git status --porcelain
           git diff --name-only
 
+      - name: Install dependencies in fixture project
+        run: |
+          cd test/fixtures/test_project
+          fvm flutter pub get
+
       - name: Run dart analyze in test
         run: fvm dart analyze test
 
