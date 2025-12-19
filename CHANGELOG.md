@@ -5,6 +5,94 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-12-19
+
+### Major Release - Framework-Specific Lints
+
+🎉 Major expansion with 42 new lint rules across three new categories: Bloc, Provider, and FakeAsync, plus 11 new common lint rules!
+
+#### New Categories
+
+**Bloc Lints (22 rules)**
+
+Framework-specific lints for the Bloc state management library:
+
+- `avoid-bloc-public-fields` - Warns when a Bloc or Cubit has public fields
+- `avoid-bloc-public-methods` - Warns when a Bloc has public methods except overridden ones
+- `avoid-cubits` - Warns when a Cubit is used
+- `avoid-duplicate-bloc-event-handlers` - Detects multiple handlers for the same event
+- `avoid-empty-build-when` - Requires buildWhen condition in BlocBuilder/BlocConsumer
+- `avoid-existing-instances-in-bloc-provider` - Prevents reusing instances in BlocProvider
+- `avoid-instantiating-in-bloc-value-provider` - Prevents new instances in BlocProvider.value
+- `avoid-passing-bloc-to-bloc` - Prevents Bloc dependencies on other Blocs
+- `avoid-passing-build-context-to-blocs` - Prevents BuildContext in Bloc events/methods
+- `avoid-returning-value-from-cubit-methods` - Ensures Cubits communicate via state
+- `check-is-not-closed-after-async-gap` - Requires isClosed checks in async handlers
+- `emit-new-bloc-state-instances` - Prevents emitting existing state instances
+- `handle-bloc-event-subclasses` - Ensures all event subclasses are handled
+- `prefer-bloc-event-suffix` - Enforces "Event" suffix for event classes
+- `prefer-bloc-extensions` - Suggests context.read()/watch() over BlocProvider.of()
+- `prefer-bloc-state-suffix` - Enforces "State" suffix for state classes
+- `prefer-correct-bloc-provider` - Ensures BlocProvider is used for Blocs
+- `prefer-immutable-bloc-events` - Requires @immutable on Bloc events
+- `prefer-immutable-bloc-state` - Requires @immutable on Bloc state
+- `prefer-multi-bloc-provider` - Suggests MultiBlocProvider for nested providers
+- `prefer-sealed-bloc-events` - Requires sealed/final modifiers on event classes
+- `prefer-sealed-bloc-state` - Requires sealed/final modifiers on state classes
+
+**Provider Lints (8 rules)**
+
+Framework-specific lints for the Provider state management library:
+
+- `avoid-instantiating-in-value-provider` - Prevents new instances in Provider.value
+- `avoid-read-inside-build` - Warns about read() usage in build methods
+- `avoid-watch-outside-build` - Warns about watch()/select() outside build
+- `dispose-providers` - Ensures proper disposal of provided resources
+- `prefer-immutable-selector-value` - Requires immutable values in Selector
+- `prefer-multi-provider` - Suggests MultiProvider for nested providers
+- `prefer-nullable-provider-types` - Recommends nullable provider types
+- `prefer-provider-extensions` - Suggests context extensions over Provider.of()
+
+**FakeAsync Lints (1 rule)**
+
+Testing-focused lints for the fake_async package:
+
+- `avoid-async-callback-in-fake-async` - Prevents async callbacks in FakeAsync
+
+#### New Common Lints (11 rules)
+
+Enhanced common lints with new best practice rules:
+
+- `prefer-async-await` - Suggests async/await over Future API
+- `prefer-contains` - Suggests contains() over indexOf() != -1
+- `prefer-correct-for-loop-increment` - Validates for-loop increment expressions
+- `prefer-correct-json-casts` - Ensures proper JSON type casting
+- `prefer-early-return` - Recommends early returns to reduce nesting
+- `prefer-first` - Suggests first over [0] or elementAt(0)
+- `prefer-iterable-of` - Suggests Iterable.of() over manual iteration
+- `prefer-last` - Suggests last over [length - 1]
+- `prefer-named-boolean-parameters` - Requires named parameters for booleans
+- `prefer-return-await` - Suggests explicit return await in try blocks
+- `prefer-switch-expression` - Recommends switch expressions over statements
+
+### Documentation
+
+- Added BLOC_LINTS.md with comprehensive Bloc lint documentation
+- Added PROVIDER_LINTS.md with comprehensive Provider lint documentation
+- Added FAKE_ASYNC_LINTS.md with FakeAsync lint documentation
+- Updated test fixtures and configuration for new rules
+
+### Summary
+
+Version 2.0.0 introduces:
+- **42 new lint rules** (22 Bloc + 8 Provider + 1 FakeAsync + 11 Common)
+- **3 new framework-specific categories** (Bloc, Provider, FakeAsync)
+- **Total of 128 lint rules** across all categories
+- Enhanced coverage for popular Flutter state management solutions
+- Improved testing practices with FakeAsync support
+
+---
+
 ## [1.0.0] - 2025-12-19
 
 ### Initial Release
@@ -151,4 +239,5 @@ Future releases will be documented here. We follow semantic versioning:
 - **MINOR** version for new functionality in a backward compatible manner
 - **PATCH** version for backward compatible bug fixes
 
-[1.0.0]: https://github.com/your-username/awesome_lints/releases/tag/v1.0.0
+[2.0.0]: https://github.com/LucasXu0/awesome_lints/releases/tag/v2.0.0
+[1.0.0]: https://github.com/LucasXu0/awesome_lints/releases/tag/v1.0.0

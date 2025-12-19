@@ -1,0 +1,2 @@
+# Ignore test fixtures that import packages not in dependencies
+test/fixtures/
