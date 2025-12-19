@@ -24,16 +24,38 @@ class PreferBlocStateSuffix extends DartLintRule {
     context.registry.addClassDeclaration((node) {
       if (!_isBloc(node)) return;
 
-      // Get the state type from Bloc<Event, State>
+      // Get the state type from Bloc<Event, State> or Cubit<State>
       final extendsClause = node.extendsClause;
       if (extendsClause == null) return;
 
       final superclass = extendsClause.superclass;
       final typeArguments = superclass.typeArguments?.arguments;
-      if (typeArguments == null || typeArguments.length < 2) return;
+      if (typeArguments == null || typeArguments.isEmpty) return;
 
-      final stateType = typeArguments[1];
+      // For Cubit<State>, state is at index 0
+      // For Bloc<Event, State>, state is at index 1
+      final isCubit = superclass.name.lexeme == 'Cubit';
+      final stateIndex = isCubit ? 0 : 1;
+
+      if (typeArguments.length <= stateIndex) return;
+
+      final stateType = typeArguments[stateIndex];
       final stateTypeName = stateType.toString();
+
+      // Skip primitive and built-in types
+      const builtInTypes = [
+        'int',
+        'double',
+        'String',
+        'bool',
+        'num',
+        'void',
+        'dynamic',
+        'Object',
+        'Never',
+      ];
+
+      if (builtInTypes.contains(stateTypeName)) return;
 
       // Check if the state type name ends with 'State'
       if (!stateTypeName.endsWith('State')) {
