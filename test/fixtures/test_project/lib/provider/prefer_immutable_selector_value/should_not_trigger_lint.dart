@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable, arguments_ordering, avoid_default_tostring
+// ignore_for_file: arguments_ordering, avoid_default_tostring, prefer_async_await, prefer_contains, prefer_correct_for_loop_increment, prefer_early_return, prefer_iterable_of, prefer_named_boolean_parameters, prefer_switch_expression, unused_local_variable
 
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';

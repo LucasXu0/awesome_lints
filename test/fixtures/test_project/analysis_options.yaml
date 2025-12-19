@@ -6,3 +6,6 @@ custom_lint:
   rules:
     - no_magic_number: false
     - no_magic_string: false
+
+  debug: true
+  verbose: true
