@@ -2,6 +2,7 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 import 'lints/bloc/bloc.dart';
 import 'lints/common/common.dart';
+import 'lints/fake_async/fake_async.dart';
 import 'lints/flutter/flutter.dart';
 import 'lints/provider/provider.dart';
 
@@ -14,6 +15,7 @@ class _AwesomeLints extends PluginBase {
     ...flutterLintRules,
     ...providerLintRules,
     ...blocLintRules,
+    ...fakeAsyncLintRules,
   ];
 
   List<LintRule> commonLintRules = [
@@ -143,4 +145,6 @@ class _AwesomeLints extends PluginBase {
     PreferSealedBlocEvents(),
     PreferSealedBlocState(),
   ];
+
+  List<LintRule> fakeAsyncLintRules = [AvoidAsyncCallbackInFakeAsync()];
 }
