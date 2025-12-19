@@ -2,9 +2,9 @@ name: Lint
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint:
@@ -14,10 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+
       - name: Setup Flutter with FVM
         uses: kuhnroyal/flutter-fvm-config-action@v3
         with:
-          path: '.fvmrc'
+          path: ".fvmrc"
 
       - name: Install FVM
         run: |
