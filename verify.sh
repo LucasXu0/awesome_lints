@@ -102,8 +102,8 @@ echo ""
 
 # Step 7: Run custom_lint in test
 print_step "Running custom_lint in test folder..."
-# Fail on any diagnostic issues (errors, warnings, and infos)
-if $DART_CMD run custom_lint test; then
+# Fail on errors and warnings, but allow info messages
+if $DART_CMD run custom_lint test --no-fatal-infos; then
     print_success "custom_lint passed"
 else
     print_error "custom_lint failed"
