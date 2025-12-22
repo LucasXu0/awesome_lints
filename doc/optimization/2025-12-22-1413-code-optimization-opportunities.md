@@ -614,7 +614,7 @@ class MyLint extends DartLintRule {
 
 ### 6. Optimize Deep AST Traversals
 
-**Status:** 🟡 Medium Priority
+**Status:** ✅ COMPLETED (2025-12-22)
 **Impact:** Low (prevents pathological cases)
 **Effort:** Low (2-3 hours)
 
@@ -662,6 +662,27 @@ extension AstNodeTraversalExtensions on AstNode {
 - ✅ Predictable performance
 - ✅ Configurable depth limits
 - ✅ No impact on normal code
+
+#### Implementation Summary
+
+**What was completed:**
+- Migrated 6 lint files to use new AST traversal extensions
+- Added maxDepth=50 protection to all traversals
+- Reduced code duplication by ~25 lines
+
+**Files migrated:**
+1. `avoid_read_inside_build.dart` - Full migration
+2. `avoid_watch_outside_build.dart` - Full migration
+3. `avoid_async_call_in_sync_function.dart` - Full migration
+4. `avoid_assigning_to_static_field.dart` - Full migration
+5. `avoid_accessing_other_classes_private_members.dart` - Full migration
+6. `prefer_return_await.dart` - Partial migration (_isInAsyncFunction only; _isInTryBlock kept manual loop due to complex stop conditions)
+
+**Commits:**
+- `e0c3fba`: Initial migration (avoid_read_inside_build.dart)
+- `9bea7ae`: Complete migration for remaining 5 files
+
+**Note:** Some files retain manual while loops where complex stop conditions require "stop without returning" semantics that `findAncestor()` doesn't support.
 
 ---
 
