@@ -105,7 +105,11 @@ class PreferReturnAwait extends DartLintRule {
 
 extension _AstNodeExtension on AstNode {
   bool contains(AstNode other) {
-    // Check if 'other' is a descendant of this node
-    return other.findAncestor((n) => identical(n, this)) != null;
+    AstNode? current = other;
+    while (current != null) {
+      if (identical(current, this)) return true;
+      current = current.parent;
+    }
+    return false;
   }
 }
