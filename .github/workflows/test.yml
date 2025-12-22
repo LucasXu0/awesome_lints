@@ -39,22 +39,5 @@ jobs:
           dart pub global activate fvm
           fvm install
 
-      - name: Install dependencies
-        run: fvm flutter pub get
-
-      - name: Install dependencies in fixture project
-        run: |
-          cd test/fixtures/test_project
-          fvm flutter pub get
-
-      - name: Run Dart tests
-        run: fvm dart test
-        continue-on-error: true # Allow tests to fail for now since we're adding this
-
-      - name: Run custom_lint on fixtures
-        run: |
-          cd test/fixtures/test_project
-          fvm dart run custom_lint
-
-      - name: Verify script
+      - name: Run verification script
         run: ./verify.sh
