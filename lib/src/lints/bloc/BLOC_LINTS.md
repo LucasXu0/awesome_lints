@@ -2,6 +2,31 @@
 
 22 lint rules for the Bloc package to help you write better Bloc code and avoid common pitfalls.
 
+## Configuration
+
+As of v2.1.0, these rules are **disabled by default**. To enable:
+
+**All Bloc rules:**
+```yaml
+include: package:awesome_lints/presets/bloc.yaml
+```
+
+**Individual rules:**
+```yaml
+custom_lint:
+  enable_all_lint_rules: false
+  rules:
+    - avoid_bloc_public_fields
+    - prefer_immutable_bloc_events
+```
+
+**Recommended preset (includes subset of Bloc rules):**
+```yaml
+include: package:awesome_lints/presets/recommended.yaml
+```
+
+---
+
 ## avoid-bloc-public-fields
 
 Warns when a Bloc or Cubit has public fields.

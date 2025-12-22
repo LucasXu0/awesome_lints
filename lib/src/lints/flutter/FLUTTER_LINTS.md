@@ -2,6 +2,31 @@
 
 This document lists all Flutter-specific lint rules provided by Awesome Lints.
 
+## Configuration
+
+As of v2.1.0, these rules are **disabled by default**. To enable:
+
+**All Flutter rules:**
+```yaml
+include: package:awesome_lints/presets/flutter.yaml
+```
+
+**Individual rules:**
+```yaml
+custom_lint:
+  enable_all_lint_rules: false
+  rules:
+    - avoid_late_context
+    - prefer_spacing
+```
+
+**Recommended preset (includes subset of Flutter rules):**
+```yaml
+include: package:awesome_lints/presets/recommended.yaml
+```
+
+---
+
 ## Table of Contents
 
 - [avoid-empty-setstate](#avoid-empty-setstate)

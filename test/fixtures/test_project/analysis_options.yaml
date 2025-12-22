@@ -2,8 +2,12 @@ analyzer:
   plugins:
     - custom_lint
 
+# Use strict preset to validate all rules in tests
+include: package:awesome_lints/presets/strict.yaml
+
 custom_lint:
   rules:
+    # Disable rules that are intentionally violated in test fixtures
     - no_magic_number: false
     - no_magic_string: false
 

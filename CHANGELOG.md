@@ -5,6 +5,101 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-12-22
+
+### BREAKING CHANGES
+
+**Rules are now disabled by default (opt-in model)**
+
+Previous versions (v2.0.0 and earlier) enabled all 128 rules automatically.
+Starting with v2.1.0, rules must be explicitly enabled or configured via presets.
+
+**Migration Required:**
+
+To maintain v2.0.0 behavior (all rules enabled):
+
+```yaml
+# analysis_options.yaml
+include: package:awesome_lints/presets/strict.yaml
+```
+
+To adopt the recommended preset (recommended for most projects):
+
+```yaml
+# analysis_options.yaml
+include: package:awesome_lints/presets/recommended.yaml
+```
+
+For gradual adoption (core essential rules only):
+
+```yaml
+# analysis_options.yaml
+include: package:awesome_lints/presets/core.yaml
+```
+
+See [Migration Guide](doc/feature/2025-12-22-opt-in-rules-by-default.md#migration-guide) for detailed instructions.
+
+### Features
+
+**New Preset Configurations:**
+
+- `core.yaml` - Essential rules only (~15 rules)
+  - Critical bug prevention
+  - Null safety issues
+  - Flutter lifecycle errors
+  - Recommended for new projects
+
+- `recommended.yaml` - Balanced rule set (~40 rules)
+  - Includes all core rules
+  - Code quality improvements
+  - Common mistake prevention
+  - Recommended for most projects
+
+- `strict.yaml` - All rules enabled (128 rules)
+  - Maintains v2.0.0 behavior
+  - Comprehensive analysis
+  - Recommended for very strict projects
+
+- Category-specific presets:
+  - `flutter.yaml` - All 32 Flutter rules
+  - `common.yaml` - All 65 common Dart rules
+  - `provider.yaml` - All 8 Provider rules
+  - `bloc.yaml` - All 22 Bloc rules
+  - `fake_async.yaml` - All FakeAsync rules
+
+### Documentation
+
+- Added comprehensive [Migration Guide](doc/feature/2025-12-22-opt-in-rules-by-default.md)
+- Updated README with preset usage examples
+- Updated all category documentation files
+- Added preset comparison guide
+
+### Migration Examples
+
+**Before (v2.0.0):**
+```yaml
+# All rules enabled by default
+custom_lint:
+  rules:
+    - avoid_non_null_assertion: false  # Must disable unwanted
+    - no_magic_number: false           # Must disable unwanted
+```
+
+**After (v2.1.0):**
+```yaml
+# Use preset or enable specific rules
+include: package:awesome_lints/presets/recommended.yaml
+
+# Or enable specific rules only
+custom_lint:
+  enable_all_lint_rules: false
+  rules:
+    - avoid_late_context
+    - prefer_early_return
+```
+
+---
+
 ## [2.0.0] - 2025-12-19
 
 ### Major Release - Framework-Specific Lints
@@ -239,5 +334,6 @@ Future releases will be documented here. We follow semantic versioning:
 - **MINOR** version for new functionality in a backward compatible manner
 - **PATCH** version for backward compatible bug fixes
 
+[2.1.0]: https://github.com/LucasXu0/awesome_lints/releases/tag/v2.1.0
 [2.0.0]: https://github.com/LucasXu0/awesome_lints/releases/tag/v2.0.0
 [1.0.0]: https://github.com/LucasXu0/awesome_lints/releases/tag/v1.0.0

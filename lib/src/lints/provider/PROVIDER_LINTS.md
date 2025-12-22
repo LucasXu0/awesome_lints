@@ -2,6 +2,31 @@
 
 8 lint rules for the Provider package to help you write better Provider code and avoid common pitfalls.
 
+## Configuration
+
+As of v2.1.0, these rules are **disabled by default**. To enable:
+
+**All Provider rules:**
+```yaml
+include: package:awesome_lints/presets/provider.yaml
+```
+
+**Individual rules:**
+```yaml
+custom_lint:
+  enable_all_lint_rules: false
+  rules:
+    - avoid_read_inside_build
+    - avoid_watch_outside_build
+```
+
+**Recommended preset (includes subset of Provider rules):**
+```yaml
+include: package:awesome_lints/presets/recommended.yaml
+```
+
+---
+
 ## avoid-instantiating-in-value-provider
 
 Warns when a `Provider.value` returns a new instance instead of reusing an existing one.
