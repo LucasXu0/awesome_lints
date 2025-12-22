@@ -339,6 +339,17 @@ Contributions are welcome! When submitting new rules:
 3. Include comprehensive test fixtures
 4. Follow the existing code structure and style
 
+### Documentation Templates
+
+To maintain consistency across project documentation, use the templates in `doc/templates/`:
+
+- **[Feature Documentation](doc/templates/FEATURE_TEMPLATE.md)** - For new features and breaking changes
+- **[Migration Guides](doc/templates/MIGRATION_TEMPLATE.md)** - For version upgrade guides
+- **[Optimization Docs](doc/templates/OPTIMIZATION_TEMPLATE.md)** - For code improvements and refactoring
+- **[How-to Guides](doc/templates/HOW_TO_TEMPLATE.md)** - For tutorials and step-by-step guides
+
+See [doc/templates/README.md](doc/templates/README.md) for detailed usage instructions and [doc/templates/QUICK_START.md](doc/templates/QUICK_START.md) for a quick reference.
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
