@@ -88,7 +88,7 @@ class TypeUtils {
     return false;
   }
 
-  /// Gets the element type from a collection type (List<T>, Set<T>, etc.).
+  /// Gets the element type from a collection type (`List<T>`, `Set<T>`, etc.).
   ///
   /// Returns null if the type is not a collection or has no type arguments.
   ///
@@ -163,7 +163,7 @@ class TypeUtils {
     return collectionTypes.contains(type.element.name);
   }
 
-  /// Gets the return type from a Future<T>.
+  /// Gets the return type from a `Future<T>`.
   ///
   /// Returns null if the type is not a Future or has no type arguments.
   ///
@@ -179,7 +179,7 @@ class TypeUtils {
     return type.typeArguments.first;
   }
 
-  /// Gets the element type from a Stream<T>.
+  /// Gets the element type from a `Stream<T>`.
   ///
   /// Returns null if the type is not a Stream or has no type arguments.
   static DartType? getStreamElementType(DartType? type) {

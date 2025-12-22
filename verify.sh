@@ -92,9 +92,10 @@ else
 fi
 echo ""
 
-# Step 6: Run custom_lint in test
+# Step 6: Run custom_lint in test (warnings expected in fixtures)
 print_step "Running custom_lint in test folder..."
-if $DART_CMD run custom_lint test; then
+# Note: Test fixtures are designed to trigger lint warnings, so we only fail on errors
+if $DART_CMD run custom_lint test --no-fatal-warnings --no-fatal-infos; then
     print_success "custom_lint passed"
 else
     print_error "custom_lint failed"
