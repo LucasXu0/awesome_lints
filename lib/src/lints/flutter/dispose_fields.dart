@@ -5,6 +5,9 @@ import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+import '../../utils/ast_extensions.dart';
+import '../../utils/disposal_utils.dart';
+
 class DisposeFields extends DartLintRule {
   const DisposeFields() : super(code: _code);
 
@@ -97,16 +100,7 @@ class DisposeFields extends DartLintRule {
 
   /// Checks if the type has dispose(), close(), or cancel() methods
   bool _hasDisposableMethod(DartType type) {
-    // Check if it's an InterfaceType (class type)
-    if (type is! InterfaceType) return false;
-
-    // Look for dispose(), close(), or cancel() methods
-    // Use lookUpMethod to search through the class hierarchy
-    final disposeMethod = type.lookUpMethod('dispose', type.element.library);
-    final closeMethod = type.lookUpMethod('close', type.element.library);
-    final cancelMethod = type.lookUpMethod('cancel', type.element.library);
-
-    return disposeMethod != null || closeMethod != null || cancelMethod != null;
+    return DisposalUtils.hasDisposalMethod(type);
   }
 
   /// Finds the dispose method in the class
@@ -142,54 +136,20 @@ class _DisposedFieldsVisitor extends RecursiveAstVisitor<void> {
   void visitMethodInvocation(MethodInvocation node) {
     final methodName = node.methodName.name;
 
-    // Check if it's a dispose(), close(), or cancel() call
-    if (methodName != 'dispose' &&
-        methodName != 'close' &&
-        methodName != 'cancel') {
+    // Check if it's a disposal method call
+    if (!DisposalUtils.disposalMethods.contains(methodName)) {
       super.visitMethodInvocation(node);
       return;
     }
 
     final target = node.target;
 
-    // Extract the field name from various target types
-    final fieldName = _extractFieldName(target);
+    // Extract the field name using the extension method
+    final fieldName = target?.simpleIdentifierName;
     if (fieldName != null) {
       disposedFields.add(fieldName);
     }
 
     super.visitMethodInvocation(node);
-  }
-
-  /// Extracts the field name from various expression types
-  String? _extractFieldName(Expression? expression) {
-    if (expression == null) return null;
-
-    // Handle simple field access: field.dispose()
-    if (expression is SimpleIdentifier) {
-      return expression.name;
-    }
-
-    // Handle prefixed identifier: this.field.dispose()
-    if (expression is PrefixedIdentifier) {
-      if (expression.prefix.name == 'this') {
-        return expression.identifier.name;
-      }
-    }
-
-    // Handle property access: this.field.dispose()
-    if (expression is PropertyAccess) {
-      final propertyTarget = expression.target;
-      if (propertyTarget is ThisExpression) {
-        return expression.propertyName.name;
-      }
-    }
-
-    // Handle postfix expression: field!.dispose()
-    if (expression is PostfixExpression) {
-      return _extractFieldName(expression.operand);
-    }
-
-    return null;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -92,5 +93,41 @@ class PreferIterableOf extends DartLintRule {
     final targetString = targetType.getDisplayString();
 
     return sourceString == targetString;
+  }
+
+  @override
+  List<Fix> getFixes() => [_ReplaceWithOf()];
+}
+
+class _ReplaceWithOf extends DartFix {
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ChangeReporter reporter,
+    CustomLintContext context,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
+  ) {
+    context.registry.addInstanceCreationExpression((node) {
+      if (!analysisError.sourceRange.intersects(node.sourceRange)) return;
+
+      final constructorName = node.constructorName;
+      final factoryName = constructorName.name?.name;
+
+      if (factoryName != 'from') return;
+
+      final changeBuilder = reporter.createChangeBuilder(
+        message: 'Replace .from() with .of()',
+        priority: 80,
+      );
+
+      changeBuilder.addDartFileEdit((builder) {
+        // Replace 'from' with 'of' in the constructor name
+        final nameNode = constructorName.name;
+        if (nameNode != null) {
+          builder.addSimpleReplacement(nameNode.sourceRange, 'of');
+        }
+      });
+    });
   }
 }

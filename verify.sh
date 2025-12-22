@@ -46,7 +46,7 @@ echo ""
 
 # Step 1: Install dependencies
 print_step "Installing dependencies..."
-$DART_CMD pub get
+$FLUTTER_CMD pub get
 print_success "Dependencies installed"
 echo ""
 
@@ -82,7 +82,15 @@ else
 fi
 echo ""
 
-# Step 5: Run dart analyze in test
+# Step 5: Install dependencies in fixture project
+print_step "Installing dependencies in fixture project..."
+cd test/fixtures/test_project
+$FLUTTER_CMD pub get
+cd ../../..
+print_success "Fixture project dependencies installed"
+echo ""
+
+# Step 6: Run dart analyze in test
 print_step "Running dart analyze in test folder..."
 if $DART_CMD analyze test; then
     print_success "test folder analysis passed"
@@ -92,9 +100,10 @@ else
 fi
 echo ""
 
-# Step 6: Run custom_lint in test
+# Step 7: Run custom_lint in test (warnings expected in fixtures)
 print_step "Running custom_lint in test folder..."
-if $DART_CMD run custom_lint test; then
+# Note: Test fixtures are designed to trigger lint warnings, so we only fail on errors
+if $DART_CMD run custom_lint test --no-fatal-warnings --no-fatal-infos; then
     print_success "custom_lint passed"
 else
     print_error "custom_lint failed"

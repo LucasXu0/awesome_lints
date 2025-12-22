@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -72,5 +73,68 @@ class PreferContains extends DartLintRule {
     }
 
     return false;
+  }
+
+  @override
+  List<Fix> getFixes() => [_ReplaceWithContains()];
+}
+
+class _ReplaceWithContains extends DartFix {
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ChangeReporter reporter,
+    CustomLintContext context,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
+  ) {
+    context.registry.addBinaryExpression((node) {
+      if (!analysisError.sourceRange.intersects(node.sourceRange)) return;
+
+      final isEqualityOperator =
+          node.operator.type == TokenType.EQ_EQ ||
+          node.operator.type == TokenType.BANG_EQ;
+
+      if (!isEqualityOperator) return;
+
+      // Find which operand is indexOf() and extract the target
+      MethodInvocation? indexOfCall;
+      bool isEquality = node.operator.type == TokenType.EQ_EQ;
+
+      if (_isIndexOfMethodInvocation(node.leftOperand)) {
+        indexOfCall = node.leftOperand as MethodInvocation;
+      } else if (_isIndexOfMethodInvocation(node.rightOperand)) {
+        indexOfCall = node.rightOperand as MethodInvocation;
+      }
+
+      if (indexOfCall == null) return;
+
+      // Get the target and arguments from indexOf call
+      final target = indexOfCall.target;
+      if (target == null) return;
+
+      final indexOfArgs = indexOfCall.argumentList.toSource();
+
+      // indexOf() == -1  → !target.contains(arg)
+      // indexOf() != -1  → target.contains(arg)
+      final needsNegation = isEquality;
+      final replacement = needsNegation
+          ? '!${target.toSource()}.contains$indexOfArgs'
+          : '${target.toSource()}.contains$indexOfArgs';
+
+      final changeBuilder = reporter.createChangeBuilder(
+        message: 'Replace with .contains()',
+        priority: 80,
+      );
+
+      changeBuilder.addDartFileEdit((builder) {
+        builder.addSimpleReplacement(node.sourceRange, replacement);
+      });
+    });
+  }
+
+  bool _isIndexOfMethodInvocation(Expression expression) {
+    if (expression is! MethodInvocation) return false;
+    return expression.methodName.name == 'indexOf';
   }
 }

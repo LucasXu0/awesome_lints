@@ -1,8 +1,9 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+
+import '../../utils/disposal_utils.dart';
 
 class AvoidUndisposedInstances extends DartLintRule {
   const AvoidUndisposedInstances() : super(code: _code);
@@ -26,8 +27,8 @@ class AvoidUndisposedInstances extends DartLintRule {
       final type = node.staticType;
       if (type == null) return;
 
-      // Check if the type has a dispose method
-      if (!_hasDisposeMethod(type)) return;
+      // Check if the type has a disposal method (dispose, close, or cancel)
+      if (!DisposalUtils.hasDisposalMethod(type)) return;
 
       var parent = node.parent;
 
@@ -51,21 +52,5 @@ class AvoidUndisposedInstances extends DartLintRule {
         reporter.atNode(node, _code);
       }
     });
-  }
-
-  bool _hasDisposeMethod(DartType type) {
-    if (type is! InterfaceType) return false;
-
-    // Check current class and superclasses
-    var current = type;
-    while (true) {
-      if (current.methods.any((m) => m.name == 'dispose')) {
-        return true;
-      }
-      final superType = current.superclass;
-      if (superType == null) break;
-      current = superType;
-    }
-    return false;
   }
 }
