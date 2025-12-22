@@ -1,0 +1,92 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate Pull Request
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for proper diff
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.10.4
+
+      - name: Setup Flutter with FVM
+        uses: kuhnroyal/flutter-fvm-config-action@v3
+        with:
+          path: ".fvmrc"
+
+      - name: Install FVM
+        run: |
+          dart pub global activate fvm
+          fvm install
+
+      - name: Install dependencies
+        run: fvm flutter pub get
+
+      - name: Check for new lints
+        id: check_lints
+        run: |
+          # Check if any new lint files were added
+          NEW_LINTS=$(git diff --name-only origin/main...HEAD | grep 'lib/src/lints/.*/.*\.dart$' | grep -v '\.dart$' || true)
+          if [ ! -z "$NEW_LINTS" ]; then
+            echo "new_lints=true" >> $GITHUB_OUTPUT
+            echo "New lint files detected:"
+            echo "$NEW_LINTS"
+          else
+            echo "new_lints=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate new lints have tests
+        if: steps.check_lints.outputs.new_lints == 'true'
+        run: |
+          # For each new lint, check if test fixtures exist
+          for lint_file in $(git diff --name-only origin/main...HEAD | grep 'lib/src/lints/.*/.*\.dart$' | grep -v '/\(common\|flutter\|provider\|bloc\|fake_async\)\.dart$'); do
+            # Extract lint name and category
+            LINT_NAME=$(basename "$lint_file" .dart)
+            CATEGORY=$(echo "$lint_file" | sed 's|lib/src/lints/\(.*\)/.*|\1|')
+
+            # Check if fixture directory exists
+            FIXTURE_DIR="test/fixtures/test_project/lib/$CATEGORY/$LINT_NAME"
+            if [ ! -d "$FIXTURE_DIR" ]; then
+              echo "❌ Error: No test fixtures found for new lint: $LINT_NAME"
+              echo "   Expected directory: $FIXTURE_DIR"
+              exit 1
+            fi
+
+            # Check if should_trigger_lint.dart exists
+            if [ ! -f "$FIXTURE_DIR/should_trigger_lint.dart" ]; then
+              echo "❌ Error: Missing should_trigger_lint.dart for: $LINT_NAME"
+              exit 1
+            fi
+
+            echo "✅ Fixtures found for: $LINT_NAME"
+          done
+
+      - name: Validate documentation updates
+        if: steps.check_lints.outputs.new_lints == 'true'
+        run: |
+          # Check if LINTS.md files were updated
+          UPDATED_DOCS=$(git diff --name-only origin/main...HEAD | grep 'LINTS\.md$' || true)
+          if [ -z "$UPDATED_DOCS" ]; then
+            echo "⚠️  Warning: New lints added but no LINTS.md files were updated"
+            echo "   Please update the relevant LINTS.md documentation"
+            # Don't fail, just warn
+          else
+            echo "✅ Documentation files updated: $UPDATED_DOCS"
+          fi
+
+      - name: Check lint count in README
+        if: steps.check_lints.outputs.new_lints == 'true'
+        run: |
+          echo "⚠️  New lints were added. Please verify the lint count in README.md is updated."
+          echo "   Current counts in README:"
+          grep -E '\*\*[0-9]+ .* lints\*\*' README.md || true
