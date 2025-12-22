@@ -171,6 +171,46 @@ Each category (`common/`, `flutter/`, `provider/`, `bloc/`, `fake_async/`) conta
 5. **Verify**: Run `./verify.sh` to check formatting, analysis, and lint tests
 6. **Update README**: Increment rule count in `README.md` if needed
 
+## Documentation Templates
+
+When creating project documentation, use the standardized templates in `doc/templates/`:
+
+### Available Templates
+
+- **FEATURE_TEMPLATE.md** - For documenting new features, breaking changes, and architectural decisions
+  - Use for: Major features, breaking changes, system refactors
+  - Naming: `doc/feature/YYYY-MM-DD-feature-name.md`
+
+- **MIGRATION_TEMPLATE.md** - For version upgrade and migration guides
+  - Use for: Breaking changes requiring user migration
+  - Naming: `doc/migration/vX.Y-to-vA.B.md`
+
+- **OPTIMIZATION_TEMPLATE.md** - For optimization opportunities and refactoring analysis
+  - Use for: Code improvements, performance optimizations, technical debt reduction
+  - Naming: `doc/optimization/YYYY-MM-DD-HHMM-optimization-name.md`
+
+- **HOW_TO_TEMPLATE.md** - For step-by-step tutorials and guides
+  - Use for: Developer tutorials, workflow documentation
+  - Naming: `doc/how-to-task-name.md`
+
+### Quick Usage
+
+```bash
+# Create a feature document
+cp doc/templates/FEATURE_TEMPLATE.md doc/feature/$(date +%Y-%m-%d)-my-feature.md
+
+# Create a migration guide
+cp doc/templates/MIGRATION_TEMPLATE.md doc/migration/v2.1-to-v2.2.md
+
+# Create an optimization document
+cp doc/templates/OPTIMIZATION_TEMPLATE.md doc/optimization/$(date +%Y-%m-%d-%H%M)-my-optimization.md
+
+# Create a how-to guide
+cp doc/templates/HOW_TO_TEMPLATE.md doc/how-to-my-task.md
+```
+
+See `doc/templates/README.md` for detailed guidance and `doc/templates/QUICK_START.md` for quick reference.
+
 ## FVM (Flutter Version Manager)
 
 This project uses FVM to ensure consistent Flutter/Dart versions:
