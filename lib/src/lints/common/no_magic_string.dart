@@ -1,9 +1,10 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
-import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
-class NoMagicString extends DartLintRule {
+import 'base/magic_value_lint.dart';
+
+class NoMagicString extends MagicValueLint {
   const NoMagicString() : super(code: _code);
 
   static const _code = LintCode(
@@ -19,111 +20,59 @@ class NoMagicString extends DartLintRule {
   static const _defaultIgnoredInvocations = ['print', 'debugPrint'];
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    DiagnosticReporter reporter,
-    CustomLintContext context,
-  ) {
-    context.registry.addSimpleStringLiteral((node) {
-      if (_shouldReport(node)) {
-        reporter.atNode(node, _code);
-      }
-    });
+  bool isAllowedValue(Literal node) {
+    // Don't report empty strings
+    if (node is SimpleStringLiteral && node.value.isEmpty) {
+      return true;
+    }
+    return false;
   }
 
-  bool _shouldReport(SimpleStringLiteral node) {
-    // Don't report empty strings
-    if (node.value.isEmpty) {
-      return false;
-    }
+  @override
+  bool shouldCheckLiteral(Literal node) {
+    return node is SimpleStringLiteral;
+  }
 
-    // Don't report if it's part of a variable declaration with const/final
-    if (_isPartOfConstOrFinalDeclaration(node)) {
-      return false;
-    }
+  @override
+  void registerLiteralChecks(
+    CustomLintContext context,
+    void Function(Literal) checkLiteral,
+  ) {
+    context.registry.addSimpleStringLiteral((node) => checkLiteral(node));
+  }
 
-    // Don't report if it's a default parameter value
-    if (_isDefaultParameterValue(node)) {
-      return false;
-    }
-
-    // Don't report if it's in an annotation
-    if (_isInAnnotation(node)) {
-      return false;
-    }
-
+  @override
+  bool hasCustomExclusion(Literal node) {
     // Don't report if it's an argument to certain methods (print, debugPrint, etc.)
     if (_isArgumentToIgnoredInvocation(node)) {
-      return false;
+      return true;
     }
 
     // Don't report if it's used in assert messages
     if (_isAssertMessage(node)) {
-      return false;
+      return true;
     }
 
     // Don't report if it's in a throw statement or exception constructor
     if (_isInException(node)) {
-      return false;
+      return true;
     }
 
     // Don't report if it's used as a key in GlobalKey or similar constructors
     if (_isInKeyConstructor(node)) {
-      return false;
+      return true;
     }
 
     // Don't report if it's a RegExp pattern
     if (_isRegExpPattern(node)) {
-      return false;
+      return true;
     }
 
     // Don't report if it's a method name in string methods
     if (_isStringMethodArgument(node)) {
-      return false;
+      return true;
     }
 
-    return true;
-  }
-
-  bool _isPartOfConstOrFinalDeclaration(AstNode node) {
-    AstNode? current = node.parent;
-    while (current != null) {
-      if (current is VariableDeclaration) {
-        final parent = current.parent;
-        if (parent is VariableDeclarationList) {
-          return parent.isConst || parent.isFinal;
-        }
-      }
-      if (current is FieldDeclaration) {
-        return current.fields.isConst || current.fields.isFinal;
-      }
-      if (current is TopLevelVariableDeclaration) {
-        return current.variables.isConst || current.variables.isFinal;
-      }
-      current = current.parent;
-    }
-    return false;
-  }
-
-  bool _isDefaultParameterValue(AstNode node) {
-    AstNode? current = node.parent;
-    while (current != null) {
-      if (current is DefaultFormalParameter) {
-        return true;
-      }
-      current = current.parent;
-    }
-    return false;
-  }
-
-  bool _isInAnnotation(AstNode node) {
-    AstNode? current = node.parent;
-    while (current != null) {
-      if (current is Annotation) {
-        return true;
-      }
-      current = current.parent;
-    }
     return false;
   }
 
