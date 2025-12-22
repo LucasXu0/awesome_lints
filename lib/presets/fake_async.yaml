@@ -1,0 +1,12 @@
+# Awesome Lints - FakeAsync Preset
+# FakeAsync testing rules (1 rule)
+# Recommended for: Projects using fake_async for testing
+#
+# Usage:
+#   include: package:awesome_lints/presets/fake_async.yaml
+
+custom_lint:
+  enable_all_lint_rules: false
+  rules:
+    # FakeAsync Testing
+    - avoid_async_callback_in_fake_async

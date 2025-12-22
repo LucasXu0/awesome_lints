@@ -1,0 +1,37 @@
+# Awesome Lints - Bloc Preset
+# All Bloc/Cubit state management rules (22 rules)
+# Recommended for: Projects using Bloc/Cubit pattern
+#
+# Usage:
+#   include: package:awesome_lints/presets/bloc.yaml
+
+custom_lint:
+  enable_all_lint_rules: false
+  rules:
+    # Bloc Architecture & Best Practices
+    - avoid_bloc_public_fields
+    - avoid_bloc_public_methods
+    - avoid_cubits
+    - avoid_duplicate_bloc_event_handlers
+    - avoid_empty_build_when
+    - avoid_existing_instances_in_bloc_provider
+    - avoid_instantiating_in_bloc_value_provider
+    - avoid_passing_bloc_to_bloc
+    - avoid_passing_build_context_to_blocs
+    - avoid_returning_value_from_cubit_methods
+    - check_is_not_closed_after_async_gap
+    - emit_new_bloc_state_instances
+    - handle_bloc_event_subclasses
+
+    # Bloc Naming & Conventions
+    - prefer_bloc_event_suffix
+    - prefer_bloc_extensions
+    - prefer_bloc_state_suffix
+    - prefer_correct_bloc_provider
+
+    # Bloc Immutability & Patterns
+    - prefer_immutable_bloc_events
+    - prefer_immutable_bloc_state
+    - prefer_multi_bloc_provider
+    - prefer_sealed_bloc_events
+    - prefer_sealed_bloc_state

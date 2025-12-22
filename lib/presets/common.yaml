@@ -1,0 +1,96 @@
+# Awesome Lints - Common Dart Preset
+# All common Dart rules (65 rules)
+# Recommended for: Projects wanting all common Dart lints
+#
+# Usage:
+#   include: package:awesome_lints/presets/common.yaml
+
+custom_lint:
+  enable_all_lint_rules: false
+  rules:
+    # Code Organization
+    - arguments_ordering
+    - binary_expression_operand_order
+    - newline_before_case
+    - newline_before_constructor
+    - newline_before_method
+    - newline_before_return
+
+    # Null Safety & Type Safety
+    - avoid_non_null_assertion
+    - avoid_always_null_parameters
+    - avoid_casting_to_extension_type
+
+    # Collection & Type Checking
+    - avoid_accessing_collection_by_constant_index
+    - avoid_collection_equality_checks
+    - avoid_collection_methods_with_unrelated_types
+    - avoid_collection_mutating_methods
+    - avoid_duplicate_collection_elements
+    - prefer_contains
+    - prefer_first
+    - prefer_iterable_of
+    - prefer_last
+
+    # Logic Errors
+    - avoid_assignments_as_conditions
+    - avoid_bitwise_operators_with_booleans
+    - avoid_conditions_with_boolean_literals
+    - avoid_constant_assert_conditions
+    - avoid_constant_conditions
+    - avoid_constant_switches
+    - avoid_contradictory_expressions
+    - no_boolean_literal_compare
+    - no_equal_arguments
+    - no_equal_conditions
+    - no_equal_nested_conditions
+    - no_equal_switch_case
+    - no_equal_switch_expression_cases
+    - no_equal_then_else
+
+    # Code Quality
+    - avoid_accessing_other_classes_private_members
+    - avoid_adjacent_strings
+    - avoid_barrel_files
+    - avoid_cascade_after_if_null
+    - avoid_collapsible_if
+    - avoid_commented_out_code
+    - avoid_complex_arithmetic_expressions
+    - avoid_complex_conditions
+    - avoid_complex_loop_conditions
+    - avoid_continue
+    - avoid_declaring_call_method
+    - avoid_default_tostring
+    - avoid_deprecated_usage
+    - avoid_double_slash_imports
+    - avoid_duplicate_cascades
+    - double_literal_format
+    - no_empty_block
+    - no_empty_string
+    - no_magic_number
+    - no_magic_string
+    - no_object_declaration
+    - prefer_early_return
+    - prefer_named_boolean_parameters
+
+    # Async & Future Handling
+    - avoid_async_call_in_sync_function
+    - prefer_async_await
+    - prefer_return_await
+
+    # Resource Management
+    - avoid_assigning_to_static_field
+    - dispose_class_fields
+
+    # Pattern Matching & Records
+    - avoid_bottom_type_in_patterns
+    - avoid_bottom_type_in_records
+
+    # JSON & Type Casting
+    - prefer_correct_json_casts
+
+    # Loop Best Practices
+    - prefer_correct_for_loop_increment
+
+    # Switch Expressions
+    - prefer_switch_expression

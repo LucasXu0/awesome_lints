@@ -1,0 +1,32 @@
+# Awesome Lints - Core Preset
+# Essential rules for critical bug prevention (~15 rules)
+# Recommended for: New projects, gradual adoption
+#
+# Usage:
+#   include: package:awesome_lints/presets/core.yaml
+
+custom_lint:
+  enable_all_lint_rules: false
+  rules:
+    # Critical Null Safety
+    - avoid_non_null_assertion
+
+    # Logic Errors
+    - no_equal_then_else
+    - no_equal_conditions
+    - avoid_contradictory_expressions
+    - avoid_constant_conditions
+
+    # Collection Safety
+    - avoid_collection_equality_checks
+    - avoid_collection_methods_with_unrelated_types
+
+    # Flutter Lifecycle (if using Flutter)
+    - avoid_late_context
+    - avoid_mounted_in_setstate
+    - proper_super_calls
+    - dispose_fields
+    - avoid_undisposed_instances
+
+    # Resource Management
+    - dispose_class_fields

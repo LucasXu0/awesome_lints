@@ -1,0 +1,45 @@
+# Awesome Lints - Flutter Preset
+# All Flutter-specific rules (32 rules)
+# Recommended for: Flutter projects wanting only Flutter lints
+#
+# Usage:
+#   include: package:awesome_lints/presets/flutter.yaml
+
+custom_lint:
+  enable_all_lint_rules: false
+  rules:
+    # Flutter Widget Lifecycle
+    - avoid_empty_setstate
+    - avoid_late_context
+    - avoid_missing_controller
+    - avoid_mounted_in_setstate
+    - avoid_single_child_column_or_row
+    - avoid_stateless_widget_initialized_fields
+    - avoid_undisposed_instances
+    - avoid_unnecessary_gesture_detector
+    - avoid_unnecessary_overrides_in_state
+    - avoid_unnecessary_stateful_widgets
+    - avoid_wrapping_in_padding
+    - dispose_fields
+    - pass_existing_future_to_future_builder
+    - pass_existing_stream_to_stream_builder
+    - proper_super_calls
+
+    # Flutter Best Practices
+    - prefer_action_button_tooltip
+    - prefer_align_over_container
+    - prefer_async_callback
+    - prefer_center_over_align
+    - prefer_compute_over_isolate_run
+    - prefer_constrained_box_over_container
+    - prefer_container
+    - prefer_dedicated_media_query_methods
+    - prefer_for_loop_in_children
+    - prefer_padding_over_container
+    - prefer_single_setstate
+    - prefer_sized_box_square
+    - prefer_sliver_prefix
+    - prefer_spacing
+    - prefer_text_rich
+    - prefer_void_callback
+    - prefer_widget_private_members
