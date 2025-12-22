@@ -432,7 +432,7 @@ class NoMagicString extends MagicValueLint {
 
 ### 4. Decompose Large Lint Implementations
 
-**Status:** 🟡 Medium Priority
+**Status:** ✅ COMPLETED (2025-12-22)
 **Impact:** Medium (improves testability and readability)
 **Effort:** Medium per file (4-6 hours each)
 
@@ -497,6 +497,32 @@ class StringLiteralExclusionRules {
 - ✅ Clear separation of concerns
 - ✅ Easier to understand and modify
 - ✅ Reusable exclusion rules
+
+#### Implementation Summary
+
+**What was completed:**
+- Created 2 new reusable utility classes
+- Refactored 2 large lint files to use these utilities
+- Reduced total lint code by 207 lines
+
+**Utilities created:**
+
+1. **TypeCompatibilityChecker** (`lib/src/utils/type_compatibility_checker.dart`)
+   - Extracted 52-line type compatibility logic
+   - Methods: `isCompatible()`, `isValidListIndex()`, `isValidMapKey()`, `isValidMapValue()`, `isValidCollectionElement()`
+   - Reusable for any lint needing type compatibility checking
+
+2. **StringExclusionRules** (`lib/src/utils/string_exclusion_rules.dart`)
+   - Extracted 142 lines of string exclusion logic
+   - Methods: `isArgumentToIgnoredInvocation()`, `isAssertMessage()`, `isInException()`, `isRegExpPattern()`, `shouldExclude()`
+   - Centralized exclusion rules for magic string detection
+
+**Files refactored:**
+- `avoid_collection_methods_with_unrelated_types.dart`: 207 → 142 lines (-65 lines, -31%)
+- `no_magic_string.dart`: 190 → 48 lines (-142 lines, -75%)
+
+**Commit:**
+- `842f6be`: refactor: decompose large lint files with reusable utility classes
 
 ---
 
