@@ -31,10 +31,15 @@ class PreferSwitchExpression extends DartLintRule {
     // Must have at least one member
     if (node.members.isEmpty) return false;
 
+    // Must have more than one member (single case switches are not worth converting)
+    if (node.members.length < 2) return false;
+
     // Track if we're in a return context or assignment context
     String? assignmentTarget;
     bool allReturn = true;
     bool allAssignment = true;
+    int validMemberCount =
+        0; // Track how many members were successfully analyzed
 
     for (final member in node.members) {
       // Skip default cases for now (they can be handled but let's keep it simple)
@@ -43,6 +48,8 @@ class PreferSwitchExpression extends DartLintRule {
         if (member is SwitchDefault) {
           final result = _analyzeMember(member);
           if (result == null) return false;
+
+          validMemberCount++; // Successfully analyzed this default case
 
           if (result.isReturn) {
             allAssignment = false;
@@ -67,6 +74,8 @@ class PreferSwitchExpression extends DartLintRule {
       final result = _analyzeMember(member);
       if (result == null) return false;
 
+      validMemberCount++; // Successfully analyzed this member
+
       if (result.isReturn) {
         allAssignment = false;
       } else if (result.isAssignment) {
@@ -82,58 +91,63 @@ class PreferSwitchExpression extends DartLintRule {
       }
     }
 
-    // Must be all returns or all assignments to same variable
-    return allReturn || allAssignment;
+    // Must have at least one valid member and all must be returns or all assignments
+    return validMemberCount > 0 && (allReturn || allAssignment);
   }
 
   _MemberAnalysisResult? _analyzeMember(SwitchMember member) {
     final statements = member.statements;
     if (statements.isEmpty) return null;
 
-    final lastStatement = statements.last;
+    // Reject any complex control flow patterns
+    for (final stmt in statements) {
+      // Reject if/try/loops/switch/continue
+      if (stmt is IfStatement) return null;
+      if (stmt is TryStatement) return null;
+      if (stmt is ForStatement) return null;
+      if (stmt is WhileStatement) return null;
+      if (stmt is DoStatement) return null;
+      if (stmt is SwitchStatement) return null;
+      if (stmt is ContinueStatement) return null;
+      if (stmt is VariableDeclarationStatement) return null;
 
-    // Case 1: Single return statement (or variable declaration + return)
-    if (lastStatement is ReturnStatement) {
-      // Return with a value
-      if (lastStatement.expression != null) {
-        // Check all preceding statements are variable declarations
-        for (var i = 0; i < statements.length - 1; i++) {
-          if (statements[i] is! VariableDeclarationStatement) {
-            return null;
-          }
-        }
-        return _MemberAnalysisResult(isReturn: true);
-      }
-      // Return without value can't be converted
-      return null;
-    }
-
-    // Case 2: Assignment + break
-    // Look for pattern: variable = value; break;
-    if (statements.length >= 2 && lastStatement is BreakStatement) {
-      final secondLast = statements[statements.length - 2];
-      if (secondLast is ExpressionStatement) {
-        final expression = secondLast.expression;
-        if (expression is AssignmentExpression &&
-            expression.leftHandSide is SimpleIdentifier) {
-          // Check all other statements (except last 2) are variable declarations
-          for (var i = 0; i < statements.length - 2; i++) {
-            if (statements[i] is! VariableDeclarationStatement) {
-              return null;
-            }
-          }
-          final target = (expression.leftHandSide as SimpleIdentifier).name;
-          return _MemberAnalysisResult(
-            isAssignment: true,
-            assignmentTarget: target,
-          );
-        }
+      // Reject throw/print/function calls (side effects)
+      if (stmt is ExpressionStatement) {
+        final expr = stmt.expression;
+        if (expr is ThrowExpression) return null;
+        if (expr is MethodInvocation) return null;
+        if (expr is FunctionExpressionInvocation) return null;
       }
     }
 
-    // Case 3: Just a break statement means empty case
-    if (statements.length == 1 && lastStatement is BreakStatement) {
-      return null;
+    final last = statements.last;
+
+    // Pattern 1: Single return with value
+    if (statements.length == 1 &&
+        last is ReturnStatement &&
+        last.expression != null) {
+      return _MemberAnalysisResult(isReturn: true);
+    }
+
+    // Pattern 2: Assignment + break (exactly 2 statements)
+    if (statements.length == 2 && last is BreakStatement) {
+      final first = statements[0];
+      if (first is ExpressionStatement &&
+          first.expression is AssignmentExpression) {
+        final assignment = first.expression as AssignmentExpression;
+        if (assignment.leftHandSide is! SimpleIdentifier) return null;
+
+        // Reject if right-hand side has side effects
+        final rhs = assignment.rightHandSide;
+        if (rhs is MethodInvocation) return null;
+        if (rhs is FunctionExpressionInvocation) return null;
+        if (rhs is AwaitExpression) return null;
+
+        return _MemberAnalysisResult(
+          isAssignment: true,
+          assignmentTarget: (assignment.leftHandSide as SimpleIdentifier).name,
+        );
+      }
     }
 
     return null;
