@@ -2,6 +2,31 @@
 
 This document lists all general Dart lint rules provided by Awesome Lints that apply to any Dart codebase.
 
+## Configuration
+
+As of v2.1.0, these rules are **disabled by default**. To enable:
+
+**All Common Dart rules:**
+```yaml
+include: package:awesome_lints/presets/common.yaml
+```
+
+**Individual rules:**
+```yaml
+custom_lint:
+  enable_all_lint_rules: false
+  rules:
+    - avoid_non_null_assertion
+    - no_equal_then_else
+```
+
+**Recommended preset (includes subset of Common rules):**
+```yaml
+include: package:awesome_lints/presets/recommended.yaml
+```
+
+---
+
 ## Table of Contents
 
 - [arguments-ordering](#arguments-ordering)

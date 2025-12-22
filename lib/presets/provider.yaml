@@ -1,0 +1,19 @@
+# Awesome Lints - Provider Preset
+# All Provider state management rules (8 rules)
+# Recommended for: Projects using Provider package
+#
+# Usage:
+#   include: package:awesome_lints/presets/provider.yaml
+
+custom_lint:
+  enable_all_lint_rules: false
+  rules:
+    # Provider Best Practices
+    - avoid_instantiating_in_value_provider
+    - avoid_read_inside_build
+    - avoid_watch_outside_build
+    - dispose_providers
+    - prefer_immutable_selector_value
+    - prefer_multi_provider
+    - prefer_nullable_provider_types
+    - prefer_provider_extensions

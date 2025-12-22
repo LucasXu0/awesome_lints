@@ -1,0 +1,57 @@
+# Awesome Lints - Recommended Preset
+# Balanced set of important rules for code quality (~40 rules)
+# Recommended for: Most projects
+#
+# Usage:
+#   include: package:awesome_lints/presets/recommended.yaml
+
+include: package:awesome_lints/presets/core.yaml
+
+custom_lint:
+  rules:
+    # Code Quality & Organization
+    - arguments_ordering
+    - binary_expression_operand_order
+    - prefer_early_return
+    - no_empty_block
+
+    # Common Mistakes
+    - no_equal_arguments
+    - avoid_duplicate_collection_elements
+    - no_equal_switch_case
+    - avoid_duplicate_cascades
+
+    # Async Best Practices
+    - prefer_async_await
+    - avoid_async_call_in_sync_function
+
+    # Flutter Best Practices
+    - avoid_single_child_column_or_row
+    - prefer_spacing
+    - prefer_container
+    - avoid_unnecessary_stateful_widgets
+    - avoid_empty_setstate
+    - avoid_unnecessary_overrides_in_state
+    - avoid_stateless_widget_initialized_fields
+
+    # Flutter Performance
+    - pass_existing_future_to_future_builder
+    - pass_existing_stream_to_stream_builder
+    - prefer_dedicated_media_query_methods
+    - prefer_single_setstate
+
+    # Flutter Widget Composition
+    - prefer_sized_box_square
+    - avoid_wrapping_in_padding
+    - prefer_for_loop_in_children
+
+    # Provider (if using Provider package)
+    - avoid_read_inside_build
+    - avoid_watch_outside_build
+    - prefer_provider_extensions
+
+    # Bloc (if using Bloc package)
+    - avoid_bloc_public_fields
+    - avoid_bloc_public_methods
+    - prefer_immutable_bloc_events
+    - prefer_immutable_bloc_state

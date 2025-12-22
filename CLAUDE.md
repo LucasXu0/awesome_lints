@@ -11,6 +11,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Bloc** (22 rules): Bloc/Cubit patterns and architecture
 - **FakeAsync** (1 rule): Testing with fake_async
 
+## Configuration Model (v2.1.0+)
+
+**Important:** As of v2.1.0, all lint rules are **disabled by default**. Users must opt-in via:
+- Preset configurations (recommended)
+- Manual rule enablement
+
+### Presets
+
+Located in `lib/presets/`:
+- `core.yaml` - ~15 essential rules
+- `recommended.yaml` - ~40 balanced rules
+- `strict.yaml` - All 128 rules (maintains v2.0.0 behavior)
+- Category presets: `flutter.yaml`, `common.yaml`, `provider.yaml`, `bloc.yaml`, `fake_async.yaml`
+
+### Usage in Test Fixtures
+
+Test fixtures should use strict preset to validate all rules:
+
+```yaml
+# test/fixtures/test_project/analysis_options.yaml
+include: package:awesome_lints/presets/strict.yaml
+```
+
 ## Common Commands
 
 ### Setup and Dependencies

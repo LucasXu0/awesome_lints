@@ -10,7 +10,7 @@ A comprehensive collection of custom lint rules for Dart and Flutter application
 - 🧊 **22 Bloc-specific lints** - Best practices for the Bloc state management package
 - ⏱️ **1 FakeAsync-specific lint** - Catch common testing mistakes with fake_async
 - ⚡ **Fast analysis** - Built on custom_lint for efficient, real-time feedback
-- 🛠️ **Easy to configure** - All rules enabled by default, with optional customization
+- 🛠️ **Easy to configure** - Flexible presets for different use cases, with optional customization
 - 📚 **Well-documented** - Every rule includes examples and explanations
 
 ## Quick Start
@@ -24,12 +24,15 @@ dart pub add dev:awesome_lints
 dart pub add dev:custom_lint
 ```
 
-2. Enable the custom_lint plugin in your `analysis_options.yaml`:
+2. Configure `analysis_options.yaml` with a preset:
 
 ```yaml
 analyzer:
   plugins:
     - custom_lint
+
+# Choose a preset (recommended for most projects):
+include: package:awesome_lints/presets/recommended.yaml
 ```
 
 3. Run the linter:
@@ -143,17 +146,73 @@ Rules include:
 
 ## Configuration
 
-All lints are enabled by default. To customize rule behavior or disable specific rules, add configuration to your `analysis_options.yaml`:
+### Using Presets (Recommended)
+
+`awesome_lints` provides preset configurations for different use cases:
+
+| Preset | Rules | Use Case |
+|--------|-------|----------|
+| `core.yaml` | ~15 | Essential bug prevention only |
+| `recommended.yaml` | ~40 | Balanced set (recommended for most projects) |
+| `strict.yaml` | 128 | All rules (comprehensive analysis) |
+| Category-specific | Varies | `flutter.yaml`, `common.yaml`, `provider.yaml`, `bloc.yaml`, `fake_async.yaml` |
+
+**Quick Start (Recommended):**
 
 ```yaml
+# analysis_options.yaml
+include: package:awesome_lints/presets/recommended.yaml
+```
+
+**Maintain v2.0.0 Behavior (All Rules):**
+
+```yaml
+# analysis_options.yaml
+include: package:awesome_lints/presets/strict.yaml
+```
+
+**Gradual Adoption (Core Rules Only):**
+
+```yaml
+# analysis_options.yaml
+include: package:awesome_lints/presets/core.yaml
+```
+
+### Custom Configuration
+
+You can extend presets and customize rules:
+
+```yaml
+# Start with recommended preset
+include: package:awesome_lints/presets/recommended.yaml
+
 custom_lint:
   rules:
-    # Disable a specific rule
-    - avoid_non_null_assertion: false
-
-    # Configure rule parameters (if supported)
+    # Enable additional rules
     - no_magic_number:
         allowed_numbers: [0, 1, -1, 100]
+    - prefer_switch_expression
+
+    # Disable specific rules from the preset
+    - avoid_barrel_files: false
+```
+
+### Manual Configuration (Advanced)
+
+Enable rules manually without a preset:
+
+```yaml
+analyzer:
+  plugins:
+    - custom_lint
+
+custom_lint:
+  enable_all_lint_rules: false
+  rules:
+    - avoid_non_null_assertion
+    - no_magic_number
+    - avoid_late_context
+    # ... list all desired rules
 ```
 
 ## Development

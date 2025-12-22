@@ -1,0 +1,9 @@
+# Awesome Lints - Strict Preset
+# Enables all 128 lint rules
+# Recommended for: Maintaining v2.0.0 behavior, very strict projects
+#
+# Usage:
+#   include: package:awesome_lints/presets/strict.yaml
+
+custom_lint:
+  enable_all_lint_rules: true

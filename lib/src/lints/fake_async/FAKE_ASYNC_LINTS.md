@@ -2,6 +2,30 @@
 
 1 lint rule for the fake_async package to help you write better tests and avoid common pitfalls when testing asynchronous code.
 
+## Configuration
+
+As of v2.1.0, this rule is **disabled by default**. To enable:
+
+**FakeAsync rule:**
+```yaml
+include: package:awesome_lints/presets/fake_async.yaml
+```
+
+**Individual rule:**
+```yaml
+custom_lint:
+  enable_all_lint_rules: false
+  rules:
+    - avoid_async_callback_in_fake_async
+```
+
+**All rules (strict preset):**
+```yaml
+include: package:awesome_lints/presets/strict.yaml
+```
+
+---
+
 ## avoid-async-callback-in-fake-async
 
 Warns when an async callback is passed to `FakeAsync` which is not awaited.
@@ -56,4 +80,4 @@ This FakeAsync-specific lint rule helps you:
 - Catch test correctness issues at compile time
 - Follow FakeAsync best practices
 
-All rules are enabled by default and can be configured in your `analysis_options.yaml` file.
+As of v2.1.0, rules must be explicitly enabled via presets or manual configuration in your `analysis_options.yaml` file.
