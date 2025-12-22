@@ -68,4 +68,4 @@ jobs:
         run: fvm dart analyze test
 
       - name: Run custom_lint in test
-        run: fvm dart run custom_lint test --no-fatal-warnings --no-fatal-infos
+        run: fvm dart run custom_lint test
