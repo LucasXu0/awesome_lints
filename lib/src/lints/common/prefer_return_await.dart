@@ -4,6 +4,8 @@ import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+import '../../utils/ast_extensions.dart';
+
 class PreferReturnAwait extends DartLintRule {
   const PreferReturnAwait() : super(code: _code);
 
@@ -47,40 +49,49 @@ class PreferReturnAwait extends DartLintRule {
   }
 
   bool _isInAsyncFunction(AstNode node) {
-    AstNode? current = node;
-    while (current != null) {
-      if (current is FunctionExpression) {
-        return current.body.isAsynchronous;
-      }
-      if (current is MethodDeclaration) {
-        return current.body.isAsynchronous;
-      }
-      if (current is FunctionDeclaration) {
-        return current.functionExpression.body.isAsynchronous;
-      }
-      current = current.parent;
+    // Find any enclosing function-like node
+    final ancestor = node.findAncestor((n) {
+      if (n is FunctionExpression) return true;
+      if (n is MethodDeclaration) return true;
+      if (n is FunctionDeclaration) return true;
+      return false;
+    });
+
+    if (ancestor == null) return false;
+
+    // Check if it's async
+    if (ancestor is FunctionExpression) {
+      return ancestor.body.isAsynchronous;
     }
+    if (ancestor is MethodDeclaration) {
+      return ancestor.body.isAsynchronous;
+    }
+    if (ancestor is FunctionDeclaration) {
+      return ancestor.functionExpression.body.isAsynchronous;
+    }
+
     return false;
   }
 
   bool _isInTryBlock(AstNode node) {
-    AstNode? current = node.parent;
-    while (current != null) {
+    // Find enclosing TryStatement, but stop at function boundaries
+    final ancestor = node.findAncestor((n) {
       // Stop at function boundaries
-      if (current is FunctionExpression ||
-          current is MethodDeclaration ||
-          current is FunctionDeclaration) {
-        return false;
-      }
+      if (n is FunctionExpression) return false;
+      if (n is MethodDeclaration) return false;
+      if (n is FunctionDeclaration) return false;
 
-      if (current is TryStatement) {
-        // Check if we're in the try body (not in catch or finally)
-        return current.body.statements.any((stmt) => stmt.contains(node));
-      }
+      // Found TryStatement
+      if (n is TryStatement) return true;
 
-      current = current.parent;
-    }
-    return false;
+      // Continue searching
+      return false;
+    });
+
+    if (ancestor is! TryStatement) return false;
+
+    // Check if we're in the try body (not in catch or finally)
+    return ancestor.body.statements.any((stmt) => stmt.contains(node));
   }
 
   bool _isFutureType(DartType type) {
@@ -95,11 +106,7 @@ class PreferReturnAwait extends DartLintRule {
 
 extension _AstNodeExtension on AstNode {
   bool contains(AstNode other) {
-    AstNode? current = other;
-    while (current != null) {
-      if (identical(current, this)) return true;
-      current = current.parent;
-    }
-    return false;
+    // Check if 'other' is a descendant of this node
+    return other.findAncestor((n) => identical(n, this)) != null;
   }
 }

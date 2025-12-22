@@ -3,6 +3,8 @@ import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+import '../../utils/ast_extensions.dart';
+
 class AvoidReadInsideBuild extends DartLintRule {
   const AvoidReadInsideBuild() : super(code: _code);
 
@@ -35,30 +37,23 @@ class AvoidReadInsideBuild extends DartLintRule {
   }
 
   bool _isInsideBuildMethod(AstNode node) {
-    AstNode? current = node;
+    // Find enclosing method declaration
+    final method = node.findAncestorOfType<MethodDeclaration>();
+    if (method == null) return false;
 
-    while (current != null) {
-      if (current is MethodDeclaration) {
-        // Check if this is a build method
-        if (current.name.lexeme == 'build') {
-          // Verify it returns Widget and has BuildContext parameter
-          final parameters = current.parameters;
-          if (parameters != null && parameters.parameters.isNotEmpty) {
-            final firstParam = parameters.parameters.first;
-            if (firstParam is SimpleFormalParameter) {
-              final paramType = firstParam.type;
-              if (paramType is NamedType &&
-                  paramType.name.lexeme == 'BuildContext') {
-                return true;
-              }
-            }
-          }
-        }
-        return false;
-      }
-      current = current.parent;
-    }
+    // Check if this is a build method
+    if (method.name.lexeme != 'build') return false;
 
-    return false;
+    // Verify it has BuildContext parameter
+    final parameters = method.parameters;
+    if (parameters == null || parameters.parameters.isEmpty) return false;
+
+    final firstParam = parameters.parameters.first;
+    if (firstParam is! SimpleFormalParameter) return false;
+
+    final paramType = firstParam.type;
+    if (paramType is! NamedType) return false;
+
+    return paramType.name.lexeme == 'BuildContext';
   }
 }
