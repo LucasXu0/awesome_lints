@@ -4,6 +4,8 @@ import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+import '../../utils/ast_extensions.dart';
+
 class AvoidAccessingOtherClassesPrivateMembers extends DartLintRule {
   const AvoidAccessingOtherClassesPrivateMembers() : super(code: _code);
 
@@ -60,15 +62,8 @@ class AvoidAccessingOtherClassesPrivateMembers extends DartLintRule {
     if (memberClass == null) return;
 
     // Get the enclosing class of the code making the access
-    ClassElement? currentClass;
-    AstNode? current = node;
-    while (current != null) {
-      if (current is ClassDeclaration) {
-        currentClass = current.declaredFragment?.element;
-        break;
-      }
-      current = current.parent;
-    }
+    final classDeclaration = node.findAncestorOfType<ClassDeclaration>();
+    final currentClass = classDeclaration?.declaredFragment?.element;
 
     // If accessing from a different class, report it
     if (currentClass != null && currentClass != memberClass) {

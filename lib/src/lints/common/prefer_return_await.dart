@@ -74,24 +74,23 @@ class PreferReturnAwait extends DartLintRule {
   }
 
   bool _isInTryBlock(AstNode node) {
-    // Find enclosing TryStatement, but stop at function boundaries
-    final ancestor = node.findAncestor((n) {
+    AstNode? current = node.parent;
+    while (current != null) {
       // Stop at function boundaries
-      if (n is FunctionExpression) return false;
-      if (n is MethodDeclaration) return false;
-      if (n is FunctionDeclaration) return false;
+      if (current is FunctionExpression ||
+          current is MethodDeclaration ||
+          current is FunctionDeclaration) {
+        return false;
+      }
 
-      // Found TryStatement
-      if (n is TryStatement) return true;
+      if (current is TryStatement) {
+        // Check if we're in the try body (not in catch or finally)
+        return current.body.statements.any((stmt) => stmt.contains(node));
+      }
 
-      // Continue searching
-      return false;
-    });
-
-    if (ancestor is! TryStatement) return false;
-
-    // Check if we're in the try body (not in catch or finally)
-    return ancestor.body.statements.any((stmt) => stmt.contains(node));
+      current = current.parent;
+    }
+    return false;
   }
 
   bool _isFutureType(DartType type) {

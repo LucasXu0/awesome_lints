@@ -3,6 +3,8 @@ import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+import '../../utils/ast_extensions.dart';
+
 class AvoidWatchOutsideBuild extends DartLintRule {
   const AvoidWatchOutsideBuild() : super(code: _code);
 
@@ -36,38 +38,36 @@ class AvoidWatchOutsideBuild extends DartLintRule {
   }
 
   bool _isInsideBuildMethod(AstNode node) {
-    AstNode? current = node;
-    bool foundFunctionExpression = false;
+    // Check if there's a FunctionExpression between node and build method
+    final functionExpression = node.findAncestorOfType<FunctionExpression>();
 
-    while (current != null) {
-      // If we encounter a function expression (callback), we're outside the direct build body
-      if (current is FunctionExpression) {
-        foundFunctionExpression = true;
-      }
+    // Find enclosing method declaration
+    final method = node.findAncestorOfType<MethodDeclaration>();
+    if (method == null) return false;
 
-      if (current is MethodDeclaration) {
-        // Check if this is a build method
-        if (current.name.lexeme == 'build') {
-          // Verify it returns Widget and has BuildContext parameter
-          final parameters = current.parameters;
-          if (parameters != null && parameters.parameters.isNotEmpty) {
-            final firstParam = parameters.parameters.first;
-            if (firstParam is SimpleFormalParameter) {
-              final paramType = firstParam.type;
-              if (paramType is NamedType &&
-                  paramType.name.lexeme == 'BuildContext') {
-                // If we found a function expression between the call and build method,
-                // it means we're in a callback, so we're not directly in build
-                return !foundFunctionExpression;
-              }
-            }
-          }
-        }
-        return false;
-      }
-      current = current.parent;
+    // Check if this is a build method
+    if (method.name.lexeme != 'build') return false;
+
+    // Verify it has BuildContext parameter
+    final parameters = method.parameters;
+    if (parameters == null || parameters.parameters.isEmpty) return false;
+
+    final firstParam = parameters.parameters.first;
+    if (firstParam is! SimpleFormalParameter) return false;
+
+    final paramType = firstParam.type;
+    if (paramType is! NamedType) return false;
+    if (paramType.name.lexeme != 'BuildContext') return false;
+
+    // If there's a function expression between the call and build method,
+    // it means we're in a callback, so we're not directly in build
+    if (functionExpression != null) {
+      // Check if the function expression is between node and method
+      final isBetween =
+          functionExpression.findAncestorOfType<MethodDeclaration>() == method;
+      if (isBetween) return false;
     }
 
-    return false;
+    return true;
   }
 }

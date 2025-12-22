@@ -4,6 +4,8 @@ import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+import '../../utils/ast_extensions.dart';
+
 class AvoidAssigningToStaticField extends DartLintRule {
   const AvoidAssigningToStaticField() : super(code: _code);
 
@@ -82,15 +84,11 @@ class AvoidAssigningToStaticField extends DartLintRule {
   }
 
   bool _isInInstanceMethod(AstNode node) {
-    AstNode? current = node;
-    while (current != null) {
-      if (current is MethodDeclaration) {
-        // If it's a static method, return false
-        return !current.isStatic;
-      }
-      current = current.parent;
-    }
-    // Not in a method at all
-    return false;
+    // Find enclosing method declaration
+    final method = node.findAncestorOfType<MethodDeclaration>();
+    if (method == null) return false;
+
+    // If it's a static method, return false
+    return !method.isStatic;
   }
 }
