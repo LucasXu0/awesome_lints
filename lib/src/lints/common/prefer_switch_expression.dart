@@ -5,8 +5,8 @@ import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 class PreferSwitchExpression extends DartLintRule {
-  PreferSwitchExpression({bool ignoreFallthroughCases = false})
-    : _ignoreFallthroughCases = ignoreFallthroughCases,
+  PreferSwitchExpression({CustomLintConfigs? configs})
+    : _configs = configs,
       super(code: _code);
 
   static const String ruleName = 'prefer_switch_expression';
@@ -19,7 +19,10 @@ class PreferSwitchExpression extends DartLintRule {
     errorSeverity: analyzer_error.DiagnosticSeverity.INFO,
   );
 
-  final bool _ignoreFallthroughCases;
+  final CustomLintConfigs? _configs;
+
+  bool get _ignoreFallthroughCases =>
+      _configs?.rules[ruleName]?.json['ignore-fallthrough-cases'] == true;
 
   @override
   void run(

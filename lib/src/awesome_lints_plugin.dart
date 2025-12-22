@@ -19,12 +19,6 @@ class _AwesomeLints extends PluginBase {
   ];
 
   List<LintRule> _commonLintRules(CustomLintConfigs configs) {
-    final ignoreFallthroughCases =
-        configs
-            .rules[PreferSwitchExpression.ruleName]
-            ?.json['ignore-fallthrough-cases'] ==
-        true;
-
     return [
       ArgumentsOrdering(),
       AvoidAccessingCollectionsByConstantIndex(),
@@ -90,7 +84,7 @@ class _AwesomeLints extends PluginBase {
       PreferLast(),
       PreferNamedBooleanParameters(),
       PreferReturnAwait(),
-      PreferSwitchExpression(ignoreFallthroughCases: ignoreFallthroughCases),
+      PreferSwitchExpression(configs: configs),
     ];
   }
 
