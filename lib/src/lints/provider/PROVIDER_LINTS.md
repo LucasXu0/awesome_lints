@@ -6,8 +6,6 @@
 
 Warns when a `Provider.value` returns a new instance instead of reusing an existing one.
 
-**Tags:** #correctness
-
 **Why?**
 
 Creating fresh instances in value providers defeats the pattern's intent. Value providers should encapsulate pre-existing objects, enabling proper sharing and avoiding unnecessary object creation that can impact performance and memory usage.
@@ -35,8 +33,6 @@ Provider.value(
 ## avoid-read-inside-build
 
 Warns when a `read` method is used inside the `build` method.
-
-**Tags:** #correctness
 
 **Why?**
 
@@ -70,8 +66,6 @@ class MyWidget extends StatelessWidget {
 
 Warns when `watch` or `select` methods are used outside of the `build` method.
 
-**Tags:** #correctness
-
 **Why?**
 
 `watch` is designed to subscribe to changes, which is not needed when the value is read outside of the `build` method. This creates unnecessary subscriptions. Use `read` instead for one-time value access.
@@ -97,8 +91,6 @@ void onButtonPressed(BuildContext context) {
 ## dispose-providers
 
 Warns when a provided class with a `dispose`, `close`, or `cancel` method does not have this method called in the Provider `dispose` callback.
-
-**Tags:** #memory-leak #correctness
 
 **Why?**
 
@@ -138,8 +130,6 @@ class MyService {
 ## prefer-immutable-selector-value
 
 Warns when a `Selector` returns a mutable value.
-
-**Tags:** #correctness
 
 **Why?**
 
@@ -186,8 +176,6 @@ Selector<MyModel, MyData>(
 
 Warns when multiple nested Providers can be replaced with `MultiProvider` instead.
 
-**Tags:** #readability #maintainability
-
 **Why?**
 
 Nested providers create deeper widget hierarchies, making code harder to read and maintain. Using `MultiProvider` flattens this structure, providing clearer organization of multiple provider declarations.
@@ -224,8 +212,6 @@ MultiProvider(
 
 Warns when a specified type of `context.watch`, `context.read`, or `Provider.of` is non-nullable.
 
-**Tags:** #maintainability #types
-
 **Why?**
 
 Making provider types nullable ensures developers explicitly handle scenarios where a provided value might not be available, reducing runtime errors and improving code robustness. This is especially important when dealing with conditionally provided values.
@@ -249,8 +235,6 @@ Provider.of<MyService?>(context);
 ## prefer-provider-extensions
 
 Warns when using `Provider.of()` instead of `context.read()` or `context.watch()`.
-
-**Tags:** #readability #maintainability
 
 **Why?**
 

@@ -6,8 +6,6 @@
 
 Warns when an async callback is passed to `FakeAsync` which is not awaited.
 
-**Tags:** #correctness #testing
-
 **Why?**
 
 Async callbacks passed to `FakeAsync` are not awaited by the implementation, making tests always pass even when they should fail. This can hide bugs in your asynchronous code and give false confidence in test coverage. The `FakeAsync` utility is designed to work with synchronous callbacks that manually advance time using the provided `FakeAsync` instance.

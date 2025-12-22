@@ -6,8 +6,6 @@
 
 Warns when a Bloc or Cubit has public fields.
 
-**Tags:** #maintainability #correctness #encapsulation
-
 **Why?**
 
 It's recommended to keep the state of your Blocs private and only update it in event handlers. Public fields can lead to uncontrolled state modifications outside the intended event-handling flow, breaking the predictable state management pattern.
@@ -35,8 +33,6 @@ class CounterBloc extends Bloc<CounterEvent, int> {
 ## avoid-bloc-public-methods
 
 Warns when a Bloc has public methods except the overridden ones.
-
-**Tags:** #maintainability #correctness #encapsulation
 
 **Why?**
 
@@ -82,8 +78,6 @@ class CounterBloc extends Bloc<CounterEvent, int> {
 
 Warns when a Cubit is used.
 
-**Tags:** #maintainability
-
 **Why?**
 
 This rule is recommended when you prefer using only Blocs throughout your codebase, need to leverage transformers and bloc concurrency packages, want to avoid exceptions from Cubits entering the main zone, or anticipate code complexity that may eventually require converting Cubits to Blocs.
@@ -103,8 +97,6 @@ Use a Bloc implementation instead of a Cubit.
 ## avoid-duplicate-bloc-event-handlers
 
 Warns when a bloc declares multiple event handlers for the same event.
-
-**Tags:** #correctness #maintainability
 
 **Why?**
 
@@ -136,8 +128,6 @@ class CounterBloc extends Bloc<CounterEvent, int> {
 ## avoid-empty-build-when
 
 Warns when a BlocBuilder or BlocConsumer does not specify the buildWhen condition.
-
-**Tags:** #performance #maintainability
 
 **Why?**
 
@@ -171,8 +161,6 @@ BlocBuilder<BlocA, BlocAState>(
 
 Warns when a BlocProvider returns an existing instance instead of creating a new one.
 
-**Tags:** #correctness
-
 **Why?**
 
 BlocProvider should create fresh instances rather than reusing existing ones to prevent potential state management issues and ensure proper lifecycle management.
@@ -200,8 +188,6 @@ BlocProvider(
 ## avoid-instantiating-in-bloc-value-provider
 
 Warns when a BlocProvider.value returns a new instance instead of reusing an existing one.
-
-**Tags:** #correctness
 
 **Why?**
 
@@ -231,8 +217,6 @@ BlocProvider.value(
 
 Warns when a Bloc depends on another Bloc.
 
-**Tags:** #maintainability #correctness #encapsulation
-
 **Why?**
 
 Blocs should only receive information through events or injected repositories via constructor. If you need a bloc to respond to another bloc, you should push the problem up to the presentation layer or down to the domain layer.
@@ -254,8 +238,6 @@ Push dependencies to repositories or handle inter-bloc communication through the
 ## avoid-passing-build-context-to-blocs
 
 Warns when a Bloc event or a Cubit method accept BuildContext.
-
-**Tags:** #maintainability #correctness #encapsulation
 
 **Why?**
 
@@ -289,8 +271,6 @@ class CounterCubit extends Cubit<int> {
 
 Warns when a Cubit method returns a value.
 
-**Tags:** #maintainability #correctness
-
 **Why?**
 
 Cubits should communicate state changes through emitted states rather than returning values directly. This maintains clarity about the reactive flow and ensures predictable state management patterns.
@@ -318,8 +298,6 @@ class CounterCubit extends Cubit<int> {
 ## check-is-not-closed-after-async-gap
 
 Warns when an async handler does not have isClosed check before dispatching an event after an async gap.
-
-**Tags:** #correctness #maintainability
 
 **Why?**
 
@@ -351,8 +329,6 @@ on<CounterDecrementEvent>((event, emit) async {
 
 Warns when an emit invocation receives the existing state instead of a newly created instance.
 
-**Tags:** #correctness
-
 **Why?**
 
 Passing existing state objects can create issues when the state is not properly updating. State management frameworks rely on object identity changes to detect updates.
@@ -377,8 +353,6 @@ on<CounterDecrementEvent>((event, emit) async {
 ## handle-bloc-event-subclasses
 
 Warns when a bloc does not handle all event subclasses.
-
-**Tags:** #correctness
 
 **Why?**
 
@@ -410,8 +384,6 @@ class CounterBloc extends Bloc<CounterEvent, int> {
 
 Warns when a Bloc event class name does not match the configured pattern.
 
-**Tags:** #readability #maintainability
-
 **Why?**
 
 Enforcing a standardized naming convention (default: ending with "Event") for Bloc event classes improves code readability and makes it immediately clear which classes represent Bloc events.
@@ -440,8 +412,6 @@ class CounterBloc extends Bloc<SomeEvent, int> {
 
 Suggests using context.read() or context.watch() instead of BlocProvider.of(context).
 
-**Tags:** #readability #maintainability
-
 **Why?**
 
 Using context extensions produces more concise code, promotes consistency, and reduces the likelihood of forgetting `listen: false` when read behavior is expected.
@@ -463,8 +433,6 @@ final bloc = context.read<MyBloc>();
 ## prefer-bloc-state-suffix
 
 Warns when a Bloc state class name does not match the configured pattern.
-
-**Tags:** #readability #maintainability
 
 **Why?**
 
@@ -494,8 +462,6 @@ class CounterBloc extends Bloc<CounterEvent, SomeState> {
 
 Warns when a Bloc is provided not with a BlocProvider.
 
-**Tags:** #correctness
-
 **Why?**
 
 If you use both `bloc` and `provider` packages, it becomes easy to accidentally use the wrong Provider for your Blocs. This rule ensures proper architectural patterns.
@@ -521,8 +487,6 @@ BlocProvider<BlocA>(
 ## prefer-immutable-bloc-events
 
 Warns when a Bloc event does not have the @immutable annotation.
-
-**Tags:** #maintainability
 
 **Why?**
 
@@ -550,8 +514,6 @@ class CounterIncrement extends CounterEvent {}
 
 Warns when a Bloc state does not have the @immutable annotation.
 
-**Tags:** #maintainability
-
 **Why?**
 
 Having immutable state objects helps ensure you always pass a newly created object to `emit` invocations and avoid any issues with the state not being updated.
@@ -577,8 +539,6 @@ class CounterIncrement extends CounterState {}
 ## prefer-multi-bloc-provider
 
 Warns when a BlocProvider / BlocListener / RepositoryProvider can be replaced with a Multi version.
-
-**Tags:** #readability #maintainability
 
 **Why?**
 
@@ -616,8 +576,6 @@ MultiBlocProvider(
 
 Warns when Bloc events do not have a sealed or final modifier.
 
-**Tags:** #maintainability #readability
-
 **Why?**
 
 Using sealed or final modifiers on Bloc event classes improves type safety and prevents unintended subclassing, creating a controlled event hierarchy.
@@ -641,8 +599,6 @@ final class CounterIncrementEvent extends CounterEvent {}
 ## prefer-sealed-bloc-state
 
 Warns when Bloc state classes do not have a sealed or final modifier.
-
-**Tags:** #maintainability #readability
 
 **Why?**
 
