@@ -5,18 +5,23 @@ import 'lints/common/common.dart';
 import 'lints/fake_async/fake_async.dart';
 import 'lints/flutter/flutter.dart';
 import 'lints/provider/provider.dart';
+import 'utils/fixture_filtered_lint_rule.dart';
 
 PluginBase createPlugin() => _AwesomeLints();
 
 class _AwesomeLints extends PluginBase {
   @override
-  List<LintRule> getLintRules(CustomLintConfigs configs) => [
-    ..._commonLintRules(configs),
-    ...flutterLintRules,
-    ...providerLintRules,
-    ...blocLintRules,
-    ...fakeAsyncLintRules,
-  ];
+  List<LintRule> getLintRules(CustomLintConfigs configs) {
+    final rules = <LintRule>[
+      ..._commonLintRules(configs),
+      ...flutterLintRules,
+      ...providerLintRules,
+      ...blocLintRules,
+      ...fakeAsyncLintRules,
+    ];
+
+    return rules.map(FixtureFilteredLintRule.new).toList();
+  }
 
   List<LintRule> _commonLintRules(CustomLintConfigs configs) {
     return [

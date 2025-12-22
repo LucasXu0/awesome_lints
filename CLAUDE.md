@@ -145,15 +145,13 @@ test/fixtures/test_project/lib/<category>/<rule_name>/
 ```
 
 **Important patterns:**
-- Files start with a massive `// ignore_for_file:` header (auto-generated)
+- Fixtures no longer rely on `// ignore_for_file:` mega-headers
 - Use `// expect_lint: rule_name` comment on lines where lint should trigger
 - Running `dart run custom_lint` in the test project validates all fixtures
 - Test project has dependencies: flutter, provider, flutter_bloc, fake_async
 
-**Auto-generate ignore headers:**
-```bash
-./scripts/generate-test-ignores.sh
-```
+**How fixtures avoid cross-triggering other lints:**
+- When analyzing files under `test/fixtures/test_project/lib/<category>/<rule_name>/...`, the plugin only runs the lint matching `<rule_name>`.
 
 ### Category Organization
 

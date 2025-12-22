@@ -35,9 +35,14 @@ jobs:
       - name: Check for new lints
         id: check_lints
         run: |
-          # Check if any new lint files were added
-          NEW_LINTS=$(git diff --name-only origin/main...HEAD | grep 'lib/src/lints/.*/.*\.dart$' | grep -v '\.dart$' || true)
-          if [ ! -z "$NEW_LINTS" ]; then
+          # Check if any new lint rule files were added (exclude category barrel files).
+          NEW_LINTS=$(
+            git diff --name-only origin/main...HEAD |
+              grep -E '^lib/src/lints/(common|flutter|provider|bloc|fake_async)/[^/]+\.dart$' |
+              grep -v -E '/(common|flutter|provider|bloc|fake_async)\.dart$' || true
+          )
+
+          if [ -n "$NEW_LINTS" ]; then
             echo "new_lints=true" >> $GITHUB_OUTPUT
             echo "New lint files detected:"
             echo "$NEW_LINTS"
@@ -49,7 +54,11 @@ jobs:
         if: steps.check_lints.outputs.new_lints == 'true'
         run: |
           # For each new lint, check if test fixtures exist
-          for lint_file in $(git diff --name-only origin/main...HEAD | grep 'lib/src/lints/.*/.*\.dart$' | grep -v '/\(common\|flutter\|provider\|bloc\|fake_async\)\.dart$'); do
+          for lint_file in $(
+            git diff --name-only origin/main...HEAD |
+              grep -E '^lib/src/lints/(common|flutter|provider|bloc|fake_async)/[^/]+\.dart$' |
+              grep -v -E '/(common|flutter|provider|bloc|fake_async)\.dart$'
+          ); do
             # Extract lint name and category
             LINT_NAME=$(basename "$lint_file" .dart)
             CATEGORY=$(echo "$lint_file" | sed 's|lib/src/lints/\(.*\)/.*|\1|')

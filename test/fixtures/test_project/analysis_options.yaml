@@ -1,15 +1,22 @@
 analyzer:
   plugins:
     - custom_lint
+  errors:
+    constant_pattern_never_matches_value_type: ignore
+    dead_code: ignore
+    deprecated_member_use: ignore
+    duplicate_ignore: ignore
+    equal_elements_in_set: ignore
+    must_call_super: ignore
+    non_exhaustive_switch_expression: ignore
+    not_assigned_potentially_non_nullable_local_variable: ignore
+    unchecked_use_of_nullable_value: ignore
+    unnecessary_null_comparison: ignore
+    unused_element: ignore
+    unused_field: ignore
+    unused_import: ignore
+    unused_local_variable: ignore
 
-# Use strict preset to validate all rules in tests
 include: package:awesome_lints/presets/strict.yaml
 
-custom_lint:
-  rules:
-    # Disable rules that are intentionally violated in test fixtures
-    - no_magic_number: false
-    - no_magic_string: false
-
-  debug: true
-  verbose: true
+custom_lint: {}
