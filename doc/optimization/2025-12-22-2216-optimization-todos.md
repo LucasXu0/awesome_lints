@@ -121,7 +121,7 @@ The core lint implementations are in good shape and have already undergone a mea
 
 **Where:**
 - `test/fixtures/test_project/analysis_options.yaml`
-- `scripts/generate-test-ignores.sh`
+- (removed) `scripts/generate-test-ignores.sh`
 
 **Optimization options:**
 1. **Run fixtures per rule (allowlist):**
@@ -139,7 +139,7 @@ The core lint implementations are in good shape and have already undergone a mea
 **What was completed:**
 - Removed `// ignore_for_file:` mega-headers from fixture Dart files.
 - Added `FixtureFilteredLintRule` wrapper so fixture files only run the lint matching `lib/<category>/<lint_name>/...`.
-- Deprecated `scripts/generate-test-ignores.sh` since it’s no longer needed.
+- Removed `scripts/generate-test-ignores.sh` since it’s no longer needed.
 
 **Simple explanation:**
 - Before: fixtures enabled many rules, so each fixture file had to ignore every other lint via a huge `// ignore_for_file:` header.
@@ -215,4 +215,4 @@ The core lint implementations are in good shape and have already undergone a mea
 - [x] Update `test/fixtures/README.md` fixture tree to match `category/lint_name`
 - [ ] Align “enabled by default” messaging across README and `*_LINTS.md`
 - [x] Make CI format check for `test` use `--set-exit-if-changed`
-- [ ] Decide whether to keep or replace `scripts/generate-test-ignores.sh`
+- [x] Remove `scripts/generate-test-ignores.sh`
