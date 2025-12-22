@@ -119,7 +119,6 @@ if (invocation.isOnThis) {
 The project has several GitHub Actions workflows:
 
 - **`lint.yml`** - Runs on every push/PR, checks formatting and analysis
-- **`test.yml`** - Runs tests and verification
 - **`pr-validation.yml`** - Validates PRs for new lints (checks for tests, documentation)
 
 When creating a PR with new lints, ensure:
