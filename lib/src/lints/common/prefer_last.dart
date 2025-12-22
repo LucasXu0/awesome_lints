@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -117,5 +118,59 @@ class PreferLast extends DartLintRule {
     // Simple check: compare string representation
     // This handles most common cases
     return expr1.toString() == expr2.toString();
+  }
+
+  @override
+  List<Fix> getFixes() => [_ReplaceWithLast()];
+}
+
+class _ReplaceWithLast extends DartFix {
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ChangeReporter reporter,
+    CustomLintContext context,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
+  ) {
+    context.registry.addIndexExpression((node) {
+      if (!analysisError.sourceRange.intersects(node.sourceRange)) return;
+
+      final target = node.target;
+      if (target == null) return;
+
+      final changeBuilder = reporter.createChangeBuilder(
+        message: 'Replace with .last',
+        priority: 80,
+      );
+
+      changeBuilder.addDartFileEdit((builder) {
+        builder.addSimpleReplacement(
+          node.sourceRange,
+          '${target.toSource()}.last',
+        );
+      });
+    });
+
+    context.registry.addMethodInvocation((node) {
+      if (!analysisError.sourceRange.intersects(node.sourceRange)) return;
+
+      if (node.methodName.name != 'elementAt') return;
+
+      final target = node.target;
+      if (target == null) return;
+
+      final changeBuilder = reporter.createChangeBuilder(
+        message: 'Replace with .last',
+        priority: 80,
+      );
+
+      changeBuilder.addDartFileEdit((builder) {
+        builder.addSimpleReplacement(
+          node.sourceRange,
+          '${target.toSource()}.last',
+        );
+      });
+    });
   }
 }

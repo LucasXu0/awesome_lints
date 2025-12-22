@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -58,5 +59,70 @@ class PreferFirst extends DartLintRule {
     if (argument is IntegerLiteral && argument.value == 0) {
       reporter.atNode(node, _code);
     }
+  }
+
+  @override
+  List<Fix> getFixes() => [_ReplaceWithFirst()];
+}
+
+class _ReplaceWithFirst extends DartFix {
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ChangeReporter reporter,
+    CustomLintContext context,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
+  ) {
+    context.registry.addIndexExpression((node) {
+      if (!analysisError.sourceRange.intersects(node.sourceRange)) return;
+
+      final index = node.index;
+      if (index is IntegerLiteral && index.value == 0) {
+        final changeBuilder = reporter.createChangeBuilder(
+          message: 'Replace with .first',
+          priority: 80,
+        );
+
+        changeBuilder.addDartFileEdit((builder) {
+          // Replace [0] with .first
+          final target = node.target;
+          if (target != null) {
+            builder.addSimpleReplacement(
+              node.sourceRange,
+              '${target.toSource()}.first',
+            );
+          }
+        });
+      }
+    });
+
+    context.registry.addMethodInvocation((node) {
+      if (!analysisError.sourceRange.intersects(node.sourceRange)) return;
+
+      if (node.methodName.name != 'elementAt') return;
+
+      final arguments = node.argumentList.arguments;
+      if (arguments.length != 1) return;
+
+      final argument = arguments.first;
+      if (argument is IntegerLiteral && argument.value == 0) {
+        final changeBuilder = reporter.createChangeBuilder(
+          message: 'Replace with .first',
+          priority: 80,
+        );
+
+        changeBuilder.addDartFileEdit((builder) {
+          // Replace .elementAt(0) with .first
+          final target = node.target;
+          if (target != null) {
+            builder.addSimpleReplacement(
+              node.sourceRange,
+              '${target.toSource()}.first',
+            );
+          }
+        });
+      }
+    });
   }
 }

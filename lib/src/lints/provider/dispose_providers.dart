@@ -4,6 +4,9 @@ import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+import '../../utils/ast_extensions.dart';
+import '../../utils/disposal_utils.dart';
+
 class DisposeProviders extends DartLintRule {
   const DisposeProviders() : super(code: _code);
 
@@ -49,12 +52,7 @@ class DisposeProviders extends DartLintRule {
   }
 
   Expression? _getCreateFunction(InstanceCreationExpression node) {
-    for (final argument in node.argumentList.arguments) {
-      if (argument is NamedExpression && argument.name.label.name == 'create') {
-        return argument.expression;
-      }
-    }
-    return null;
+    return node.argumentList.getNamedArgument('create')?.expression;
   }
 
   ClassElement? _getProviderTypeArgument(InstanceCreationExpression node) {
@@ -78,13 +76,11 @@ class DisposeProviders extends DartLintRule {
   }
 
   bool _hasDisposeMethod(ClassElement classElement) {
-    // Check if the class has dispose, close, or cancel method
-    const disposeMethods = {'dispose', 'close', 'cancel'};
-
+    // Check if the class has any disposal method (dispose, close, or cancel)
     ClassElement? current = classElement;
     while (current != null) {
       for (final method in current.methods) {
-        if (disposeMethods.contains(method.name)) {
+        if (DisposalUtils.disposalMethods.contains(method.name)) {
           return true;
         }
       }
@@ -98,12 +94,6 @@ class DisposeProviders extends DartLintRule {
   }
 
   Expression? _getDisposeCallback(InstanceCreationExpression node) {
-    for (final argument in node.argumentList.arguments) {
-      if (argument is NamedExpression &&
-          argument.name.label.name == 'dispose') {
-        return argument.expression;
-      }
-    }
-    return null;
+    return node.argumentList.getNamedArgument('dispose')?.expression;
   }
 }

@@ -4,6 +4,8 @@ import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+import '../../utils/ast_extensions.dart';
+
 class AvoidSingleChildColumnOrRow extends DartLintRule {
   const AvoidSingleChildColumnOrRow() : super(code: _code);
 
@@ -32,14 +34,8 @@ class AvoidSingleChildColumnOrRow extends DartLintRule {
       if (typeName != 'Column' && typeName != 'Row') return;
 
       // Find the 'children' argument
-      NamedExpression? childrenArg;
-      try {
-        childrenArg = node.argumentList.arguments
-            .whereType<NamedExpression>()
-            .firstWhere((arg) => arg.name.label.name == 'children');
-      } catch (_) {
-        return;
-      }
+      final childrenArg = node.argumentList.getNamedArgument('children');
+      if (childrenArg == null) return;
 
       // Check if children is a list literal
       final expression = childrenArg.expression;
@@ -100,14 +96,8 @@ class _RemoveSingleChildWrapper extends DartFix {
       if (typeName != 'Column' && typeName != 'Row') return;
 
       // Find the 'children' argument
-      NamedExpression? childrenArg;
-      try {
-        childrenArg = node.argumentList.arguments
-            .whereType<NamedExpression>()
-            .firstWhere((arg) => arg.name.label.name == 'children');
-      } catch (_) {
-        return;
-      }
+      final childrenArg = node.argumentList.getNamedArgument('children');
+      if (childrenArg == null) return;
 
       final expression = childrenArg.expression;
       if (expression is! ListLiteral) return;
