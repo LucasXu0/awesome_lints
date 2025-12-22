@@ -110,6 +110,7 @@ The core lint implementations are in good shape and have already undergone a mea
 
 ### 4) Rework fixture strategy to reduce maintenance and speed up validation
 
+**Status:** ✅ Completed  
 **Impact:** Medium–High (developer time + CI time)  
 **Effort:** Medium–High
 
@@ -134,6 +135,15 @@ The core lint implementations are in good shape and have already undergone a mea
 **Success criteria:**
 - No per-file mega-ignore headers.
 - Adding a new rule requires only a fixture folder and docs, not regenerating hundreds of ignore strings.
+
+**What was completed:**
+- Removed `// ignore_for_file:` mega-headers from fixture Dart files.
+- Added `FixtureFilteredLintRule` wrapper so fixture files only run the lint matching `lib/<category>/<lint_name>/...`.
+- Deprecated `scripts/generate-test-ignores.sh` since it’s no longer needed.
+
+**Simple explanation:**
+- Before: fixtures enabled many rules, so each fixture file had to ignore every other lint via a huge `// ignore_for_file:` header.
+- Now: when analyzing fixture files, the plugin only *runs* the lint whose name matches the fixture directory (`.../lib/<category>/<lint_name>/...`), so other lints never execute and there’s nothing to ignore.
 
 ---
 
