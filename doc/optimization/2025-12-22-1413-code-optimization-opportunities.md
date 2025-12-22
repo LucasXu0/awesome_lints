@@ -33,8 +33,8 @@ This document outlines code optimization opportunities identified through compre
 | Priority | Count | Status | Est. LOC Reduction | Actual Reduction |
 |----------|-------|--------|-------------------|------------------|
 | High     | 3     | ✅ COMPLETED | ~300 lines | ~300 lines |
-| Medium   | 4     | 🟡 Pending | ~100 lines | - |
-| Low      | 3     | 🟢 Pending | Documentation | - |
+| Medium   | 3     | 🟡 Pending | ~100 lines | - |
+| Low      | 2     | 🟢 Pending | Performance/Quality | - |
 
 ---
 
@@ -430,120 +430,7 @@ class NoMagicString extends MagicValueLint {
 
 ## Medium Priority Optimizations
 
-### 4. Automate Lint Rule Registration
-
-**Status:** 🟡 Medium Priority
-**Impact:** Medium (prevents registration errors)
-**Effort:** High (12-16 hours, requires code generation)
-
-#### Problem
-
-All 128 lint rules are manually instantiated in `awesome_lints_plugin.dart`:
-
-```dart
-final commonLintRules = <DartLintRule>[
-  const AvoidNonNullAssertion(),
-  const NoMagicNumber(),
-  // ... 63 more manual instantiations
-];
-```
-
-**Risks:**
-- Forgetting to register new lints
-- No compile-time verification
-- Manual maintenance burden
-
-#### Proposed Solution
-
-Use code generation with `build_runner` to auto-discover lint rules:
-
-**Step 1:** Add annotation to mark lint rules:
-
-```dart
-// lib/src/annotations/lint_registry.dart
-
-/// Marks a lint rule for automatic registration.
-class LintRule {
-  const LintRule({this.category = LintCategory.common});
-
-  final LintCategory category;
-}
-
-enum LintCategory {
-  common,
-  flutter,
-  bloc,
-  provider,
-  fakeAsync,
-}
-```
-
-**Step 2:** Annotate lint classes:
-
-```dart
-@LintRule(category: LintCategory.common)
-class NoMagicNumber extends DartLintRule {
-  // ...
-}
-```
-
-**Step 3:** Create code generator:
-
-```dart
-// tool/lint_registry_generator.dart
-
-// Scans lib/src/lints/ for @LintRule annotations
-// Generates awesome_lints_plugin.g.dart with:
-//   - Automatic imports
-//   - Categorized lists
-//   - getLintRules() implementation
-```
-
-**Step 4:** Generated output:
-
-```dart
-// lib/src/awesome_lints_plugin.g.dart (generated)
-
-part of 'awesome_lints_plugin.dart';
-
-List<DartLintRule> _getGeneratedLintRules() {
-  return [
-    // Common lints (65)
-    const AvoidNonNullAssertion(),
-    const NoMagicNumber(),
-    // ... auto-generated
-
-    // Flutter lints (32)
-    const AvoidLateContext(),
-    // ... auto-generated
-
-    // And so on...
-  ];
-}
-```
-
-#### Benefits
-
-- ✅ Zero risk of forgetting to register new lints
-- ✅ Compile-time verification
-- ✅ Automatic categorization
-- ✅ Reduced manual maintenance
-- ⚠️ Requires build_runner setup
-- ⚠️ Adds complexity to build process
-
-#### Alternative: Convention-Based Discovery
-
-Use Dart reflection (if available) or file-based discovery:
-
-```dart
-// Scan lib/src/lints/*/ directories
-// Instantiate all classes extending DartLintRule
-// Group by directory name
-```
-
----
-
-### 5. Decompose Large Lint Implementations
+### 4. Decompose Large Lint Implementations
 
 **Status:** 🟡 Medium Priority
 **Impact:** Medium (improves testability and readability)
@@ -613,7 +500,7 @@ class StringLiteralExclusionRules {
 
 ---
 
-### 6. Add Type Caching Layer
+### 5. Add Type Caching Layer
 
 **Status:** 🟡 Medium Priority
 **Impact:** Low-Medium (performance improvement)
@@ -725,7 +612,7 @@ class MyLint extends DartLintRule {
 
 ---
 
-### 7. Optimize Deep AST Traversals
+### 6. Optimize Deep AST Traversals
 
 **Status:** 🟡 Medium Priority
 **Impact:** Low (prevents pathological cases)
@@ -780,60 +667,7 @@ extension AstNodeTraversalExtensions on AstNode {
 
 ## Low Priority Optimizations
 
-### 8. Add Comprehensive Inline Documentation
-
-**Status:** 🟢 Low Priority
-**Impact:** Low (improves developer experience)
-**Effort:** Medium (ongoing)
-
-#### Problem
-
-Complex helper methods lack detailed documentation:
-
-```dart
-// Minimal documentation
-bool _shouldExclude(Expression node) {
-  // 15 lines of complex logic
-}
-```
-
-#### Proposed Solution
-
-Add comprehensive dartdoc comments:
-
-```dart
-/// Determines if the given expression should be excluded from magic value detection.
-///
-/// An expression is excluded if it meets any of these criteria:
-/// - Part of a const or final declaration
-/// - Used as a default parameter value
-/// - Within an annotation
-/// - Used as a map key or index
-///
-/// Example excluded cases:
-/// ```dart
-/// final count = 42;        // const/final
-/// void foo({int x = 10})   // default param
-/// @deprecated('message')   // annotation
-/// list[0]                  // index
-/// ```
-///
-/// Returns `true` if the expression should be excluded.
-bool _shouldExclude(Expression node) {
-  // Implementation
-}
-```
-
-#### Benefits
-
-- ✅ Easier onboarding for contributors
-- ✅ Better IDE tooltips
-- ✅ Clearer intent
-- ✅ Examples improve understanding
-
----
-
-### 9. Implement Lazy Lint Instantiation
+### 7. Implement Lazy Lint Instantiation
 
 **Status:** 🟢 Low Priority
 **Impact:** Very Low (minor memory savings)
@@ -874,7 +708,7 @@ class _AwesomeLints extends PluginBase {
 
 ---
 
-### 10. Add Performance Benchmarking
+### 8. Add Performance Benchmarking
 
 **Status:** 🟢 Low Priority
 **Impact:** Low (enables data-driven optimization)
@@ -937,7 +771,7 @@ void main() {
    - Effort: 4-6 hours
    - Impact: Reduces ~200 lines of repeated code
 
-3. ✅ **Optimization #7:** Add depth limits to traversals
+3. ✅ **Optimization #6:** Add depth limits to traversals
    - Effort: 2-3 hours (done as part of #2)
    - Impact: Prevents pathological cases
 
@@ -952,7 +786,7 @@ void main() {
    - Effort: 8-12 hours
    - Impact: 50%+ reduction in magic value lint code
 
-5. ✅ **Optimization #5:** Decompose large lint files
+5. ✅ **Optimization #4:** Decompose large lint files
    - Effort: 4-6 hours per file (start with top 3)
    - Impact: Improved testability and readability
 
@@ -961,28 +795,20 @@ void main() {
 
 ### Phase 3: Advanced Optimizations (3-4 weeks)
 
-**Focus:** Performance and automation
+**Focus:** Performance
 
-6. ✅ **Optimization #6:** Add type caching layer
+6. ✅ **Optimization #5:** Add type caching layer
    - Effort: 6-8 hours
    - Impact: Performance improvement (measure first)
 
-7. ✅ **Optimization #4:** Automate lint registration
-   - Effort: 12-16 hours
-   - Impact: Zero registration errors
-
-**Estimated Time:** 18-24 hours
-**Expected Impact:** Better performance, reduced maintenance
+**Estimated Time:** 6-8 hours
+**Expected Impact:** Better performance
 
 ### Phase 4: Polish (ongoing)
 
-**Focus:** Documentation and quality of life
+**Focus:** Performance measurement
 
-8. ✅ **Optimization #8:** Improve inline documentation
-   - Effort: Ongoing (15-30 min per complex method)
-   - Impact: Better developer experience
-
-9. ✅ **Optimization #10:** Add benchmarking
+7. ✅ **Optimization #8:** Add benchmarking
    - Effort: 8-12 hours
    - Impact: Data-driven future optimizations
 
