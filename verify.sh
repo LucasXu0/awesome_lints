@@ -46,7 +46,7 @@ echo ""
 
 # Step 1: Install dependencies
 print_step "Installing dependencies..."
-$DART_CMD pub get
+$FLUTTER_CMD pub get
 print_success "Dependencies installed"
 echo ""
 
