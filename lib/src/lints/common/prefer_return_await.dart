@@ -4,6 +4,8 @@ import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+import '../../utils/ast_extensions.dart';
+
 class PreferReturnAwait extends DartLintRule {
   const PreferReturnAwait() : super(code: _code);
 
@@ -47,19 +49,27 @@ class PreferReturnAwait extends DartLintRule {
   }
 
   bool _isInAsyncFunction(AstNode node) {
-    AstNode? current = node;
-    while (current != null) {
-      if (current is FunctionExpression) {
-        return current.body.isAsynchronous;
-      }
-      if (current is MethodDeclaration) {
-        return current.body.isAsynchronous;
-      }
-      if (current is FunctionDeclaration) {
-        return current.functionExpression.body.isAsynchronous;
-      }
-      current = current.parent;
+    // Find any enclosing function-like node
+    final ancestor = node.findAncestor((n) {
+      if (n is FunctionExpression) return true;
+      if (n is MethodDeclaration) return true;
+      if (n is FunctionDeclaration) return true;
+      return false;
+    });
+
+    if (ancestor == null) return false;
+
+    // Check if it's async
+    if (ancestor is FunctionExpression) {
+      return ancestor.body.isAsynchronous;
     }
+    if (ancestor is MethodDeclaration) {
+      return ancestor.body.isAsynchronous;
+    }
+    if (ancestor is FunctionDeclaration) {
+      return ancestor.functionExpression.body.isAsynchronous;
+    }
+
     return false;
   }
 

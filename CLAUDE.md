@@ -37,8 +37,8 @@ fvm dart format lib test
 fvm dart analyze lib
 fvm dart analyze test
 
-# Run custom_lint on test fixtures (warnings are expected)
-fvm dart run custom_lint test --no-fatal-warnings --no-fatal-infos
+# Run custom_lint on test fixtures
+fvm dart run custom_lint test
 ```
 
 ### Testing

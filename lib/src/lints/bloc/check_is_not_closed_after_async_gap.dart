@@ -105,11 +105,35 @@ class _AddCallVisitor extends GeneralizingAstVisitor<void> {
 
     if (node.methodName.name == 'add') {
       // Check if it's wrapped in an isClosed check
-      final parent = node.parent;
-      if (parent is! IfStatement || !_isClosedCheck(parent.expression)) {
+      if (!_isInsideIsClosedCheck(node)) {
         reporter.atNode(node, code);
       }
     }
+  }
+
+  bool _isInsideIsClosedCheck(AstNode node) {
+    AstNode? current = node.parent;
+    while (current != null) {
+      if (current is IfStatement && _isClosedCheck(current.expression)) {
+        // Make sure we're in the then statement, not the else
+        if (_isDescendantOf(node, current.thenStatement)) {
+          return true;
+        }
+      }
+      // Stop at function boundaries
+      if (current is FunctionExpression) break;
+      current = current.parent;
+    }
+    return false;
+  }
+
+  bool _isDescendantOf(AstNode node, AstNode ancestor) {
+    AstNode? current = node;
+    while (current != null) {
+      if (identical(current, ancestor)) return true;
+      current = current.parent;
+    }
+    return false;
   }
 
   bool _isClosedCheck(Expression expression) {

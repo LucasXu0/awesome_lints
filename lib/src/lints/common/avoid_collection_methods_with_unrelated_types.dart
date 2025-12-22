@@ -4,6 +4,8 @@ import 'package:analyzer/error/error.dart' as analyzer_error;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+import '../../utils/type_compatibility_checker.dart';
+
 class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
   const AvoidCollectionMethodsWithUnrelatedTypes() : super(code: _code);
 
@@ -28,6 +30,8 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
   static const _mapKeyMethods = {'containsKey', 'remove'};
 
   static const _mapValueMethods = {'containsValue'};
+
+  static const _typeChecker = TypeCompatibilityChecker();
 
   @override
   void run(
@@ -93,16 +97,11 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
       if (indexType == null) return;
 
       if (targetType.isDartCoreMap) {
-        final typeArgs = targetType.typeArguments;
-        if (typeArgs.isNotEmpty) {
-          final keyType = typeArgs[0];
-          if (!_isCompatibleType(indexType, keyType)) {
-            reporter.atNode(index, _code);
-          }
+        if (!_typeChecker.isValidMapKey(targetType, indexType)) {
+          reporter.atNode(index, _code);
         }
       } else if (targetType.isDartCoreList) {
-        // List indexing should be int
-        if (!indexType.isDartCoreInt) {
+        if (!_typeChecker.isValidListIndex(indexType)) {
           reporter.atNode(index, _code);
         }
       }
@@ -118,12 +117,7 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
   ) {
     if (!_elementMethods.contains(methodName)) return;
 
-    final typeArgs = collectionType.typeArguments;
-    if (typeArgs.isEmpty) return; // Dynamic collection
-
-    final elementType = typeArgs.first;
-
-    if (!_isCompatibleType(argumentType, elementType)) {
+    if (!_typeChecker.isValidCollectionElement(collectionType, argumentType)) {
       reporter.atNode(argument, _code);
     }
   }
@@ -135,73 +129,14 @@ class AvoidCollectionMethodsWithUnrelatedTypes extends DartLintRule {
     Expression argument,
     DiagnosticReporter reporter,
   ) {
-    final typeArgs = mapType.typeArguments;
-    if (typeArgs.length < 2) return; // Dynamic map
-
     if (_mapKeyMethods.contains(methodName)) {
-      final keyType = typeArgs[0];
-      if (!_isCompatibleType(argumentType, keyType)) {
+      if (!_typeChecker.isValidMapKey(mapType, argumentType)) {
         reporter.atNode(argument, _code);
       }
     } else if (_mapValueMethods.contains(methodName)) {
-      final valueType = typeArgs[1];
-      if (!_isCompatibleType(argumentType, valueType)) {
+      if (!_typeChecker.isValidMapValue(mapType, argumentType)) {
         reporter.atNode(argument, _code);
       }
     }
-  }
-
-  bool _isCompatibleType(DartType argumentType, DartType expectedType) {
-    // Check if types have dynamic element (dynamic type)
-    if (argumentType.element?.name == 'dynamic' ||
-        expectedType.element?.name == 'dynamic') {
-      return true;
-    }
-
-    // Object is compatible with everything
-    if (expectedType.isDartCoreObject) {
-      return true;
-    }
-
-    // Null type is compatible with nullable types
-    if (argumentType.element?.name == 'Null') {
-      return true;
-    }
-
-    // Check if argument type is exactly the expected type
-    if (argumentType == expectedType) {
-      return true;
-    }
-
-    // Check subtype relationship for interface types
-    if (argumentType is InterfaceType && expectedType is InterfaceType) {
-      if (argumentType.element == expectedType.element) {
-        return true;
-      }
-    }
-
-    // Simple name-based check for compatibility
-    // This is a simplified approach that may have some false negatives
-    // but avoids the complexity of full type hierarchy analysis
-    final argName = argumentType.element?.name;
-    final expName = expectedType.element?.name;
-
-    if (argName == expName) {
-      return true;
-    }
-
-    // Check for num/int/double compatibility
-    if (expName == 'num' && (argName == 'int' || argName == 'double')) {
-      return true;
-    }
-    if (expName == 'int' && argName == 'int') {
-      return true;
-    }
-    if (expName == 'double' && argName == 'double') {
-      return true;
-    }
-
-    // If types are completely different, they're incompatible
-    return false;
   }
 }
