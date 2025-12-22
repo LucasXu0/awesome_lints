@@ -7,14 +7,15 @@ This directory contains test fixtures for integration testing of the custom lint
 ```
 test/fixtures/test_project/
   lib/
-    <lint_name>/
-      should_trigger_lint.dart
-      should_not_trigger_lint.dart
+    <category>/
+      <lint_name>/
+        should_trigger_lint.dart
+        should_not_trigger_lint.dart
   analysis_options.yaml
   pubspec.yaml
 ```
 
-Each lint rule has its own subdirectory in `lib/` containing:
+Each lint rule has its own subdirectory in `lib/<category>/` containing:
 - `should_trigger_lint.dart` - Examples that should trigger the lint warning
 - `should_not_trigger_lint.dart` - Examples that should NOT trigger the lint warning
 
@@ -39,7 +40,7 @@ To test the lint rules:
 
 ## Expected Results for avoid_single_child_column_or_row
 
-### lib/avoid_single_child_column_or_row/should_trigger_lint.dart
+### lib/flutter/avoid_single_child_column_or_row/should_trigger_lint.dart
 This file should show 8 warnings:
 - Line 11: Column with single child
 - Line 18: Row with single child
@@ -50,5 +51,5 @@ This file should show 8 warnings:
 - Line 64: Column with conditional (single child)
 - Line 71: Row with for loop (single iteration)
 
-### lib/avoid_single_child_column_or_row/should_not_trigger_lint.dart
+### lib/flutter/avoid_single_child_column_or_row/should_not_trigger_lint.dart
 This file should show NO warnings as all cases result in multiple children or empty lists.

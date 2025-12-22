@@ -49,7 +49,7 @@ jobs:
         run: fvm dart analyze lib
 
       - name: Check dart format in test
-        run: fvm dart format test
+        run: fvm dart format --set-exit-if-changed test
 
       - name: Debug versions and diff
         run: |
