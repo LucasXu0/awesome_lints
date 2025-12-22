@@ -5,7 +5,7 @@ A comprehensive collection of custom lint rules for Dart and Flutter application
 ## Features
 
 - 🎯 **32 Flutter-specific lints** - Catch Flutter widget issues, lifecycle problems, and performance pitfalls
-- 🔍 **54 Common Dart lints** - General-purpose rules for any Dart codebase
+- 🔍 **65 Common Dart lints** - General-purpose rules for any Dart codebase
 - 📦 **8 Provider-specific lints** - Best practices for the Provider state management package
 - 🧊 **22 Bloc-specific lints** - Best practices for the Bloc state management package
 - ⏱️ **1 FakeAsync-specific lint** - Catch common testing mistakes with fake_async
@@ -17,13 +17,11 @@ A comprehensive collection of custom lint rules for Dart and Flutter application
 
 ### Installation
 
-1. Add `awesome_lints` and `custom_lint` to your `pubspec.yaml`:
+1. Add `awesome_lints` and `custom_lint` as dev dependencies:
 
-```yaml
-dev_dependencies:
-  awesome_lints:
-    path: path/to/awesome_lints  # or use git/pub dependency
-  custom_lint: ^0.7.0
+```bash
+dart pub add dev:awesome_lints
+dart pub add dev:custom_lint
 ```
 
 2. Enable the custom_lint plugin in your `analysis_options.yaml`:
@@ -80,7 +78,7 @@ Popular rules include:
 
 ### Common Dart Rules
 
-54 rules applicable to any Dart codebase, covering:
+65 rules applicable to any Dart codebase, covering:
 - Code quality and maintainability
 - Logic errors and potential bugs
 - Performance considerations
@@ -269,7 +267,7 @@ dev_dependencies:
 
 ## Requirements
 
-- Dart SDK: 3.0.0 or higher
+- Dart SDK: 3.10.0 or higher
 - Flutter SDK: 3.0.0 or higher (for Flutter-specific rules)
 - custom_lint: ^0.7.0
 
