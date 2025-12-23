@@ -255,6 +255,53 @@ Warns when collections are compared using `==` instead of deep equality checks.
 
 **Why?** The `==` operator compares identity for most collections, not contents. Use packages like `collection` for deep equality.
 
+**Bad:**
+```dart
+void compareCollections() {
+  final list1 = [1, 2, 3];
+  final list2 = [1, 2, 3];
+
+  // Compares identity, not contents - always false!
+  if (list1 == list2) {
+    print('Equal');
+  }
+
+  final map1 = {'a': 1, 'b': 2};
+  final map2 = {'a': 1, 'b': 2};
+
+  // Also compares identity
+  if (map1 == map2) {
+    print('Equal');
+  }
+}
+```
+
+**Good:**
+```dart
+import 'package:collection/collection.dart';
+
+void compareCollections() {
+  final list1 = [1, 2, 3];
+  final list2 = [1, 2, 3];
+
+  // Use deep equality from collection package
+  if (const DeepCollectionEquality().equals(list1, list2)) {
+    print('Equal');
+  }
+
+  // Or use listEquals from Flutter
+  if (listEquals(list1, list2)) {
+    print('Equal');
+  }
+
+  // Null checks are still fine
+  List<int>? nullableList;
+  if (nullableList == null) {
+    print('List is null');
+  }
+}
+```
+
 ---
 
 ## avoid-collection-methods-with-unrelated-types
@@ -262,6 +309,41 @@ Warns when collections are compared using `==` instead of deep equality checks.
 Warns when collection methods are called with types unrelated to the collection's type parameter.
 
 **Why?** Calling methods like `contains()` with unrelated types is likely a mistake and will always return false.
+
+**Bad:**
+```dart
+void checkCollection() {
+  final numbers = <int>[1, 2, 3, 4, 5];
+
+  // Passing String to contains() on List<int> - always returns false!
+  if (numbers.contains('3')) {
+    print('Found'); // Never executes
+  }
+
+  final users = <String>['Alice', 'Bob'];
+
+  // Passing int to remove() on List<String> - does nothing
+  users.remove(42);
+}
+```
+
+**Good:**
+```dart
+void checkCollection() {
+  final numbers = <int>[1, 2, 3, 4, 5];
+
+  // Use correct type
+  if (numbers.contains(3)) {
+    print('Found');
+  }
+
+  // Or convert the value
+  final searchValue = '3';
+  if (numbers.contains(int.parse(searchValue))) {
+    print('Found');
+  }
+}
+```
 
 ---
 
@@ -350,6 +432,46 @@ Warns when `continue` is used in loops.
 Warns when expressions contain logical contradictions that make them always true or false.
 
 **Why?** Contradictory expressions indicate logic errors that should be fixed.
+
+**Bad:**
+```dart
+void validateUser(int age, String status) {
+  // x == a && x == b (where a != b)
+  if (age == 18 && age == 21) {
+    print('Invalid: age cannot be both 18 and 21');
+  }
+
+  // x == a && x != a
+  if (status == 'active' && status != 'active') {
+    print('Invalid: contradictory condition');
+  }
+
+  // x < a && x > a
+  if (age < 18 && age > 18) {
+    print('Invalid: contradictory comparison');
+  }
+}
+```
+
+**Good:**
+```dart
+void validateUser(int age, String status) {
+  // Use OR for multiple value checks
+  if (age == 18 || age == 21) {
+    print('Valid: checking for either value');
+  }
+
+  // Use range checks correctly
+  if (age >= 18 && age <= 65) {
+    print('Valid: checking age range');
+  }
+
+  // Fix logic errors
+  if (status == 'active') {
+    print('Valid: single condition');
+  }
+}
+```
 
 ---
 
@@ -457,6 +579,56 @@ Warns when class fields that implement `Disposable` or have a `dispose()` method
 
 **Why?** Proper disposal of resources prevents memory leaks and ensures cleanup.
 
+**Bad:**
+```dart
+class MyWidget {
+  final StreamController<int> _controller = StreamController();
+  final TextEditingController _textController = TextEditingController();
+
+  // Missing dispose method - memory leak!
+}
+```
+
+**Good:**
+```dart
+class MyWidget {
+  final StreamController<int> _controller = StreamController();
+  final TextEditingController _textController = TextEditingController();
+
+  void dispose() {
+    _controller.close();
+    _textController.dispose();
+  }
+}
+
+// Or in a StatefulWidget
+class MyStatefulWidget extends StatefulWidget {
+  @override
+  State<MyStatefulWidget> createState() => _MyState();
+}
+
+class _MyState extends State<MyStatefulWidget> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(controller: _controller);
+  }
+}
+```
+
 ---
 
 ## double-literal-format
@@ -537,6 +709,50 @@ Warns when multiple conditions in if-else chains check the same thing.
 
 **Why?** Equal conditions indicate logic errors - the second condition will never be evaluated.
 
+**Bad:**
+```dart
+void checkStatus(String status) {
+  // Second condition is unreachable
+  if (status == 'active') {
+    print('Active user');
+  } else if (status == 'active') {
+    print('This never executes!');
+  }
+}
+
+void checkAge(int age) {
+  // Duplicate condition
+  if (age > 18) {
+    print('Adult');
+  } else if (age > 18) {
+    print('Unreachable');
+  }
+}
+```
+
+**Good:**
+```dart
+void checkStatus(String status) {
+  // Different conditions
+  if (status == 'active') {
+    print('Active user');
+  } else if (status == 'inactive') {
+    print('Inactive user');
+  }
+}
+
+void checkAge(int age) {
+  // Different conditions
+  if (age > 18) {
+    print('Adult');
+  } else if (age >= 13) {
+    print('Teenager');
+  } else {
+    print('Child');
+  }
+}
+```
+
 ---
 
 ## no-equal-nested-conditions
@@ -568,6 +784,52 @@ Warns when switch expression cases return the same value.
 Warns when if-else branches have identical code.
 
 **Why?** If both branches do the same thing, the condition is pointless. Remove it or fix the logic error.
+
+**Bad:**
+```dart
+String getMessage(bool isActive) {
+  // Both branches return the same value!
+  if (isActive) {
+    return 'Welcome';
+  } else {
+    return 'Welcome';
+  }
+}
+
+void processData(int value) {
+  // Same code in both branches
+  if (value > 10) {
+    print('Processing');
+    save(value);
+  } else {
+    print('Processing');
+    save(value);
+  }
+}
+```
+
+**Good:**
+```dart
+String getMessage(bool isActive) {
+  // Just return the value directly
+  return 'Welcome';
+}
+
+// Or fix the logic
+String getCorrectMessage(bool isActive) {
+  if (isActive) {
+    return 'Welcome back!';
+  } else {
+    return 'Please log in';
+  }
+}
+
+void processData(int value) {
+  // Remove unnecessary condition
+  print('Processing');
+  save(value);
+}
+```
 
 ---
 
