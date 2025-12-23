@@ -46,6 +46,10 @@ class TypeCompatibilityChecker {
       if (argumentType.element == expectedType.element) {
         return true;
       }
+      // Check if argumentType is a subtype of expectedType
+      if (argumentType.asInstanceOf(expectedType.element) != null) {
+        return true;
+      }
     }
 
     // Simple name-based check for compatibility
