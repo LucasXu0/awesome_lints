@@ -38,7 +38,8 @@ class AvoidCollectionEqualityChecks extends DartLintRule {
       if (leftType == null || rightType == null) return;
 
       // Skip null checks (e.g., `collection == null` or `collection != null`)
-      if (_isNullLiteral(node.leftOperand) || _isNullLiteral(node.rightOperand)) {
+      if (_isNullLiteral(node.leftOperand) ||
+          _isNullLiteral(node.rightOperand)) {
         return;
       }
 
