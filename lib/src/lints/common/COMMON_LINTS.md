@@ -247,6 +247,41 @@ Warns when nested if statements can be combined into a single if with a logical 
 
 **Why?** Collapsing nested ifs reduces nesting levels and improves readability.
 
+**Bad:**
+```dart
+void processUser(User? user) {
+  if (user != null) {
+    if (user.isActive) {
+      print('Processing active user');
+    }
+  }
+}
+
+void checkValues(int age, String status) {
+  if (age > 18) {
+    if (status == 'verified') {
+      grantAccess();
+    }
+  }
+}
+```
+
+**Good:**
+```dart
+void processUser(User? user) {
+  // Combine conditions with &&
+  if (user != null && user.isActive) {
+    print('Processing active user');
+  }
+}
+
+void checkValues(int age, String status) {
+  if (age > 18 && status == 'verified') {
+    grantAccess();
+  }
+}
+```
+
 ---
 
 ## avoid-collection-equality-checks
@@ -408,6 +443,55 @@ Warns when assert conditions are constant values.
 Warns when if/while conditions are constant values that can be evaluated at compile time.
 
 **Why?** Constant conditions indicate dead code or logic errors. The branch is either always or never taken.
+
+**Bad:**
+```dart
+void processData() {
+  // Condition is always true
+  if (true) {
+    print('This always executes');
+  }
+
+  // Condition is always false
+  if (false) {
+    print('This never executes - dead code!');
+  }
+
+  // Constant expression
+  if (2 + 2 == 5) {
+    print('Dead code');
+  }
+
+  // Infinite loop
+  while (true) {
+    print('Infinite loop!');
+    // Missing break condition
+  }
+}
+```
+
+**Good:**
+```dart
+void processData(bool shouldProcess, int count) {
+  // Use dynamic conditions
+  if (shouldProcess) {
+    print('Conditional execution');
+  }
+
+  // Check actual variable
+  if (count > 0) {
+    print('Has items');
+  }
+
+  // If you need an infinite loop, make it explicit
+  while (true) {
+    if (shouldExit()) {
+      break; // Clear exit condition
+    }
+    doWork();
+  }
+}
+```
 
 ---
 
@@ -571,6 +655,36 @@ Recommends a consistent order for binary expression operands (e.g., putting vari
 
 **Why?** Consistent operand ordering improves code readability and makes patterns more recognizable.
 
+**Bad:**
+```dart
+void validateAge(int age) {
+  // Constant on left (Yoda conditions)
+  if (18 <= age) {
+    print('Adult');
+  }
+
+  // Inconsistent style
+  if (0 < count && max >= count) {
+    process();
+  }
+}
+```
+
+**Good:**
+```dart
+void validateAge(int age) {
+  // Variable on left, constant on right
+  if (age >= 18) {
+    print('Adult');
+  }
+
+  // Consistent style - variable first
+  if (count > 0 && count <= max) {
+    process();
+  }
+}
+```
+
 ---
 
 ## dispose-class-fields
@@ -677,6 +791,42 @@ Warns when boolean values are explicitly compared to `true` or `false`.
 
 **Why?** Comparing booleans to literals is redundant. Use the boolean value or its negation directly.
 
+**Bad:**
+```dart
+void checkUser(User user) {
+  // Redundant comparison
+  if (user.isActive == true) {
+    print('Active');
+  }
+
+  // Redundant comparison
+  if (user.isDeleted == false) {
+    process(user);
+  }
+
+  // Verbose
+  final canAccess = user.hasPermission() == true;
+}
+```
+
+**Good:**
+```dart
+void checkUser(User user) {
+  // Use boolean directly
+  if (user.isActive) {
+    print('Active');
+  }
+
+  // Use negation operator
+  if (!user.isDeleted) {
+    process(user);
+  }
+
+  // Direct assignment
+  final canAccess = user.hasPermission();
+}
+```
+
 ---
 
 ## no-empty-block
@@ -684,6 +834,52 @@ Warns when boolean values are explicitly compared to `true` or `false`.
 Warns when code blocks are empty.
 
 **Why?** Empty blocks are often mistakes or indicate incomplete implementation. Add a comment if intentional.
+
+**Bad:**
+```dart
+void processData(String data) {
+  if (data.isEmpty) {
+    // Empty block - forgot to implement?
+  }
+}
+
+class MyWidget extends StatefulWidget {
+  @override
+  void initState() {
+    super.initState();
+    // Empty - why override if doing nothing?
+  }
+}
+
+try {
+  riskyOperation();
+} catch (e) {
+  // Silent failure - bad practice
+}
+```
+
+**Good:**
+```dart
+void processData(String data) {
+  if (data.isEmpty) {
+    // If intentionally empty, add comment explaining why
+    return; // Skip processing for empty data
+  }
+}
+
+// Or remove unnecessary override
+class MyWidget extends StatefulWidget {
+  // Don't override if not needed
+}
+
+try {
+  riskyOperation();
+} catch (e) {
+  // Handle errors properly
+  log.error('Operation failed: $e');
+  rethrow;
+}
+```
 
 ---
 
@@ -700,6 +896,45 @@ Warns when empty strings are used as default values or compared against.
 Warns when the same expression is passed multiple times to different parameters.
 
 **Why?** Duplicate arguments are often copy-paste errors.
+
+**Bad:**
+```dart
+void createRect(double x, double y, double width, double height) {
+  // Copy-paste error - using width for both dimensions
+  final rect = Rectangle(x, y, width, width);
+}
+
+void updateUser(String firstName, String lastName, String email) {
+  // Passing same value to different parameters
+  saveUser(
+    firstName: firstName,
+    lastName: firstName, // Should be lastName!
+    email: email,
+  );
+}
+
+// Passing same value twice
+final range = Range(min: value, max: value);
+```
+
+**Good:**
+```dart
+void createRect(double x, double y, double width, double height) {
+  // Use correct parameters
+  final rect = Rectangle(x, y, width, height);
+}
+
+void updateUser(String firstName, String lastName, String email) {
+  saveUser(
+    firstName: firstName,
+    lastName: lastName, // Correct
+    email: email,
+  );
+}
+
+// Use different values
+final range = Range(min: minValue, max: maxValue);
+```
 
 ---
 
@@ -761,6 +996,50 @@ Warns when nested conditions repeat the same check as outer conditions.
 
 **Why?** Nested equal conditions are redundant - if the outer condition passed, the inner is always true.
 
+**Bad:**
+```dart
+void processUser(User user) {
+  if (user.isActive) {
+    print('User is active');
+    // Redundant check - we already know user.isActive is true
+    if (user.isActive) {
+      sendNotification();
+    }
+  }
+}
+
+void checkAge(int age) {
+  if (age >= 18) {
+    // Redundant - age is already >= 18
+    if (age >= 18) {
+      print('Adult');
+    }
+  }
+}
+```
+
+**Good:**
+```dart
+void processUser(User user) {
+  if (user.isActive) {
+    print('User is active');
+    // Remove redundant check
+    sendNotification();
+  }
+}
+
+// Or if you need a different condition
+void processUserCorrect(User user) {
+  if (user.isActive) {
+    print('User is active');
+    // Check a different condition
+    if (user.isPremium) {
+      sendPremiumNotification();
+    }
+  }
+}
+```
+
 ---
 
 ## no-equal-switch-case
@@ -768,6 +1047,46 @@ Warns when nested conditions repeat the same check as outer conditions.
 Warns when switch cases have identical code blocks.
 
 **Why?** Duplicate case bodies often indicate copy-paste errors or cases that should be combined.
+
+**Bad:**
+```dart
+String getStatusMessage(String status) {
+  switch (status) {
+    case 'pending':
+      return 'Please wait';
+    case 'processing':
+      return 'Please wait'; // Duplicate code
+    case 'queued':
+      return 'Please wait'; // Duplicate code
+    case 'completed':
+      return 'Done';
+  }
+}
+```
+
+**Good:**
+```dart
+String getStatusMessage(String status) {
+  switch (status) {
+    // Combine cases with same behavior
+    case 'pending':
+    case 'processing':
+    case 'queued':
+      return 'Please wait';
+    case 'completed':
+      return 'Done';
+  }
+}
+
+// Or use switch expression (Dart 3.0+)
+String getStatusMessageModern(String status) {
+  return switch (status) {
+    'pending' || 'processing' || 'queued' => 'Please wait',
+    'completed' => 'Done',
+    _ => 'Unknown status',
+  };
+}
+```
 
 ---
 
