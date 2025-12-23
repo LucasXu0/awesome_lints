@@ -89,6 +89,10 @@ class DisposeFields extends DartLintRule {
 
         // Check if the type has dispose(), close(), or cancel() methods
         if (_hasDisposableMethod(dartType)) {
+          // Skip fields that are initialized from external sources
+          if (_isExternallyOwned(variable)) {
+            continue;
+          }
           disposableFields.add(member);
           break; // Only add the field declaration once
         }
@@ -101,6 +105,70 @@ class DisposeFields extends DartLintRule {
   /// Checks if the type has dispose(), close(), or cancel() methods
   bool _hasDisposableMethod(DartType type) {
     return DisposalUtils.hasDisposalMethod(type);
+  }
+
+  /// Checks if a field is externally owned (from context, DI, etc.)
+  /// and should not be disposed by this class
+  bool _isExternallyOwned(VariableDeclaration variable) {
+    final initializer = variable.initializer;
+    if (initializer == null) return false;
+
+    // Check for common patterns of external ownership
+    if (initializer is MethodInvocation) {
+      final methodName = initializer.methodName.name;
+      final target = initializer.target;
+
+      // Check for context.read<T>(), context.watch<T>(), Provider.of<T>(context)
+      if (target != null) {
+        final targetName = target.simpleIdentifierName;
+        if (targetName == 'context') {
+          // context.read(), context.watch(), etc.
+          if (methodName == 'read' ||
+              methodName == 'watch' ||
+              methodName == 'select') {
+            return true;
+          }
+        }
+
+        // Provider.of(context), GetIt.instance.get(), etc.
+        if (methodName == 'of' || methodName == 'get' || methodName == 'find') {
+          return true;
+        }
+      }
+
+      // Check for Provider.of(context, ...) pattern (no target)
+      if (target == null && methodName == 'of') {
+        // Check if first argument is 'context'
+        final args = initializer.argumentList.arguments;
+        if (args.isNotEmpty) {
+          final firstArg = args.first;
+          if (firstArg is SimpleIdentifier && firstArg.name == 'context') {
+            return true;
+          }
+        }
+      }
+    }
+
+    // Check for widget.something (passed from parent widget)
+    if (initializer is PropertyAccess || initializer is PrefixedIdentifier) {
+      final targetName = _getTargetName(initializer);
+      if (targetName == 'widget') {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /// Extracts target name from PropertyAccess or PrefixedIdentifier
+  String? _getTargetName(Expression expression) {
+    if (expression is PropertyAccess) {
+      return expression.target?.simpleIdentifierName;
+    }
+    if (expression is PrefixedIdentifier) {
+      return expression.prefix.name;
+    }
+    return null;
   }
 
   /// Finds the dispose method in the class

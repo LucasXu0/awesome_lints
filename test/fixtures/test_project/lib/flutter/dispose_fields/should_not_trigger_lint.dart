@@ -206,3 +206,104 @@ class MyWidget9 extends StatelessWidget {
     return Container();
   }
 }
+
+// Case 10: Field from context.read() - externally owned, should NOT trigger
+class MyWidget10 extends StatefulWidget {
+  const MyWidget10({super.key});
+
+  @override
+  State<MyWidget10> createState() => _MyWidget10State();
+}
+
+class _MyWidget10State extends State<MyWidget10> {
+  late final TextEditingController controller = context.read<TextEditingController>();
+
+  @override
+  void dispose() {
+    // Should NOT dispose - it's owned by the provider
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+// Case 11: Field from widget parameter - externally owned, should NOT trigger
+class MyWidget11 extends StatefulWidget {
+  final TextEditingController controller;
+
+  const MyWidget11({super.key, required this.controller});
+
+  @override
+  State<MyWidget11> createState() => _MyWidget11State();
+}
+
+class _MyWidget11State extends State<MyWidget11> {
+  late final TextEditingController controller = widget.controller;
+
+  @override
+  void dispose() {
+    // Should NOT dispose - it's passed from parent
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+// Case 12: Field from Provider.of() - externally owned, should NOT trigger
+class MyWidget12 extends StatefulWidget {
+  const MyWidget12({super.key});
+
+  @override
+  State<MyWidget12> createState() => _MyWidget12State();
+}
+
+class _MyWidget12State extends State<MyWidget12> {
+  late final StreamController controller = StreamController.of(context);
+
+  @override
+  void dispose() {
+    // Should NOT dispose - it's from Provider.of
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+// Case 13: Field initialized in initState from Provider.of - should NOT trigger
+class MyWidget13 extends StatefulWidget {
+  const MyWidget13({super.key});
+
+  @override
+  State<MyWidget13> createState() => _MyWidget13State();
+}
+
+class _MyWidget13State extends State<MyWidget13> {
+  late final TextEditingController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialized from Provider in initState
+    controller = TextEditingController.of(context, listen: false);
+  }
+
+  @override
+  void dispose() {
+    // Should NOT dispose - obtained from Provider
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
