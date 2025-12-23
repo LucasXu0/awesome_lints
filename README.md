@@ -197,11 +197,27 @@ custom_lint:
     - avoid_barrel_files: false
 ```
 
-### Manual Configuration (Advanced)
+### Enabling Individual Rules
 
-Enable rules manually without a preset:
+**Starting from a preset and adding specific rules:**
 
 ```yaml
+# analysis_options.yaml
+include: package:awesome_lints/presets/core.yaml
+
+custom_lint:
+  rules:
+    # Enable additional rules not in the core preset
+    - no_magic_number:
+        allowed_numbers: [0, 1, -1, 100]
+    - prefer_switch_expression
+    - avoid_barrel_files
+```
+
+**Starting from scratch (no preset):**
+
+```yaml
+# analysis_options.yaml
 analyzer:
   plugins:
     - custom_lint
@@ -209,11 +225,33 @@ analyzer:
 custom_lint:
   enable_all_lint_rules: false
   rules:
+    # List only the rules you want
     - avoid_non_null_assertion
     - no_magic_number
     - avoid_late_context
-    # ... list all desired rules
+    - arguments_ordering
+    - prefer_early_return
 ```
+
+**Disabling specific rules from a preset:**
+
+```yaml
+# analysis_options.yaml
+include: package:awesome_lints/presets/recommended.yaml
+
+custom_lint:
+  rules:
+    # Disable unwanted rules by setting them to false
+    - avoid_barrel_files: false
+    - no_magic_string: false
+```
+
+> **💡 Tip:** Browse the category documentation files to discover available rules:
+> - [Flutter Rules](lib/src/lints/flutter/FLUTTER_LINTS.md)
+> - [Common Dart Rules](lib/src/lints/common/COMMON_LINTS.md)
+> - [Provider Rules](lib/src/lints/provider/PROVIDER_LINTS.md)
+> - [Bloc Rules](lib/src/lints/bloc/BLOC_LINTS.md)
+> - [FakeAsync Rules](lib/src/lints/fake_async/FAKE_ASYNC_LINTS.md)
 
 ## Development
 
