@@ -142,8 +142,13 @@ class _CaseFixVisitor extends RecursiveAstVisitor<void> {
         );
 
         changeBuilder.addDartFileEdit((builder) {
-          // Insert a newline at the position before the case
-          builder.addSimpleInsertion(currentMember.offset, '\n');
+          // Find the start of the line (including indentation)
+          final lineStart = lineInfo.getOffsetOfLine(
+            currentMemberStartLine - 1,
+          );
+
+          // Insert a newline at the beginning of the line
+          builder.addSimpleInsertion(lineStart, '\n');
         });
       }
     }
