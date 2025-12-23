@@ -134,8 +134,11 @@ class _ConstructorFixVisitor extends RecursiveAstVisitor<void> {
         );
 
         changeBuilder.addDartFileEdit((builder) {
-          // Insert a newline at the position before the constructor
-          builder.addSimpleInsertion(member.offset, '\n');
+          // Find the start of the line (including indentation)
+          final lineStart = lineInfo.getOffsetOfLine(constructorStartLine - 1);
+
+          // Insert a newline at the beginning of the line
+          builder.addSimpleInsertion(lineStart, '\n');
         });
       }
     }
