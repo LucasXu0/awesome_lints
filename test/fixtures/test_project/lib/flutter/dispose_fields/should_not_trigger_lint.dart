@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // Case 1: TextEditingController properly disposed - should NOT trigger
 class MyWidget1 extends StatefulWidget {
@@ -216,7 +217,8 @@ class MyWidget10 extends StatefulWidget {
 }
 
 class _MyWidget10State extends State<MyWidget10> {
-  late final TextEditingController controller = context.read<TextEditingController>();
+  late final TextEditingController controller = context
+      .read<TextEditingController>();
 
   @override
   void dispose() {
@@ -264,7 +266,8 @@ class MyWidget12 extends StatefulWidget {
 }
 
 class _MyWidget12State extends State<MyWidget12> {
-  late final StreamController controller = StreamController.of(context);
+  late final StreamController controller =
+      Provider.of<StreamController>(context, listen: false);
 
   @override
   void dispose() {
@@ -293,7 +296,7 @@ class _MyWidget13State extends State<MyWidget13> {
   void initState() {
     super.initState();
     // Initialized from Provider in initState
-    controller = TextEditingController.of(context, listen: false);
+    controller = Provider.of<TextEditingController>(context, listen: false);
   }
 
   @override
