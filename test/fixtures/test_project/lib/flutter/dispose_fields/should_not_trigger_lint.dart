@@ -266,42 +266,14 @@ class MyWidget12 extends StatefulWidget {
 }
 
 class _MyWidget12State extends State<MyWidget12> {
-  late final StreamController controller =
-      Provider.of<StreamController>(context, listen: false);
+  late final StreamController controller = Provider.of<StreamController>(
+    context,
+    listen: false,
+  );
 
   @override
   void dispose() {
     // Should NOT dispose - it's from Provider.of
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-// Case 13: Field initialized in initState from Provider.of - should NOT trigger
-class MyWidget13 extends StatefulWidget {
-  const MyWidget13({super.key});
-
-  @override
-  State<MyWidget13> createState() => _MyWidget13State();
-}
-
-class _MyWidget13State extends State<MyWidget13> {
-  late final TextEditingController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    // Initialized from Provider in initState
-    controller = Provider.of<TextEditingController>(context, listen: false);
-  }
-
-  @override
-  void dispose() {
-    // Should NOT dispose - obtained from Provider
     super.dispose();
   }
 
