@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // Case 1: TextEditingController properly disposed - should NOT trigger
 class MyWidget1 extends StatefulWidget {
@@ -200,6 +201,81 @@ class MyWidget9 extends StatelessWidget {
   MyWidget9({super.key});
 
   final TextEditingController controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+// Case 10: Field from context.read() - externally owned, should NOT trigger
+class MyWidget10 extends StatefulWidget {
+  const MyWidget10({super.key});
+
+  @override
+  State<MyWidget10> createState() => _MyWidget10State();
+}
+
+class _MyWidget10State extends State<MyWidget10> {
+  late final TextEditingController controller = context
+      .read<TextEditingController>();
+
+  @override
+  void dispose() {
+    // Should NOT dispose - it's owned by the provider
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+// Case 11: Field from widget parameter - externally owned, should NOT trigger
+class MyWidget11 extends StatefulWidget {
+  final TextEditingController controller;
+
+  const MyWidget11({super.key, required this.controller});
+
+  @override
+  State<MyWidget11> createState() => _MyWidget11State();
+}
+
+class _MyWidget11State extends State<MyWidget11> {
+  late final TextEditingController controller = widget.controller;
+
+  @override
+  void dispose() {
+    // Should NOT dispose - it's passed from parent
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+// Case 12: Field from Provider.of() - externally owned, should NOT trigger
+class MyWidget12 extends StatefulWidget {
+  const MyWidget12({super.key});
+
+  @override
+  State<MyWidget12> createState() => _MyWidget12State();
+}
+
+class _MyWidget12State extends State<MyWidget12> {
+  late final StreamController controller = Provider.of<StreamController>(
+    context,
+    listen: false,
+  );
+
+  @override
+  void dispose() {
+    // Should NOT dispose - it's from Provider.of
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

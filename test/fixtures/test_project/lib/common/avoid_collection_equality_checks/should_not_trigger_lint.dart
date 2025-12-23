@@ -66,4 +66,30 @@ void test() {
   if (obj1 == obj2) {
     print('equal');
   }
+
+  // Valid: Null checks on collections
+  final List<int>? nullableList = null;
+  if (nullableList == null) {
+    print('list is null');
+  }
+
+  if (nullableList != null) {
+    print('list is not null');
+  }
+
+  // Valid: Null checks on maps
+  final Map<String, int>? nullableMap = null;
+  if (nullableMap == null) {
+    print('map is null');
+  }
+
+  if (null == nullableMap) {
+    print('map is null (reversed)');
+  }
+
+  // Valid: Null checks on sets
+  final Set<String>? nullableSet = null;
+  if (nullableSet != null) {
+    print('set is not null');
+  }
 }

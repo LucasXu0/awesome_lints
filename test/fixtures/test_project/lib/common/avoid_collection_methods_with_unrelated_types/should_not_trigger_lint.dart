@@ -66,3 +66,21 @@ void test() {
     '$contains1 $contains2 $index1 $index2 $hasKey $hasValue $hasKey2 $value $item $lastIndex $numContains $numIndex $lookup1 $dynIndex $length $isEmpty $keys',
   );
 }
+
+// Test class hierarchy subtype compatibility
+abstract class Animal {}
+
+class Dog extends Animal {}
+
+class Cat extends Animal {}
+
+void testClassHierarchy() {
+  final animals = <Animal>[Dog(), Cat()];
+  final dog = Dog();
+
+  // Valid: Dog is a subtype of Animal
+  animals.contains(dog);
+  animals.remove(dog);
+  animals.indexOf(dog);
+  animals.lastIndexOf(dog);
+}

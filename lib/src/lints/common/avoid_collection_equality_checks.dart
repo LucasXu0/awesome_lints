@@ -37,6 +37,12 @@ class AvoidCollectionEqualityChecks extends DartLintRule {
 
       if (leftType == null || rightType == null) return;
 
+      // Skip null checks (e.g., `collection == null` or `collection != null`)
+      if (_isNullLiteral(node.leftOperand) ||
+          _isNullLiteral(node.rightOperand)) {
+        return;
+      }
+
       // Check if either operand is a collection type (not const)
       final leftIsCollection =
           _isCollectionType(leftType) && !_isConstExpression(node.leftOperand);
@@ -52,6 +58,10 @@ class AvoidCollectionEqualityChecks extends DartLintRule {
 
   bool _isCollectionType(DartType type) {
     return type.isDartCoreList || type.isDartCoreSet || type.isDartCoreMap;
+  }
+
+  bool _isNullLiteral(Expression expression) {
+    return expression is NullLiteral;
   }
 
   bool _isConstExpression(Expression expression) {
