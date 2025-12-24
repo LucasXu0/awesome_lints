@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2025-12-24
+
+### Bug Fixes
+
+- **dispose_fields**: Now correctly skips externally-owned resources (e.g., resources provided via constructor parameters that should not be disposed by the class)
+- **avoid_collection_equality_checks**: Now properly skips null comparison checks (`== null` or `!= null`)
+- **TypeCompatibilityChecker**: Improved to support subtype relationship checks for more accurate type analysis
+- **newline_before_* rules**: Auto-fixes now correctly preserve code indentation
+- **Test fixtures**: Corrected Provider API usage in `dispose_fields` test cases
+
+### Documentation
+
+- **COMMON_LINTS.md**: Added comprehensive code examples for additional rules, improving developer guidance
+- **README.md**: Added new "Enabling Individual Rules" section with clear examples of three approaches for configuring rules
+
+### Maintenance
+
+- Removed unused test files
+- Code formatting improvements
+
+---
+
 ## [2.1.0] - 2025-12-22
 
 ### BREAKING CHANGES
@@ -334,6 +356,7 @@ Future releases will be documented here. We follow semantic versioning:
 - **MINOR** version for new functionality in a backward compatible manner
 - **PATCH** version for backward compatible bug fixes
 
+[2.2.0]: https://github.com/LucasXu0/awesome_lints/releases/tag/v2.2.0
 [2.1.0]: https://github.com/LucasXu0/awesome_lints/releases/tag/v2.1.0
 [2.0.0]: https://github.com/LucasXu0/awesome_lints/releases/tag/v2.0.0
 [1.0.0]: https://github.com/LucasXu0/awesome_lints/releases/tag/v1.0.0
